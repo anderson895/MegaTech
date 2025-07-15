@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2025 at 06:28 PM
+-- Generation Time: Jul 15, 2025 at 06:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -87,14 +87,6 @@ CREATE TABLE `product` (
   `prod_image` varchar(255) NOT NULL,
   `prod_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `product`
---
-
-INSERT INTO `product` (`prod_id`, `prod_code`, `prod_name`, `prod_description`, `prod_specs`, `prod_stocks`, `prod_category_id`, `prod_price`, `prod_critical`, `prod_status`, `prod_image`, `prod_added`) VALUES
-(1, 'prod123', 'product name', 'dawd', '[{\"name\":\"color\",\"value\":\"gray\"}]', 66, 2, 999.00, 10, 1, 'product_687681548b87d1.24285280.jpg', '2025-07-16 00:27:00'),
-(2, 'prod123', 'product name', 'dawd', '[{\"name\":\"color\",\"value\":\"green\"},{\"name\":\"color\",\"value\":\"red\"},{\"name\":\"shape\",\"value\":\"square\"}]', 66, 2, 999.00, 10, 1, 'product_687681788ac739.03243801.jpg', '2025-07-16 00:27:36');
 
 --
 -- Indexes for dumped tables
