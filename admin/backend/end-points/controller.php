@@ -71,14 +71,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'specs' => $specs 
                         ]);
 
+                        if ($prod_id) {
+                            echo "200"; // SUCCESS
+                        } else {
+                            echo "Error saving product data.";
+                        }
+
                     } else {
-                        echo 'Error uploading image. Please try again.';
+                        echo "Error uploading image. Please try again.";
                     }
                 } else {
-                    echo 'No image uploaded or there was an error with the image.';
+                    echo "No image uploaded or there was an error with the image.";
                 }
 
-        
 
         
          } else {
