@@ -40,6 +40,30 @@ class global_class extends db_connect
         }
     }
 
+     public function fetch_all_product(){
+        $query = $this->conn->prepare("SELECT * 
+        FROM `product` 
+        LEFT JOIN category
+        ON product.prod_category_id = category.category_id
+        where prod_status='1'
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+    
+    public function fetch_all_category(){
+        $query = $this->conn->prepare("SELECT * FROM `category`");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
 
      public function check_account($admin_id) {
         $admin_id = intval($admin_id);

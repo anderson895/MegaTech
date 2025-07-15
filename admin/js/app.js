@@ -42,4 +42,22 @@ $("#frmLogin").submit(function (e) {
       });
     });
 
+
+
+
+
+      // Show the modal when Add Product button is clicked
+    $('#addProductButton').click(function() {
+      $('#AddproductModal').fadeIn(200);  // Use fadeIn for smoother appearance
+    });
+      // Show the modal when Add Product button is clicked
+    $('#addProductButton').click(function() {
+      $('#AddproductModal').fadeIn(200);  // Use fadeIn for smoother appearance
+    });
+
+    // Hide the modal when Cancel button is clicked
+    $('#closeModalButton').click(function() {
+      $('#AddproductModal').fadeOut(200);  // Use fadeOut for smoother disappearance
+    });
+
 });
