@@ -53,6 +53,60 @@ class global_class extends db_connect
             return $result;
         }
     }
+public function addProduct($productData)
+{
+    $product_Code = $productData['code'];
+    $product_Name = $productData['name'];
+    $product_Price = $productData['price'];
+    $critical_Level = $productData['critical_level'];
+    $product_Category = $productData['category'];
+    $product_Description = $productData['description'];
+    $product_Image = $productData['image'];
+    $product_Stocks = $productData['stocks'];
+    $specs = $productData['specs']; // Array of specs
+
+    $getDateToday = date('Y-m-d H:i:s');
+    
+    // Convert specs array to JSON string
+    $specsJson = json_encode($specs);
+
+    // SQL query
+    $query = "INSERT INTO `product` 
+        (`prod_code`, `prod_name`, `prod_price`, `prod_category_id`, `prod_critical`, `prod_description`, `prod_image`, `prod_added`, `prod_status`, `prod_stocks`, `prod_specs`) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)";
+
+    $stmt = $this->conn->prepare($query);
+    if (!$stmt) {
+        error_log("Prepare failed: " . $this->conn->error);
+        return false;
+    }
+
+    // Bind parameters
+    $stmt->bind_param(
+        "ssdissssss", 
+        $product_Code,
+        $product_Name,
+        $product_Price,
+        $product_Category,
+        $critical_Level,
+        $product_Description,
+        $product_Image,
+        $getDateToday,
+        $product_Stocks,
+        $specsJson
+    );
+
+    // Execute and check
+    if ($stmt->execute()) {
+        return $this->conn->insert_id;
+    } else {
+        error_log("Execute failed: " . $stmt->error);
+        return false;
+    }
+}
+
+
+
 
 
     
