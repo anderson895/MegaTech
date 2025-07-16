@@ -80,8 +80,9 @@ if (!empty($fetch_all_product)) {
             </button>
 
             <!-- Remove Button -->
-            <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm removeProduct"
+            <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm togglerRemoveProduct"
                 data-prod_id="<?= $product['prod_id'] ?>"
+                data-prod_name="<?= htmlspecialchars($product['prod_name']) ?>"
             >
                 Remove
             </button>

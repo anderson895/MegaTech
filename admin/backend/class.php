@@ -192,8 +192,9 @@ public function addProduct($productData)
     }
 
 
+    
 
-      public function getProductImageById($product_ID) {
+    public function getProductImageById($product_ID) {
         $sql = "SELECT prod_image FROM product WHERE prod_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $product_ID);  
@@ -203,6 +204,20 @@ public function addProduct($productData)
         return $row ? $row['prod_image'] : null;
     }
     
+
+
+     public function updateProductStatus($prod_id) {
+       
+        $query = "UPDATE `product` 
+                  SET `prod_status` = 0
+                  WHERE `prod_id` = $prod_id";
+
+            if ($this->conn->query($query)) {
+                return 'success';
+            } else {
+                return 'Error: ' . $this->conn->error;
+            }
+    }
     
     
 

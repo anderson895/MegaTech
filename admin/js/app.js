@@ -3,6 +3,69 @@ $(document).ready(function () {
 
 
 
+
+
+
+
+    $(document).on('click', '.togglerRemoveProduct', function(e) {
+        e.preventDefault();
+        var prod_id = $(this).data('prod_id');
+        var prod_name = $(this).data('prod_name');
+        console.log(prod_id);
+    
+        Swal.fire({
+            title: `Are you sure to Remove <span style="color:red;">${prod_name}</span> ?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "backend/end-points/controller.php",
+                    type: 'POST',
+                    data: { prod_id: prod_id, requestType: 'removeProduct' },
+                    dataType: 'json',  // Expect a JSON response
+                    success: function(response) {
+                      console.log(response);
+                        if (response.status === 200) {
+                            Swal.fire(
+                                'Removed!',
+                                response.message, 
+                                'success'
+                            ).then(() => {
+                                location.reload(); 
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                response.message, 
+                                'error'
+                            );
+                        }
+                    },
+                    error: function() {
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem with the request.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
+
  $('#frmAddProduct').on('submit', function(e) {
           e.preventDefault();
           var category = $('#productCategory').val();

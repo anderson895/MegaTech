@@ -175,6 +175,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
 
         
+    }else if($_POST['requestType'] =='removeProduct'){
+
+      
+        $prod_id=$_POST['prod_id'];
+
+        $result = $db->updateProductStatus($prod_id);
+
+         if ($result == "success") {
+            echo json_encode(["status" => 200, "message" => "Remove Successfully"]);
+        } else {
+            echo json_encode(["status" => 400, "message" => $result]);
+        }
+
+
     }else {
             echo json_encode([
                 'status' => 'error',
