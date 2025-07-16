@@ -39,9 +39,9 @@ $firstname = $name_parts[0];
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ADORN SIA</title>
+  <title>MEGATECH</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" type="image/png" href="assets/logo1.png">
+  <link rel="icon" type="image/png" href="../assets/logo/logo1.jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js" integrity="sha512-JnjG+Wt53GspUQXQhc+c4j8SBERsgJAoHeehagKHlxQN+MtCCmFDghX9/AcbkkNRZptyZU4zC8utK59M5L45Iw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -58,6 +58,8 @@ $firstname = $name_parts[0];
 </head>
 
 <body class="bg-gray-50">
+
+<?php include "../function/PageSpinner.php"; ?>
  <!-- Header -->
 <header class="bg-white shadow">
   <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -80,7 +82,7 @@ $firstname = $name_parts[0];
     <nav id="navigation" class="hidden lg:flex lg:items-center lg:space-x-4">
       <?php if ($is_logged_in): ?>
         <!-- Show these if user is logged in -->
-        <a href="index.php" class="text-gray-700 hover:text-blue-600 transition">Products</a>
+        <a href="home" class="text-gray-700 hover:text-blue-600 transition">Products</a>
 
         <div class="relative dropdown">
           <!-- Dropdown Trigger -->
@@ -109,7 +111,7 @@ $firstname = $name_parts[0];
                   <span class="material-icons align-middle mr-2">account_circle</span>
                   Profile
               </a>
-              <a href="password_setting.php" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition">
+              <a href="password_setting" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition">
                   <span class="material-icons align-middle mr-2">lock</span>
                   Password
               </a>
