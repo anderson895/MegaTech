@@ -277,6 +277,14 @@ public function fetch_all_product() {
     }
 }
 
+
+
+public function getPriceRange() {
+    $sql = "SELECT MIN(prod_price) AS min_price, MAX(prod_price) AS max_price FROM product WHERE prod_status = 1";
+    $result = $this->conn->query($sql);
+    return $result->fetch_assoc();
+}
+
     
 
 
