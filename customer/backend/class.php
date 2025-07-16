@@ -507,8 +507,7 @@ public function OrderRequest($address, $paymentMethod, $proofOfPayment, $fileNam
     {
         $query = " 
             SELECT 
-                (SELECT COUNT(*) FROM `cart` WHERE cart_user_id = $userID) AS cartCount,
-                (SELECT COUNT(*) FROM `wishlist` WHERE wish_user_id = $userID) AS wishlistCount
+                (SELECT COUNT(*) FROM `cart` WHERE cart_user_id = $userID) AS cartCount
         ";
 
         $result = $this->conn->query($query);
@@ -534,87 +533,29 @@ public function OrderRequest($address, $paymentMethod, $proofOfPayment, $fileNam
         }
     }
 
-
-    
-    // public function AddToCart($userId, $productId, $prodSize)
-    // {
-    //     $checkProductInCart = $this->checkProductInCart($userId, $productId, $prodSize);
-        
-    //     if ($checkProductInCart->num_rows > 0) {
-    //         // Update the quantity if the product already exists in the cart
-    //         $query = $this->conn->prepare("UPDATE `cart` SET `cart_Qty` = `cart_Qty` + 1 WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId' AND `cart_prod_size` = '$prodSize'");
-    //         $response = 'Cart Updated!';
-    //     } else {
-    //         // Insert the product into the cart if it does not exist
-    //         $query = $this->conn->prepare("INSERT INTO `cart` (`cart_prod_id`, `cart_Qty`, `cart_user_id`, `cart_prod_size`) VALUES ('$productId', 1, '$userId', '$prodSize')");
-    //         $response = 'Added To Cart!';
-    //     }
-
-    //     if ($query->execute()) {
-    //         return $response;
-    //     } else {
-    //         return 400;
-    //     }
-    // }
-
-    public function AddToCart($userId, $productId, $prodSize)
+    public function AddToCart($userId, $productId)
 {
-    // Escaping user input to prevent SQL injection
-    $userId = mysqli_real_escape_string($this->conn, $userId);
-    $productId = mysqli_real_escape_string($this->conn, $productId);
-    $prodSize = mysqli_real_escape_string($this->conn, $prodSize);
-
-    // Fetch product info
     $productInfoResult = $this->conn->query("SELECT * FROM product WHERE prod_id='$productId'");
     $productInfo = $productInfoResult->fetch_assoc();
 
-    // Fetch cart info
     $cartInfoResult = $this->conn->query("SELECT * FROM cart WHERE cart_user_id='$userId' AND cart_prod_id='$productId'");
     $cartInfo = $cartInfoResult->fetch_assoc();
 
-   
-    // Check if cart quantity exceeds product stock
-    if (isset($cartInfo['cart_Qty']) && $cartInfo['cart_Qty'] >= $productInfo['product_stocks']) {
+    if (isset($cartInfo['cart_Qty']) && $cartInfo['cart_Qty'] >= $productInfo['prod_stocks']) {
         return "MaximumExceed";
     }
 
     // Check if the product is already in the cart
-    $checkProductInCart = $this->conn->query("SELECT * FROM cart WHERE cart_user_id='$userId' AND cart_prod_id='$productId' AND cart_prod_size='$prodSize'");
+    $checkProductInCart = $this->conn->query("SELECT * FROM cart WHERE cart_user_id='$userId' AND cart_prod_id='$productId'");
 
     if ($checkProductInCart->num_rows > 0) {
         // Update the quantity if the product already exists in the cart
-        $query = "UPDATE `cart` SET `cart_Qty` = `cart_Qty` + 1 WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId' AND `cart_prod_size` = '$prodSize'";
+        $query = "UPDATE `cart` SET `cart_Qty` = `cart_Qty` + 1 WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId'";
         $response = 'Cart Updated!';
     } else {
         // Insert the product into the cart if it does not exist
-        $query = "INSERT INTO `cart` (`cart_prod_id`, `cart_Qty`, `cart_user_id`, `cart_prod_size`) VALUES ('$productId', 1, '$userId', '$prodSize')";
+        $query = "INSERT INTO `cart` (`cart_prod_id`, `cart_Qty`, `cart_user_id`) VALUES ('$productId', 1, '$userId')";
         $response = 'Added To Cart!';
-    }
-
-    // Execute the query and return the response
-    if ($this->conn->query($query)) {
-        return $response;
-    } else {
-        return 400;  // Error code if query fails
-    }
-}
-
-public function AddToWish($userId, $productId)
-{
-
-    // Fetch product info
-    $productInfoResult = $this->conn->query("SELECT * FROM product WHERE prod_id='$productId'");
-    $productInfo = $productInfoResult->fetch_assoc();
-
-   
-    $checkProductInWIsh = $this->conn->query("SELECT * FROM wishlist WHERE wish_user_id ='$userId' AND wish_prod_id ='$productId'");
-
-    if ($checkProductInWIsh->num_rows > 0) {
-        return "Product is Already On Wishlist";
-    } else {
-        // Insert the product into the cart if it does not exist
-        $query = "INSERT INTO `wishlist` (`wish_user_id`,`wish_prod_id`) VALUES ('$userId','$productId')";
-        $response = 'Added To Wishlist!';
     }
 
     // Execute the query and return the response

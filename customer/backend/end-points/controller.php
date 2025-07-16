@@ -21,6 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode(['status' => $response]);
         
+    }else if ($_POST['requestType']=="AddToCart") {
+        $userId = $_POST['cart_user_id'];
+        $productId = $_POST['cart_prod_id'];
+
+        $response = $db->AddToCart($userId, $productId);
+
+        echo json_encode(['status' => $response]);
+
     }else if ($_POST['requestType']=="UpdateUserPassword") {
        // Get input data from POST request
         $userID = $_POST['userID'];
