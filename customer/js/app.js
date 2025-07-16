@@ -67,6 +67,92 @@
 
 
 
+     $('.togglerAdd').click(function() {
+        // Sample data, replace with actual values from your PHP/Backend
+        let cart_user_id = $(this).data('user_id');
+        let cart_prod_id = $(this).data('product_id'); 
+        
+        
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: { 
+                cart_user_id: cart_user_id,
+                cart_prod_id: cart_prod_id,
+                requestType: "AddToCart" // Corrected here
+            },
+            dataType: 'json', // Corrected the syntax here
+            success: function(response) {
+
+                
+                location.reload();
+                
+               
+            },
+            error: function() {
+                alertify.error('Error occurred during the request!');
+            }
+        });
+    });
+
+
+
+    $('.togglerMinus').click(function() {
+        // Sample data, replace with actual values from your PHP/Backend
+        let cart_user_id = $(this).data('user_id');
+        let cart_prod_id = $(this).data('product_id'); 
+        let cart_prod_size = $(this).data('cart_prod_size'); 
+        
+        console.log(cart_prod_size);
+        
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: { 
+                cart_user_id: cart_user_id,
+                cart_prod_id: cart_prod_id,
+                cart_prod_size: cart_prod_size,
+                requestType: "MinusToCart" // Corrected here
+            },
+            // dataType: 'json', // Corrected the syntax here
+            success: function(response) {
+                // Hide loading spinner
+                console.log(response)
+                location.reload();
+            },
+            error: function() {
+                alertify.error('Error occurred during the request!');
+            }
+        });
+    });
+
+    $('.TogglerRemoveItem').click(function() {
+        let cart_id = $(this).data('cart_id');
+        let size = $(this).data('size');
+       
+        
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: { 
+                cart_id: cart_id,
+                size:size,
+                requestType: "RemoveItem"
+            },
+            // dataType: 'json', // Corrected the syntax here
+            success: function(response) {
+                // Hide loading spinner
+                console.log(response)
+               location.reload();
+            },
+            error: function() {
+                alertify.error('Error occurred during the request!');
+            }
+        });
+    });
+
+
+
 
 
 

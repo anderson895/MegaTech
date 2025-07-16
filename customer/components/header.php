@@ -123,10 +123,10 @@ $firstname = $name_parts[0];
         <!-- Show these if user is not logged in -->
         <a href="login.php" class="text-gray-700 hover:text-blue-600 transition">Login</a>
         <span class="text-gray-500">/</span>
-        <a href="signup.php" class="text-gray-700 hover:text-blue-600 transition">Register</a>
+        <a href="signup" class="text-gray-700 hover:text-blue-600 transition">Register</a>
       <?php endif; ?>
 
-      <a href="view_cart.php" class="relative text-gray-700 hover:text-blue-600 transition text-xl">
+      <a href="view_cart" class="relative text-gray-700 hover:text-blue-600 transition text-xl">
           🛒
           <span class="absolute top-0 right-0 inline-block w-5 h-5 text-xs font-semibold text-white bg-red-500 rounded-full text-center hidden cartCount"></span>
       </a>
@@ -143,7 +143,7 @@ $firstname = $name_parts[0];
         Products
       </a>
      <!-- Cart -->
-    <a href="view_cart.php" class="flex items-center text-gray-700 hover:text-blue-600 transition relative">
+    <a href="view_cart" class="flex items-center text-gray-700 hover:text-blue-600 transition relative">
       <span class="material-icons mr-2">shopping_cart</span>
       Cart
       <span class="absolute top-0 right-0 inline-block w-5 h-5 text-xs font-semibold text-white bg-red-500 rounded-full text-center cartCount hidden">0</span>

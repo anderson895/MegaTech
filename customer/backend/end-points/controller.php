@@ -56,29 +56,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $oldImage = $db->fetch_user_profile_image($userID); 
 
     $profileImage = '';
-    // Handle file upload with a unique filename
     if (isset($_FILES['profileimage']) && $_FILES['profileimage']['error'] == 0) {
         $uploadDir = '../../../upload/';
         $fileExtension = pathinfo($_FILES['profileimage']['name'], PATHINFO_EXTENSION);
         $uniqueFileName = uniqid('profile_', true) . '.' . $fileExtension;
         $profileImage = $uploadDir . $uniqueFileName;
-
-        // Move the uploaded file to the designated folder
         if (move_uploaded_file($_FILES['profileimage']['tmp_name'], $profileImage)) {
-            // Only delete the old image if the upload is successful
             if ($oldImage && file_exists($oldImage)) {
-                unlink($oldImage); // Delete the old image
+                unlink($oldImage); 
             }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Failed to upload new profile image']);
             exit;
         }
     } else {
-        // Use the old image if no new file is uploaded
         $profileImage = $oldImage;
     }
-
-    // Update user information in the database
     $updateSuccess = $db->update_user_info($userID, $fullname, $email, $phone, $uniqueFileName);
 
     if ($updateSuccess) {
@@ -95,47 +88,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }else if ($_POST['requestType']=="AddToCart") {
         $userId = $_POST['cart_user_id'];
         $productId = $_POST['cart_prod_id'];
-        $prodSize = $_POST['cart_prod_size'];
 
-        $response = $db->AddToCart($userId, $productId,$prodSize);
-
-        echo json_encode(['status' => $response]);
-
-    }else if ($_POST['requestType']=="AddToWishlist") {
-        $userId = $_POST['cart_user_id'];
-        $productId = $_POST['cart_prod_id'];
-
-        $response = $db->AddToWish($userId, $productId);
+        $response = $db->AddToCart($userId, $productId);
 
         echo json_encode(['status' => $response]);
 
     }else if ($_POST['requestType']=="MinusToCart") {
         $userId = $_POST['cart_user_id'];
         $productId = $_POST['cart_prod_id'];
-        $prodSize = $_POST['cart_prod_size'];
         
         // Kunin ang response mula sa AddToCart method
-        $response = $db->MinusToCart($userId, $productId,$prodSize);
-        
-        // I-echo ang response upang ma-access ito sa frontend
-        echo json_encode(['status' => $response]);
-    }else if ($_POST['requestType']=="SaveAddress") {
-
-        $street_name = $_POST['street_name'];
-        $barangay = $_POST['barangay'];
-        $complete_address_add=$_POST['complete_address_add'];
-        
-        // Kunin ang response mula sa AddToCart method
-        $response = $db->AddAddress($street_name, $barangay,$complete_address_add);
-        
-        // I-echo ang response upang ma-access ito sa frontend
-        echo json_encode(['status' => $response]);
-    }else if ($_POST['requestType']=="UpdateAddress") {
-
-        $address_id = $_POST['address_id'];
-        
-        // Kunin ang response mula sa AddToCart method
-        $response = $db->UpdateAddress($address_id);
+        $response = $db->MinusToCart($userId, $productId);
         
         // I-echo ang response upang ma-access ito sa frontend
         echo json_encode(['status' => $response]);
@@ -146,12 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cart_id = $_POST['cart_id'];
         $size = $_POST['size'];
         $response = $db->RemoveItem($user_id,$cart_id,$size);
-        echo json_encode(['status' => $response]);
-    }else if ($_POST['requestType']=="RemoveFromWish") {
-       
-        $wish_id = $_POST['wish_id'];
-
-        $response = $db->RemoveFromWish($wish_id);
         echo json_encode(['status' => $response]);
     }else if ($_POST['requestType']=="OrderRequest") {
 

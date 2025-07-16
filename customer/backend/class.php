@@ -10,6 +10,12 @@ class global_class extends db_connect
     }
 
 
+
+
+
+    
+
+
     public function check_account($user_id ) {
         // I-sanitize ang admin_id para maiwasan ang SQL injection
         $user_id  = intval($user_id);
@@ -33,16 +39,10 @@ class global_class extends db_connect
     public function getCartlist($userID)
     {
         // Directly insert the userID into the query (no prepared statements)
-        $query = "SELECT cart.*, product.*, promo.*, GROUP_CONCAT(sizes.size_id) AS sizes,
-        CASE 
-                    WHEN promo.promo_expiration < NOW() THEN NULL
-                    WHEN promo.promo_status = '0' THEN NULL
-                    ELSE product.prod_promo_id
-                END AS prod_promo_id
+        $query = "SELECT cart.*, product.*
+      
             FROM `cart`
             LEFT JOIN product ON cart.cart_prod_id = product.prod_id
-            LEFT JOIN promo ON promo.promo_id = product.prod_promo_id
-            LEFT JOIN product_sizes AS sizes ON sizes.size_prod_id = product.prod_id
             WHERE cart.cart_user_id = '$userID'
             GROUP BY cart.cart_id, product.prod_id;
             ";
@@ -133,25 +133,16 @@ class global_class extends db_connect
     
 
 
-    public function RemoveItem($user_id,$cart_id,$size)
+    public function RemoveItem($user_id,$cart_id)
     { 
         
-        
-            $updateStatusQuery = "DELETE FROM `cart` WHERE cart_user_id = $user_id AND cart_prod_id=$cart_id AND cart_prod_size='$size'";
+            $updateStatusQuery = "DELETE FROM `cart` WHERE cart_user_id = $user_id AND cart_prod_id=$cart_id";
             if ($this->conn->query($updateStatusQuery)) {
                 return 200;
             }
     }
 
-    public function RemoveFromWish($wish_id)
-    { 
-        
-        
-            $updateStatusQuery = "DELETE FROM `wishlist` WHERE wish_id ='$wish_id'";
-            if ($this->conn->query($updateStatusQuery)) {
-                return 200;
-            }
-    }
+    
     
 
     public function getPaymentQr($cart_id)
@@ -524,9 +515,9 @@ public function OrderRequest($address, $paymentMethod, $proofOfPayment, $fileNam
     
 
     // cart
-    public function checkProductInCart($userId, $productId,$prodSize)
+    public function checkProductInCart($userId, $productId)
     {
-        $query = $this->conn->prepare("SELECT * FROM `cart` WHERE `cart_prod_id` = '$productId' AND `cart_user_id` = '$userId' AND cart_prod_size='$prodSize'");
+        $query = $this->conn->prepare("SELECT * FROM `cart` WHERE `cart_prod_id` = '$productId' AND `cart_user_id` = '$userId'");
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;
@@ -568,9 +559,9 @@ public function OrderRequest($address, $paymentMethod, $proofOfPayment, $fileNam
 
 
 
-        public function MinusToCart($userId, $productId, $prodSize)
+        public function MinusToCart($userId, $productId)
     {
-        $checkProductInCart = $this->checkProductInCart($userId, $productId, $prodSize);
+        $checkProductInCart = $this->checkProductInCart($userId, $productId);
 
         if ($checkProductInCart->num_rows > 0) {
             $cartItem = $checkProductInCart->fetch_assoc();
@@ -578,11 +569,11 @@ public function OrderRequest($address, $paymentMethod, $proofOfPayment, $fileNam
 
             if ($newQty <= 0) {
                 // If the quantity is 0 or less, remove the product from the cart
-                $query = "DELETE FROM `cart` WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId' AND `cart_prod_size` = '$prodSize'";
+                $query = "DELETE FROM `cart` WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId'";
                 $response = 'Product Removed from Cart!';
             } else {
                 // Update the quantity if it's still greater than 0
-                $query = "UPDATE `cart` SET `cart_Qty` = '$newQty' WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId' AND `cart_prod_size` = '$prodSize'";
+                $query = "UPDATE `cart` SET `cart_Qty` = '$newQty' WHERE `cart_user_id` = '$userId' AND `cart_prod_id` = '$productId'";
                 $response = 'Cart Updated!';
             }
         } else {
