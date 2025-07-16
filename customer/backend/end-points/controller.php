@@ -112,14 +112,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => $response]);
     }else if ($_POST['requestType']=="OrderRequest") {
 
-     // Retrieve basic fields from POST
-$selectedAddress = $_POST['selectedAddress'];
-$selectedPaymentMethod = $_POST['selectedPaymentMethod'];
-$subtotal = $_POST['subtotal'];
-$vat = $_POST['vat'];
-$total = $_POST['total'];
-$sf = $_POST['sf'];
+        // echo "<pre>";
+        // print_r($_POST);
+        // echo "</pre>";
 
+     // Retrieve basic fields from POST
+    $pickupDate = $_POST['pickupDate'];
+    $pickupTime = $_POST['pickupTime'];
+    $total = $_POST['total'];
+
+    $selectedPaymentMethod = $_POST['selectedPaymentMethod'];
+    
 // Retrieve selectedProducts from POST
 $selectedProducts = $_POST['selectedProducts'] ?? null;
 
@@ -164,7 +167,7 @@ if (isset($_FILES['selectedFile']) && $_FILES['selectedFile']['error'] == UPLOAD
 }
 
 // Process the order request in the database
-$response = $db->OrderRequest($selectedAddress, $selectedPaymentMethod, $uniqueFileName, $selectedFilePath, $subtotal, $vat,$sf, $total);
+$response = $db->OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDate,$pickupTime, $total);
 
 if ($response['status'] === 'success') {
     
@@ -174,23 +177,19 @@ if ($response['status'] === 'success') {
         foreach ($selectedProductsArray as $product) {
             $itemProductId = $product['productId'];
             $itemQty = intval($product['qty']);  
-            $itemTotalPrice =$product['price'];  // Ensure price is a float
+            $itemTotalPrice =$product['price']; 
             $originalPrice = $product['originalPrice'];
-            $itemSize = $product['size'];
+         
         
-            // Encode promo details as JSON
-            $itemDiscountDetails = json_encode([
-                'promoName' => $product['promoName'],
-                'promoRate' => $product['promoRate']
-            ]);
+            
         
             // Prepare the SQL query to insert each product into orders_item
-            $insertQuery = "INSERT INTO orders_item (item_order_id, item_product_id, item_size, item_qty, item_product_price, promo_discount, item_total) 
-                            VALUES ('$orderId', '$itemProductId', '$itemSize', '$itemQty', '$originalPrice', '$itemDiscountDetails', '$itemTotalPrice')";
+            $insertQuery = "INSERT INTO orders_item (item_order_id, item_product_id, item_product_price,item_qty,item_total) 
+                            VALUES ('$orderId', '$itemProductId', '$originalPrice', '$itemQty', '$itemTotalPrice')";
             
             $user_id = $_SESSION['user_id'];
             
-            $response = $db->RemoveItem($user_id, $itemProductId, $itemSize);
+            $response = $db->RemoveItem($user_id, $itemProductId);
             
             // Execute the query for each product
             if (!$db->conn->query($insertQuery)) {

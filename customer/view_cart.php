@@ -28,13 +28,6 @@ include "components/header.php";
                 <!-- Order Summary Box -->
                 <div class="w-full bg-white rounded-lg shadow-xl p-8">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4">Order Summary</h3>
-
-                    <!-- Sub-total -->
-                    <div class="flex justify-between text-sm text-gray-700 mb-2">
-                        <p>Sub-total (<span id="total-items"><?= count($getCartlist) ?></span> items)</p>
-                        <p>Php <span id="sub-total"><?= number_format($subTotal, 2) ?></span></p>
-                    </div>
-
                     <!-- Grand Total -->
                     <div class="border-t border-gray-200 mt-6 pt-4 flex justify-between text-lg font-bold text-gray-900">
                         <p>Total</p>
@@ -69,6 +62,13 @@ include "components/header.php";
       </p>
     </div>
 
+
+        <!-- Downpayment Info -->
+    <div id="downpaymentInfo" class="mb-4 text-center text-lg font-semibold text-indigo-600 hidden">
+    50% Downpayment: ₱<span id="downpaymentAmount">0.00</span>
+    </div>
+
+
     <!-- Payment Method Section -->
     <div class="mb-6">
       <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Select Payment Method</label>
@@ -79,6 +79,8 @@ include "components/header.php";
       </select>
     </div>
 
+
+    
     
 
     <!-- Payment Method Instructions -->

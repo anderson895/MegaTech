@@ -1,25 +1,15 @@
 $(document).ready(function() {
     function updateOrderSummary() {
         let subTotal = 0;
-        let vat = 0;
         let total = 0;
-        var sf = 0;
 
         $('.product-checkbox:checked').each(function() {
-
             const price = $(this).data('price'); 
-            
             const productTotal = price;
             subTotal += productTotal;
-            sf = 50;
-            vat = subTotal * 0.12; 
-            total = subTotal + vat + sf;
-         
+            total = subTotal;
         });
         
-        $('#shipping-fee').text(sf.toFixed(2));
-        $('#sub-total').text(subTotal.toFixed(2));
-        $('#vat').text(vat.toFixed(2));
         $('#total').text(total.toFixed(2));
     }
 
@@ -43,9 +33,25 @@ $(document).ready(function() {
 
 
 
-    $(".btnCheckOut").click(function () {
-      $("#checkoutModal").fadeIn();
+  $(".btnCheckOut").click(function () {
+    // Calculate total from selected checkboxes
+    let subTotal = 0;
+    $('.product-checkbox:checked').each(function() {
+        const price = $(this).data('price');
+        subTotal += price;
     });
+
+    // Calculate 50% downpayment
+    const downpayment = subTotal * 0.5;
+
+    // Update modal display
+    $("#downpaymentAmount").text(downpayment.toFixed(2));
+    $("#downpaymentInfo").removeClass("hidden");
+
+    // Show the modal
+    $("#checkoutModal").fadeIn();
+});
+
     $(".closeModal").click(function () {
         $("#checkoutModal").fadeOut();
     });
@@ -92,15 +98,13 @@ $(document).ready(function() {
         $('#btnConfirmCheckout').click(function (e) {
             e.preventDefault();
 
-           
-            var sf = $('#shipping-fee').text();
-            // Retrieve values for subtotal, VAT, and total
-            var subtotal = $('#sub-total').text();
-            var vat = $('#vat').text();
+    
             var total = $('#total').text();
         
             // Retrieve selected payment method and file input
             var selectedPaymentMethod = $("#paymentMethod option:selected").data('ename');
+            var pickupDate=$("#pickupDate").val();
+            var pickupTime=$("#pickupTime").val();
 
             var fileInput = $('#proofOfPayment')[0];
             var selectedFile = fileInput.files[0];
@@ -141,16 +145,12 @@ $(document).ready(function() {
             $('.product-checkbox:checked').each(function() {
                 selectedProducts.push({
                     productId: $(this).data('product-id'),
-                    originalPrice: $(this).data('originalprice'),  // Use $(this) to get data for the current checkbox
+                    originalPrice: $(this).data('originalprice'),  
                     price: $(this).data('price'),
-                    size: $(this).data('size'),
-                    qty: $(this).data('qty'),
-                    promoName: $(this).data('promoname'),
-                    promoRate: $(this).data('promorate')
+                    qty: $(this).data('qty')
                 });
-            
-                // Log the 'originalprice' for the current checkbox
-                console.log($(this).data('originalprice'));  // Logs the 'data-originalprice' value of the selected checkbox
+
+                console.log($(this).data('originalprice')); 
             });
             
             // Ensure at least one product is selected
@@ -161,12 +161,12 @@ $(document).ready(function() {
         
             // Prepare form data for AJAX
             var formData = new FormData();
-            formData.append("selectedAddress", selectedAddress);
             formData.append("selectedPaymentMethod", selectedPaymentMethod);
-            if (selectedFile) formData.append("selectedFile", selectedFile); // Only if file is selected
-            formData.append("subtotal", subtotal);
-            formData.append("sf", sf);
-            formData.append("vat", vat);
+            formData.append("selectedFile", selectedFile);
+            formData.append("pickupDate", pickupDate);
+            formData.append("pickupTime", pickupTime);
+       
+
             formData.append("total", total);
             formData.append("selectedProducts", JSON.stringify(selectedProducts));
             formData.append("requestType", "OrderRequest");
