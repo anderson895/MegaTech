@@ -37,38 +37,42 @@ if (!empty($fetch_all_product)) {
         </div>
     </td>
 
-    <td class="p-3 text-center"><?php echo $product['prod_stocks']; ?></td>
-    <td class="p-3 text-center"><?php echo $product['category_name']; ?></td>
-    <td class="p-3 text-right">₱<?php echo number_format($product['prod_price'], 2); ?></td>
-    <td class="p-3 text-center">
+    <td class="p-3 "><?php echo $product['prod_stocks']; ?></td>
+    <td class="p-3 "><?php echo $product['category_name']; ?></td>
+    <td class="p-3 ">₱<?php echo number_format($product['prod_price'], 2); ?></td>
+    <td class="p-3 ">
         <span class="<?php echo $product['prod_status'] > 0 ? 'text-green-600 font-semibold' : 'text-red-500 italic'; ?>">
             <?php echo $status; ?>
         </span>
     </td>
-    <td class="p-3">
-        <div class="flex flex-col space-y-1 sm:flex-row sm:space-y-0 sm:space-x-2">
-            <button class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm updateProductToggler"
-                data-prod_id="<?=$product['prod_id']?>"
-                data-prod_code="<?=$product['prod_code']?>"
-                data-prod_name="<?=$product['prod_name']?>"
-                data-prod_price="<?=$product['prod_price']?>"
-                data-prod_category_id="<?=$product['prod_category_id']?>"
-                data-prod_critical="<?=$product['prod_critical']?>"
-                data-prod_description="<?=$product['prod_description']?>">
-                Update
-            </button>
-            <button class="bg-green-500 text-white py-1 px-3 rounded-md text-sm stockInToggler"
-                data-prod_stocks="<?=$product['prod_stocks']?>"
-                data-prod_id="<?=$product['prod_id']?>"
-                data-prod_name="<?=$product['prod_name']?>">
-                Stock In
-            </button>
-            <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm removeProduct"
-                data-prod_id="<?=$product['prod_id']?>">
-                Remove
-            </button>
-        </div>
-    </td>
+    <td class="p-3 text-center">
+    <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
+        <button class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm updateProductToggler"
+            data-prod_id="<?=$product['prod_id']?>"
+            data-prod_code="<?=$product['prod_code']?>"
+            data-prod_name="<?=$product['prod_name']?>"
+            data-prod_price="<?=$product['prod_price']?>"
+            data-prod_category_id="<?=$product['prod_category_id']?>"
+            data-prod_critical="<?=$product['prod_critical']?>"
+            data-prod_description="<?=$product['prod_description']?>"
+        >
+            Update
+        </button>
+        <button class="bg-green-500 text-white py-1 px-3 rounded-md text-sm stockInToggler"
+            data-prod_stocks="<?=$product['prod_stocks']?>"
+            data-prod_id="<?=$product['prod_id']?>"
+            data-prod_name="<?=$product['prod_name']?>"
+        >
+            StockIn
+        </button>
+        <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm removeProduct"
+            data-prod_id="<?=$product['prod_id']?>"
+        >
+            Remove
+        </button>
+    </div>
+</td>
+
 </tr>
 <?php 
     endforeach; 

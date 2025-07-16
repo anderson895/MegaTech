@@ -43,7 +43,7 @@ include "components/header.php";
                     <th class="p-2">Category</th>
                     <th class="p-2">Price</th>
                     <th class="p-2">Status</th>
-                    <th class="p-2">Action</th>
+                    <th class="p-2 text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
