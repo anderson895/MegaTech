@@ -40,7 +40,7 @@ class global_class extends db_connect
         }
     }
 
-     public function fetch_all_product(){
+public function fetch_all_product(){
         $query = $this->conn->prepare("SELECT * 
         FROM `product` 
         LEFT JOIN category
@@ -134,6 +134,76 @@ public function addProduct($productData)
         }
         return $items;
     }
+
+
+
+
+
+
+
+
+
+
+
+    public function updateProduct(
+                    $product_ID,
+                    $product_Code,
+                    $product_Name,
+                    $product_Price,
+                    $critical_Level,
+                    $product_Category,
+                    $product_Description,
+                    $newFileName,
+                    $specs
+                ) {
+
+        $specsJson = json_encode($specs);
+        $getDateToday = date('Y-m-d H:i:s');
+
+        $sql = "UPDATE `product` SET 
+                    `prod_code` = ?, 
+                    `prod_name` = ?, 
+                    `prod_price` = ?, 
+                    `prod_category_id` = ?, 
+                    `prod_critical` = ?, 
+                    `prod_description` = ?, 
+                    `prod_specs` = ?, 
+                    `prod_added` = ?";
+        $params = [$product_Code, $product_Name, $product_Price, $product_Category, $critical_Level, $product_Description, $specsJson, $getDateToday];
+        $paramTypes = "ssssssss";
+        
+        if (!empty($product_Image)) {
+            $sql .= ", `prod_image` = ?";
+            $params[] = $product_Image;
+            $paramTypes .= "s";
+        }
+        $sql .= " WHERE `prod_id` = ?";
+        $params[] = $product_ID;
+        $paramTypes .= "i";
+        $query = $this->conn->prepare($sql);
+        $query->bind_param($paramTypes, ...$params);
+        
+        if ($query->execute()) {
+            return "success";
+        } else {
+            return false; 
+        }
+
+    }
+
+
+
+      public function getProductImageById($product_ID) {
+        $sql = "SELECT prod_image FROM product WHERE prod_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $product_ID);  
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row ? $row['prod_image'] : null;
+    }
+    
+    
     
 
 }

@@ -8,13 +8,16 @@ if (!empty($fetch_all_product)) {
 
         // Decode specs if JSON format
         $specs_html = '';
+        $decoded_specs = [];
+
         if (!empty($product['prod_specs'])) {
             $decoded_specs = json_decode($product['prod_specs'], true);
+
             if (is_array($decoded_specs)) {
                 foreach ($decoded_specs as $spec) {
-                    $spec_name = htmlspecialchars($spec['Specs'] ?? '');
+                    $spec_name = htmlspecialchars($spec['name'] ?? '');
                     $spec_value = htmlspecialchars($spec['value'] ?? '');
-                    $specs_html .= "<div><span class='font-medium'>$spec_name:</span> <span class=''>$spec_value</span></div>";
+                    $specs_html .= "<div><span class='font-medium'>$spec_name:</span> <span>$spec_value</span></div>";
                 }
             } else {
                 $specs_html = '<span class="text-gray-500 italic">Invalid specs</span>';
@@ -22,58 +25,70 @@ if (!empty($fetch_all_product)) {
         } else {
             $specs_html = '<span class="text-gray-400 italic">No specs</span>';
         }
+
+        // Encode specs for data attribute
+        $specs_json = htmlspecialchars(json_encode($decoded_specs), ENT_QUOTES, 'UTF-8');
 ?>
+
 <tr class="border-b">
-    <td class="p-3"><?php echo $product['prod_code']; ?></td>
+    <td class="p-3"><?= htmlspecialchars($product['prod_code']) ?></td>
     <td class="p-3">
-        <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($product['prod_name']); ?>" class="w-16 h-16 object-cover rounded">
+        <img src="<?= $image_path ?>" alt="<?= htmlspecialchars($product['prod_name']) ?>" class="w-16 h-16 object-cover rounded">
     </td>
-    <td class="p-3 font-semibold"><?php echo $product['prod_name']; ?></td>
-    <td class="p-3 text-sm "><?php echo strlen($product['prod_description']) > 50 ? substr($product['prod_description'], 0, 50) . '...' : $product['prod_description']; ?></td>
+    <td class="p-3 font-semibold"><?= htmlspecialchars($product['prod_name']) ?></td>
+    <td class="p-3 text-sm">
+        <?= strlen($product['prod_description']) > 50 ? htmlspecialchars(substr($product['prod_description'], 0, 50)) . '...' : htmlspecialchars($product['prod_description']) ?>
+    </td>
     
     <td class="p-3 text-sm">
-        <div class="space-y-1">
-            <?php echo $specs_html; ?>
-        </div>
+        <div class="space-y-1"><?= $specs_html ?></div>
     </td>
 
-    <td class="p-3 "><?php echo $product['prod_stocks']; ?></td>
-    <td class="p-3 "><?php echo $product['category_name']; ?></td>
-    <td class="p-3 ">₱<?php echo number_format($product['prod_price'], 2); ?></td>
-    <td class="p-3 ">
-        <span class="<?php echo $product['prod_status'] > 0 ? 'text-green-600 font-semibold' : 'text-red-500 italic'; ?>">
-            <?php echo $status; ?>
+    <td class="p-3"><?= $product['prod_stocks'] ?></td>
+    <td class="p-3"><?= htmlspecialchars($product['category_name']) ?></td>
+    <td class="p-3">₱<?= number_format($product['prod_price'], 2) ?></td>
+    <td class="p-3">
+        <span class="<?= $product['prod_status'] > 0 ? 'text-green-600 font-semibold' : 'text-red-500 italic' ?>">
+            <?= $status ?>
         </span>
     </td>
-    <td class="p-3 text-center">
-    <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
-        <button class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm updateProductToggler"
-            data-prod_id="<?=$product['prod_id']?>"
-            data-prod_code="<?=$product['prod_code']?>"
-            data-prod_name="<?=$product['prod_name']?>"
-            data-prod_price="<?=$product['prod_price']?>"
-            data-prod_category_id="<?=$product['prod_category_id']?>"
-            data-prod_critical="<?=$product['prod_critical']?>"
-            data-prod_description="<?=$product['prod_description']?>"
-        >
-            Update
-        </button>
-        <button class="bg-green-500 text-white py-1 px-3 rounded-md text-sm stockInToggler"
-            data-prod_stocks="<?=$product['prod_stocks']?>"
-            data-prod_id="<?=$product['prod_id']?>"
-            data-prod_name="<?=$product['prod_name']?>"
-        >
-            StockIn
-        </button>
-        <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm removeProduct"
-            data-prod_id="<?=$product['prod_id']?>"
-        >
-            Remove
-        </button>
-    </div>
-</td>
 
+    <td class="p-3 text-center">
+        <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
+            <!-- Update Button -->
+            <button class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm updateProductToggler"
+                data-prod_id="<?= $product['prod_id'] ?>"
+                data-prod_code="<?= htmlspecialchars($product['prod_code']) ?>"
+                data-prod_name="<?= htmlspecialchars($product['prod_name']) ?>"
+                data-prod_price="<?= $product['prod_price'] ?>"
+                data-prod_stocks="<?= $product['prod_stocks'] ?>"
+                data-prod_category_id="<?= $product['prod_category_id'] ?>"
+                data-prod_critical="<?= $product['prod_critical'] ?>"
+                data-prod_description="<?= htmlspecialchars($product['prod_description']) ?>"
+                data-prod_specs="<?= $specs_json ?>"
+            >
+                Update
+            </button>
+
+            <!-- Stock In Button -->
+            <button class="bg-green-500 text-white py-1 px-3 rounded-md text-sm stockInToggler"
+                data-prod_stocks="<?= $product['prod_stocks'] ?>"
+                data-prod_id="<?= $product['prod_id'] ?>"
+                data-prod_name="<?= htmlspecialchars($product['prod_name']) ?>"
+            >
+                StockIn
+            </button>
+
+            <!-- Remove Button -->
+            <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm removeProduct"
+                data-prod_id="<?= $product['prod_id'] ?>"
+            >
+                Remove
+            </button>
+        </div>
+    </td>
 </tr>
+
 <?php 
     endforeach; 
 } else { ?>

@@ -86,7 +86,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         
-         } else {
+         }  else if ($_POST['requestType'] == 'UpdateProduct') {
+        
+        $product_ID = $_POST['product_ID'];
+        $product_Code = $_POST['product_Code'];
+        $product_Name = $_POST['product_Name'];
+        $product_Price = $_POST['product_Price'];
+        $critical_Level = $_POST['critical_Level'];
+        
+        $product_Category = $_POST['product_Category'];
+        $product_Description = $_POST['product_Description'];
+        
+        $product_Image = $_FILES['product_Image'];
+
+
+          // Get specs from POST
+                $specs_names = $_POST['specs_name'] ?? [];
+                $specs_values = $_POST['specs_value'] ?? [];
+
+                $specs = [];
+                for ($i = 0; $i < count($specs_names); $i++) {
+                    $name = trim($specs_names[$i]);
+                    $value = trim($specs_values[$i]);
+                    if ($name !== '' && $value !== '') {
+                        $specs[] = [
+                            'Specs' => $name,
+                            'value' => $value
+                        ];
+                    }
+                }
+
+        
+        $existingImageName = $db->getProductImageById($product_ID); 
+        
+        if ($product_Image['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = '../../../upload/';
+        
+            if ($existingImageName && file_exists($uploadDir . $existingImageName)) {
+                unlink($uploadDir . $existingImageName);  
+            }
+        
+            $fileExtension = pathinfo($product_Image['name'], PATHINFO_EXTENSION);
+            $newFileName = uniqid('product_', true) . '.' . $fileExtension;
+        
+            $uploadFilePath = $uploadDir . $newFileName;
+        
+            if (move_uploaded_file($product_Image['tmp_name'], $uploadFilePath)) {
+                $user = $db->updateProduct(
+                    $product_ID,
+                    $product_Code,
+                    $product_Name,
+                    $product_Price,
+                    $critical_Level,
+                    $product_Category,
+                    $product_Description,
+                    $newFileName,
+                    $specs
+                );
+        
+                if ($user === 'success') {
+                    echo 200; 
+                } else {
+                    echo 'Failed to update product in the database.';
+                }
+            } else {
+                echo 'Error uploading image. Please try again.';
+            }
+        } else {
+            $user = $db->updateProduct(
+                $product_ID,
+                $product_Code,
+                $product_Name,
+                $product_Price,
+                $critical_Level,
+                $product_Category,
+                $product_Description,
+                $existingImageName,
+                $specs
+            );
+        
+            if ($user === 'success') {
+                echo 200;  
+            } else {
+                echo 'Failed to update product in the database.';
+            }
+        }
+        
+        
+
+        
+    }else {
             echo json_encode([
                 'status' => 'error',
                 'message' => 'Invalid request type'

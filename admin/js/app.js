@@ -19,7 +19,6 @@ $(document).ready(function () {
           $('.spinner').show();
           $('#frmAddProduct').prop('disabled', true);
   
-          // Create a new FormData object
           var formData = new FormData(this);
           formData.append('requestType', 'AddProduct'); 
   
@@ -49,6 +48,146 @@ $(document).ready(function () {
 
 
 
+
+
+
+$('.updateProductToggler').click(function () {
+    $('#product_id_update').val($(this).data('prod_id'));
+    $('#product_Code_update').val($(this).data('prod_code'));
+    $('#product_Name_update').val($(this).data('prod_name'));
+    $('#product_Price_update').val($(this).data('prod_price'));
+    $('#critical_Level_update').val($(this).data('prod_critical'));
+    $('#product_Category_update').val($(this).data('prod_category_id'));
+    $('#product_Description_update').val($(this).data('prod_description'));
+    $('#product_Stocks_update').val($(this).data('prod_stocks'));
+
+    const specsJSON = $(this).attr('data-prod_specs');
+    let specs = [];
+
+    try {
+        specs = JSON.parse(specsJSON);
+    } catch (e) {
+        console.error('Invalid JSON in data-prod_specs', e);
+    }
+
+    const specsList = $('#specsListUpdate');
+    specsList.empty();
+
+    if (specs.length > 0) {
+        specs.forEach((spec, index) => {
+            specsList.append(`
+                <div class="flex gap-2 items-center">
+                    <input type="text" name="specs_name[]" value="${spec.Specs}" placeholder="Specs Name" class="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    <input type="text" name="specs_value[]" value="${spec.value}" placeholder="Specs Value" class="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    ${specs.length > 1 ? `
+                        <button type="button" class="remove-spec-btn text-red-500 hover:text-red-700">
+                            <span class="material-icons">close</span>
+                        </button>` : ``}
+                </div>
+            `);
+        });
+    }
+
+    $('#UpdateProductModal').fadeIn();
+});
+
+// Close modal
+$('.closeUpdateModalButton').click(function () {
+    $('#UpdateProductModal').fadeOut();
+});
+
+$('#UpdateProductModal').click(function (event) {
+    if ($(event.target).is('#UpdateProductModal')) {
+        $('#UpdateProductModal').fadeOut();
+    }
+});
+
+// Add new specs
+$('#addSpecsButtonUpdate').click(function () {
+    const specsList = $('#specsListUpdate');
+
+    const newSpec = $(`
+        <div class="flex gap-2 items-center">
+            <input type="text" name="specs_name[]" placeholder="Specs Name" class="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm">
+            <input type="text" name="specs_value[]" placeholder="Specs Value" class="w-1/2 px-3 py-2 border border-gray-300 rounded-md text-sm">
+            <button type="button" class="remove-spec-btn text-red-500 hover:text-red-700">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+    `);
+
+    specsList.append(newSpec);
+
+    // Show all remove buttons since we now have more than one
+    if (specsList.children().length > 1) {
+        specsList.find('.remove-spec-btn').show();
+    }
+});
+
+// Remove a spec
+$(document).on('click', '.remove-spec-btn', function () {
+    const specsList = $('#specsListUpdate');
+    $(this).closest('div.flex').remove();
+
+    // If only one spec left, hide its remove button
+    if (specsList.children().length === 1) {
+        specsList.find('.remove-spec-btn').hide();
+    }
+});
+
+
+
+
+
+
+
+
+ $(document).ready(function() {
+    $('#frmUpdateProduct').on('submit', function(e) {
+        e.preventDefault();
+        var category = $('#product_Category_update').val();
+        if (category === null) {
+            alert("Please select a category.");
+            return; 
+        }
+         
+         
+        $('.spinner').show();
+        $('#frmUpdateProduct').prop('disabled', true);
+
+        // Create a new FormData object
+        var formData = new FormData(this);
+        formData.append('requestType', 'UpdateProduct'); 
+
+        // Perform the AJAX request
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: formData,
+            contentType: false,
+            processData: false, 
+            success: function(response) {
+              console.log(response)
+                if(response==200){
+                  $('#UpdateProductModal').hide();
+                  $('.spinner').hide();
+                  $('#frmUpdateProduct').prop('disabled', false);
+
+
+                  alertify.success("Update Successfully");
+
+                   setTimeout(function () {
+                    location.reload();
+                }, 1000);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    });
+  });
+  
 
 
 
