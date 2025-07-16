@@ -1,108 +1,98 @@
 <?php
 include "components/header.php";
 include('backend/class.php');
-
 $db = new global_class();
 ?>
-<div class="container mx-auto px-4 py-6">
-    <button 
-        id="hamburger-btn" 
-        class="lg:hidden p-2 bg-gray-800 text-white rounded hover:bg-gray-700 focus:outline-none focus:ring"
-    >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-    </button>
 
-    <div class="flex">
-       <!-- Sidebar Filters -->
-<aside 
-    id="sidebar" 
-    class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg transform -translate-x-full lg:relative lg:translate-x-0 lg:w-1/4 lg:h-auto p-6 transition-transform duration-300 ease-in-out z-50 space-y-6"
->
-    <!-- Close Button (for mobile) -->
-    <button 
-        id="close-sidebar" 
-        class="lg:hidden p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-    >
-        <span class="material-icons">close</span>
-    </button>
-
-    <!-- Category Filter -->
-    <div>
-        <h2 class="text-lg font-semibold text-gray-800 mb-3">Categories</h2>
-        <ul id="category-list" class="space-y-1">
-            <li>
-                <a href="#" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100 transition category-filter" data-category-id="all">
-                    All Categories
-                </a>
-            </li>
-            <?php 
-            $categories = $db->fetch_all_categories(); 
-            foreach ($categories as $category):
-                echo ' 
-                    <li>
-                        <a href="#" class="block px-3 py-2 rounded text-gray-700 hover:bg-gray-100 transition category-filter" data-category-id="'.$category['category_id'].'">
-                            '.ucfirst($category['category_name']).' 
-                        </a>
-                    </li>';
-            endforeach;
-            ?>
-        </ul>
+<!-- Hero Section: Clean Modern -->
+<section class="bg-gradient-to-r from-white to-blue-50">
+  <div class="container mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
+    <!-- Text Content -->
+    <div class="space-y-6 text-center md:text-left">
+      <h1 class="text-5xl font-bold text-gray-900 leading-tight">
+        Empower Your Brand<br><span class="text-blue-600">with Smart Technology</span>
+      </h1>
+      <p class="text-gray-700 text-lg">
+        Innovative solutions, clean design, and scalable platforms that drive success.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+        <a href="#services" class="px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition">
+          Explore Services
+        </a>
+        <a href="#contact" class="px-6 py-3 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-100 transition">
+          Contact Us
+        </a>
+      </div>
     </div>
 
-    <!-- Price Filter -->
-    <div>
-        <h2 class="text-lg font-semibold text-gray-800 mb-3">Price</h2>
-        <div class="space-y-3">
-            <div class="flex flex-col space-y-2">
-                <div class="flex items-center justify-between space-x-2">
-                    <label class="flex-1">
-                        <span class="block text-sm text-gray-600 mb-1">Min</span>
-                        <input type="number" id="min-price" class="w-full border rounded px-2 py-1 text-sm focus:outline-none focus:ring focus:border-blue-300" placeholder="e.g. 1000">
-                    </label>
-                    <label class="flex-1">
-                        <span class="block text-sm text-gray-600 mb-1">Max</span>
-                        <input type="number" id="max-price" class="w-full border rounded px-2 py-1 text-sm focus:outline-none focus:ring focus:border-blue-300" placeholder="e.g. 5000">
-                    </label>
-                </div>
-                <button id="price-filter-btn" class="w-full bg-blue-500 text-white text-sm font-medium py-2 rounded hover:bg-blue-600 transition">
-                    Apply
-                </button>
-            </div>
+    <!-- Hero Image -->
+    <div class="relative">
+      <img src="assets/img/banner.jpg" alt="Hero" class="rounded-2xl shadow-2xl">
+    </div>
+  </div>
+</section>
+
+<!-- Feature Highlights -->
+<section class="py-20 bg-white" id="services">
+  <div class="container mx-auto px-6 text-center">
+    <h2 class="text-4xl font-bold text-gray-800 mb-14">What Sets Us Apart</h2>
+    <div class="grid md:grid-cols-3 gap-10">
+      
+      <!-- Feature 1 -->
+      <div class="bg-gray-50 p-8 rounded-2xl shadow hover:shadow-md transition">
+        <div class="text-blue-600 mb-4">
+          <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 8c-1.105 0-2 .895-2 2 0 1.5 2 3 2 3s2-1.5 2-3c0-1.105-.895-2-2-2z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+          </svg>
         </div>
+        <h3 class="text-xl font-semibold text-gray-800">Strategic Solutions</h3>
+        <p class="text-gray-600 mt-2">Future-ready systems tailored for sustainable growth.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="bg-gray-50 p-8 rounded-2xl shadow hover:shadow-md transition">
+        <div class="text-blue-600 mb-4">
+          <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 10h2l1 2h13l1-2h2m-2 2l-1 9H6l-1-9m5-4h4a1 1 0 001-1V4H9v3a1 1 0 001 1z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800">Elegant Interfaces</h3>
+        <p class="text-gray-600 mt-2">User-centric designs that offer clarity and engagement.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="bg-gray-50 p-8 rounded-2xl shadow hover:shadow-md transition">
+        <div class="text-blue-600 mb-4">
+          <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 14l9-5-9-5-9 5 9 5z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 14l6.16-3.422a12.083 12.083 0 01-6.16 6.574A12.083 12.083 0 015.84 10.578L12 14z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800">24/7 Support</h3>
+        <p class="text-gray-600 mt-2">Our expert team ensures stability and quick assistance.</p>
+      </div>
     </div>
-</aside>
+  </div>
+</section>
 
-
-        <!-- Product Grid -->
-        <main class="w-full lg:w-3/4 p-4 ml-auto">
-            <?php include "backend/end-points/product_list.php";?>
-        </main>
-    </div>
-</div>
-
-<script>
-    // JavaScript to toggle the sidebar
-    document.getElementById('hamburger-btn').addEventListener('click', function () {
-        document.getElementById('sidebar').classList.remove('-translate-x-full');
-    });
-
-    document.getElementById('close-sidebar').addEventListener('click', function () {
-        document.getElementById('sidebar').classList.add('-translate-x-full');
-    });
-
-    // Close sidebar on overlay click (optional)
-    document.addEventListener('click', function (e) {
-        const sidebar = document.getElementById('sidebar');
-        const hamburger = document.getElementById('hamburger-btn');
-        if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
-            sidebar.classList.add('-translate-x-full');
-        }
-    });
-</script>
-
+<!-- Call to Action -->
+<section class="bg-blue-600 py-16 text-white text-center">
+  <div class="container mx-auto px-6">
+    <h2 class="text-4xl font-bold mb-4">Ready to Build the Future?</h2>
+    <p class="mb-6 text-lg">Let’s start your next digital transformation project together.</p>
+    <a href="#contact" class="inline-block px-8 py-3 bg-white text-blue-600 rounded-full font-semibold hover:bg-blue-100 transition">
+      Get in Touch
+    </a>
+  </div>
+</section>
 
 <?php include "components/footer.php"; ?>
-
-<script src="function/js/filter_price_category.js"></script>

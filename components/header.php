@@ -6,36 +6,44 @@
   <title>MEGATECH</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/png" href="customer/assets/logo1.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" integrity="sha512-MpdEaY2YQ3EokN6lCD6bnWMl5Gwk7RjBbpKLovlrH6X+DRokrPRAF3zQJl1hZUiLXfo2e9MrOt+udOnHCAmi5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" />
+  <link rel="stylesheet" href="assets/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js" integrity="sha512-JnjG+Wt53GspUQXQhc+c4j8SBERsgJAoHeehagKHlxQN+MtCCmFDghX9/AcbkkNRZptyZU4zC8utK59M5L45Iw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"></script>
 </head>
+
+
+
 
 <body class="bg-gray-50">
 
-
 <?php include "function/PageSpinner.php"; ?>
 
-
- <!-- Header -->
- <header class="bg-white shadow">
-  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-    <!-- Logo/Brand Name -->
-    <div class="flex items-center space-x-3">
-    <img src="assets/logo/logo1.jpg" alt="Logo" class="w-12 h-12 hidden sm:block">
-
-      <div class="text-xl font-bold text-gray-800"><a href="index.php" class="text-gray-700 hover:text-blue-600 transition">MEGATECH</a></div>
-    </div>
+<!-- Header -->
+<header class="bg-white shadow">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
     
-    <!-- Navigation Links -->
-    <div class="flex items-center space-x-4">
+    <!-- Logo -->
+    <div class="flex items-center space-x-3">
+      <img src="assets/logo/logo1.jpg" alt="Logo" class="w-12 h-12 hidden sm:block rounded-full">
+      <a href="index.php" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition">MEGATECH</a>
+    </div>
+
+    <!-- Center Navigation -->
+    <nav class="hidden md:flex space-x-8 text-gray-700 font-medium text-sm">
+      <a href="index" class="hover:text-blue-600 transition">Home</a>
+     <a href="index#about" class="hover:text-blue-600 transition">About</a>
+
+      <a href="products" class="hover:text-blue-600 transition">Products</a>
+    </nav>
+
+    <!-- Auth and Cart -->
+    <div class="flex items-center space-x-4 text-sm">
       <a href="login.php" class="text-gray-700 hover:text-blue-600 transition">Login</a>
       <span class="text-gray-500">/</span>
       <a href="signup.php" class="text-gray-700 hover:text-blue-600 transition">Register</a>
-      <a href="login.php" class="text-gray-700 hover:text-blue-600 transition text-xl">🛒</a>
+      <a href="cart.php" class="text-gray-700 hover:text-blue-600 transition text-xl">🛒</a>
     </div>
   </div>
 </header>
 
-</body>
-</html>
