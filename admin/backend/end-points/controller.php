@@ -189,6 +189,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
 
+    }else if($_POST['requestType'] =='StockIn'){
+
+        session_start();
+
+        $admin_id = intval($_SESSION['admin_id']);
+
+        $prod_name = $_POST['product_name_stockin'];
+        $stockin_qty = $_POST['stockin_qty'];
+        $stock_prod_id = $_POST['product_id_stockin'];
+
+        $user = $db->updateStock(
+            $stock_prod_id,
+            $admin_id,
+            $stockin_qty,
+            $prod_name
+        );
+
+        if ($user === 'success') {
+            echo 200;
+        } else {
+            echo 'Failed to update product in the database.';
+        }
     }else {
             echo json_encode([
                 'status' => 'error',

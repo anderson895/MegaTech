@@ -62,6 +62,59 @@ $(document).ready(function () {
 
 
 
+  $('.stockInToggler').click(function(){
+    $('#product_id_stockin').val($(this).attr('data-prod_id'))
+    $('#product_name_stockin').val($(this).data('prod_name'))
+    
+    $('#product_stocks').text($(this).attr('data-product_stocks'))
+    $('#stockinTarget').text($(this).attr('data-prod_name'))
+    $('#StockInModal').fadeIn()
+  });
+
+  $('#StockInModalClose').click(function(){
+    $('#StockInModal').fadeOut()
+  });
+
+
+
+  $('#frmUpdateStock').on('submit', function(e) {
+        e.preventDefault();
+        var stockin_qty = $('#stockin_qty').val();
+        if (stockin_qty === null) {
+            alert("Please Enter Quantity.");
+            return; 
+        }
+         
+         
+        $('.spinner').show();
+        $('#frmUpdateStock').prop('disabled', true);
+
+        // Create a new FormData object
+        var formData = new FormData(this);
+        formData.append('requestType', 'StockIn'); 
+
+        // Perform the AJAX request
+        $.ajax({
+            type: "POST",
+            url: "backend/end-points/controller.php",
+            data: formData,
+            contentType: false,
+            processData: false, 
+            success: function(response) {
+              console.log(response)
+                if(response==200){
+                  $('#StockInModal').hide();
+                  $('.spinner').hide();
+                  $('#frmUpdateStock').prop('disabled', false);
+
+                  location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    });
 
 
 

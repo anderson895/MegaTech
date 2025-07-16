@@ -15,7 +15,7 @@ if ($fetch_all_product->num_rows > 0) {
 
             if (is_array($decoded_specs)) {
                 foreach ($decoded_specs as $spec) {
-                    $spec_name = htmlspecialchars($spec['name'] ?? '');
+                    $spec_name = htmlspecialchars($spec['Specs'] ?? '');
                     $spec_value = htmlspecialchars($spec['value'] ?? '');
                     $specs_html .= "<div><span class='font-medium'>$spec_name:</span> <span>$spec_value</span></div>";
                 }
@@ -41,7 +41,11 @@ if ($fetch_all_product->num_rows > 0) {
     </td>
     
     <td class="p-3 text-sm">
-        <div class="space-y-1"><?= $specs_html ?></div>
+     <div class="space-y-1 max-h-[80px] overflow-y-auto">
+
+            <?= $specs_html ?>
+        </div>
+
     </td>
 
     <td class="p-3"><?= $product['prod_stocks'] ?></td>
