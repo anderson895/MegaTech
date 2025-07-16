@@ -67,7 +67,7 @@ $firstname = $name_parts[0];
     <!-- Logo -->
     <div class="flex items-center space-x-3">
       <img src="../assets/logo/logo1.jpg" alt="Logo" class="w-12 h-12 hidden sm:block rounded-full">
-      <a href="index.php" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition">MEGATECH</a>
+      <a href="home" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition">MEGATECH</a>
     </div>
 
     
@@ -107,10 +107,7 @@ $firstname = $name_parts[0];
                   <span class="material-icons align-middle mr-2">shopping_cart</span>
                   My Purchase
               </a>
-              <a href="profile.php" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition">
-                  <span class="material-icons align-middle mr-2">account_circle</span>
-                  Profile
-              </a>
+            
               <a href="password_setting" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition">
                   <span class="material-icons align-middle mr-2">lock</span>
                   Password
@@ -133,10 +130,7 @@ $firstname = $name_parts[0];
           🛒
           <span class="absolute top-0 right-0 inline-block w-5 h-5 text-xs font-semibold text-white bg-red-500 rounded-full text-center hidden cartCount"></span>
       </a>
-      <a href="view_wishlist.php" class="relative text-gray-700 hover:text-blue-600 transition text-xl">
-          <span class="material-icons align-middle mr-2">favorite_border</span>
-          <span class="absolute top-0 right-0 inline-block w-5 h-5 text-xs font-semibold text-white bg-red-500 rounded-full text-center hidden wishlistCount"></span>
-      </a>
+    
     </nav>
   </div>
 
@@ -144,7 +138,7 @@ $firstname = $name_parts[0];
   <div id="mobileMenu" class="hidden lg:hidden bg-white border-t border-gray-200">
   <nav class="flex flex-col space-y-2 p-4">
     <?php if ($is_logged_in): ?>
-      <a href="index.php" class="flex items-center text-gray-700 hover:text-blue-600 transition">
+      <a href="home" class="flex items-center text-gray-700 hover:text-blue-600 transition">
         <span class="material-icons mr-2">home</span>
         Products
       </a>
@@ -156,19 +150,12 @@ $firstname = $name_parts[0];
     </a>
 
     <!-- Wishlist -->
-    <a href="view_wishlist.php" class="flex items-center text-gray-700 hover:text-blue-600 transition relative">
-      <span class="material-icons mr-2">favorite</span>
-      Wishlist
-      <span class="absolute top-0 right-0 inline-block w-5 h-5 text-xs font-semibold text-white bg-red-500 rounded-full text-center wishlistCount hidden">0</span>
-    </a>
+    
       <a href="orders.php" class="flex items-center text-gray-700 hover:text-blue-600 transition">
         <span class="material-icons mr-2">shopping_cart</span>
         My Purchase
       </a>
-      <a href="profile.php" class="flex items-center text-gray-700 hover:text-blue-600 transition">
-        <span class="material-icons mr-2">account_circle</span>
-        Profile
-      </a>
+     
       <a href="password_setting.php" class="flex items-center text-gray-700 hover:text-blue-600 transition">
         <span class="material-icons mr-2">lock</span>
         Password
