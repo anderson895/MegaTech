@@ -37,7 +37,7 @@
 
 
 
-<script src="javascript/app.js"></script>
+<script src="assets/js/app.js"></script>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

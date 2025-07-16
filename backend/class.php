@@ -289,4 +289,50 @@ public function getPriceRange() {
 
 
 
+
+
+   public function SignUp($name,$email,$phone,$account_type)
+{
+
+    // Check if the email already exists
+    $stmt = $this->conn->prepare("SELECT * FROM `user` WHERE `Email` = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        // Email already exists, return error response
+        echo json_encode(array('status' => 'EmailAlreadyExists', 'message' => 'Email already exists'));
+        return;  // Stop further execution
+    }
+    
+ 
+
+    // Proceed with insertion if email does not exist
+    $stmt = $this->conn->prepare("INSERT INTO `user` (`Fullname`, `Email`, `Phone`,`user_type`) VALUES ( ?, ?, ?,?)");
+    $stmt->bind_param("ssss", $name, $email, $phone,$account_type);
+
+    if ($stmt->execute()) {
+        session_start();
+        $userId = $this->conn->insert_id;
+        $_SESSION['id'] = $userId;
+        $response = array(
+            'status' => 'success',
+            'id' => $userId
+        );
+        echo json_encode($response);
+    } else {
+        // Return an error status with the error code
+        echo json_encode(array('status' => 'error', 'message' => 'Unable to register'));
+    }
+}
+
+
+
+
+
+
+
+
+
 }
