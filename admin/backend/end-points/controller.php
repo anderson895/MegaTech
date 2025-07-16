@@ -211,12 +211,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo 'Failed to update product in the database.';
         }
+    }else if ($_POST['requestType'] == 'acceptUser') {
+
+        $user_id = $_POST['user_id'];
+        $response = $db->acceptUser($user_id);
+
+        echo json_encode($response);
+
+    } else if ($_POST['requestType'] == 'declineUser') {
+
+        $user_id = $_POST['user_id'];
+        $response = $db->declineUser($user_id);
+
+        echo json_encode($response);
+
+    } else if ($_POST['requestType'] == 'restrictUser') {
+
+        $user_id = $_POST['user_id'];
+        $response = $db->restrict($user_id);
+
+        echo json_encode($response);
+
+    } else if ($_POST['requestType'] == 'activateUser') {
+
+        $user_id = $_POST['user_id'];
+        $response = $db->activateUser($user_id);
+
+        echo json_encode($response);
+
     }else {
-            echo json_encode([
-                'status' => 'error',
-                'message' => 'Invalid request type'
-            ]);
-        }
+        echo json_encode([
+            'status' => 400,
+            'message' => 'Invalid request type.'
+        ]);
+    }
+
     } else {
         echo json_encode([
             'status' => 'error',

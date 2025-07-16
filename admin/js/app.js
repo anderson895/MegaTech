@@ -1,6 +1,97 @@
 $(document).ready(function () {
 
 
+$(document).on('click', '.userActionToggler', function (e) {
+    e.preventDefault();
+
+    const user_id = $(this).data('user_id');
+    const fullname = $(this).data('fullname');
+    const action = $(this).data('action');
+
+    let title = '';
+    let confirmButtonText = '';
+    let requestType = '';
+
+    if (action === 'accept') {
+        title = `Are you sure to <span style="color:green;">Accept</span> ${fullname}'s Request?`;
+        confirmButtonText = 'Yes, accept it!';
+        requestType = 'acceptUser';
+    } else if (action === 'decline') {
+        title = `Are you sure to <span style="color:red;">Decline</span> ${fullname}'s Request?`;
+        confirmButtonText = 'Yes, decline it!';
+        requestType = 'declineUser';
+    } else if (action === 'restrict') {
+        title = `Are you sure to <span style="color:red;">Restrict</span> ${fullname}?`;
+        confirmButtonText = 'Yes, restrict!';
+        requestType = 'restrictUser';
+    }else if (action === 'activate') {
+        title = `Are you sure to <span style="color:red;">Activate</span> ${fullname}?`;
+        confirmButtonText = 'Yes, activate!';
+        requestType = 'activateUser';
+    }
+
+    Swal.fire({
+        title: title,
+        html: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { user_id: user_id, requestType: requestType },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 200) {
+                        $('#spinnerOverlay').removeClass('hidden');
+
+                        // Only send mail for accept/restrict
+                        if (action === 'accept' || action === 'restrict') {
+                            $.ajax({
+                                url: 'backend/mail/user-mailer.php',
+                                type: 'POST',
+                                data: {
+                                    user_id: user_id,
+                                    action: action,
+                                    password: response.generated_password || ''
+                                },
+                                success: function () {
+                                    $('#spinnerOverlay').addClass('hidden');
+                                    Swal.fire('Success!', response.message, 'success').then(() => {
+                                        location.reload();
+                                    });
+                                },
+                                error: function () {
+                                    $('#spinnerOverlay').addClass('hidden');
+                                    Swal.fire('Email Error!', 'Action succeeded, but mail was not sent.', 'warning').then(() => {
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        } else {
+                            $('#spinnerOverlay').addClass('hidden');
+                            Swal.fire('Success!', response.message, 'success').then(() => {
+                                location.reload();
+                            });
+                        }
+
+                    } else {
+                        Swal.fire('Error!', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error!', 'There was a problem with the request.', 'error');
+                }
+            });
+        }
+    });
+});
+
+
+
 
 
 

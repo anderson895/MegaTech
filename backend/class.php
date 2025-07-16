@@ -61,84 +61,44 @@ class global_class extends db_connect
 
 
 
-    public function LoginMember($email, $password)
-    {
-        $query = $this->conn->prepare("SELECT * FROM `user_member` WHERE `email` = ? AND `status` != '2'");
-        $query->bind_param("s", $email);
-    
-        if ($query->execute()) {
-            $result = $query->get_result();
-            if ($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
-    
-                if (password_verify($password, $user['password'])) {
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-    
-                    $_SESSION['id'] = $user['id'];
-                    $_SESSION['user_type'] = "member";
-                    $query->close();
-                    return ['success' => true, 'data' => $user];
-                } else {
-                    // Password mismatch
-                    $query->close();
-                    return ['success' => false, 'message' => 'Incorrect password.'];
+
+
+public function LoginCustomer($email, $password)
+{
+    $query = $this->conn->prepare("SELECT * FROM `user` WHERE `Email` = ? AND `status` = '1'");
+    $query->bind_param("s", $email);
+
+    if ($query->execute()) {
+        $result = $query->get_result();
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+
+            // Hash the input password with SHA-256
+            $hashedPassword = hash('sha256', $password);
+
+            // Compare hashed password to the stored one
+            if ($hashedPassword === $user['Password']) {
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
                 }
-            } else {
-                // No user found
+
+                $_SESSION['user_id'] = $user['user_id'];
                 $query->close();
-                return ['success' => false, 'message' => 'Email not found or account inactive.'];
+                return ['success' => true, 'data' => $user];
+            } else {
+                $query->close();
+                return ['success' => false, 'message' => 'Incorrect password.'];
             }
         } else {
             $query->close();
-            return ['success' => false, 'message' => 'Database error during execution.'];
+            return ['success' => false, 'message' => 'Email not found or account inactive.'];
         }
+    } else {
+        $query->close();
+        return ['success' => false, 'message' => 'Database error during execution.'];
     }
-    
+}
 
-
-
-
-
-
-
-
-
-
-     public function LoginCustomer($email, $password)
-    {
-        $query = $this->conn->prepare("SELECT * FROM `user_customer` WHERE `customer_email` = ? AND `customer_status` = '1'");
-        $query->bind_param("s", $email);
-    
-        if ($query->execute()) {
-            $result = $query->get_result();
-            if ($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
-    
-                if (password_verify($password, $user['customer_password'])) {
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-    
-                    $_SESSION['customer_id'] = $user['customer_id'];
-                    $query->close();
-                    return ['success' => true, 'data' => $user];
-                } else {
-                    // Password mismatch
-                    $query->close();
-                    return ['success' => false, 'message' => 'Incorrect password.'];
-                }
-            } else {
-                // No user found
-                $query->close();
-                return ['success' => false, 'message' => 'Email not found or account inactive.'];
-            }
-        } else {
-            $query->close();
-            return ['success' => false, 'message' => 'Database error during execution.'];
-        }
-    }
     
 
 

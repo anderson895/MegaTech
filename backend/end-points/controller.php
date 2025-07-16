@@ -17,6 +17,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            
 
             echo $db->SignUp($name,$email,$phone,$account_type);
+
+
+        }else if ($_POST['requestType'] == 'Login') {
+             $email = $_POST['email'];
+            $password = $_POST['password'];
+
+            $user = $db->LoginCustomer($email, $password);
+
+            if ($user['success']) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Login successful',
+                    'data' => $user['data']
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => $user['message']
+                ]);
+            }
+
         } else {
             echo 'Else';
         }

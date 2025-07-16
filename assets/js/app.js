@@ -1,47 +1,42 @@
 $(document).ready(function () {
-
-  $("#frmLogin").submit(function (e) {
+$("#frmLogin").submit(function (e) {
     e.preventDefault();
-    
 
     $('#spinner').show();
     $('#btnLogin').prop('disabled', true);
-    
-    var formData = $(this).serializeArray(); 
+
+    var formData = $(this).serializeArray();
     formData.push({ name: 'requestType', value: 'Login' });
-    var serializedData = $.param(formData);
 
-    // Perform the AJAX request
     $.ajax({
-      type: "POST",
-      url: "backend/end-points/controller.php",
-      data: serializedData,
-      dataType: 'json',
-      success: function (response) {
+        type: "POST",
+        url: "backend/end-points/controller.php",
+        data: $.param(formData),
+        dataType: 'json',
+        success: function (response) {
+            console.log("Response:", response);
 
-        console.log(response.status)
+            if (response.status === "success") {
+                alertify.success('Login Successful');
 
-        if (response.status === "success") {
-          alertify.success('Login Successful');
+                setTimeout(function () {
+                    window.location.href = "customer/home";
+                }, 1000);
 
-          setTimeout(function () {
-            window.location.href = "customer/index.php"; 
-          }, 1000);
-
-        } else {
-          $('#spinner').hide();
-          $('#btnLogin').prop('disabled', false);
-          console.log(response); 
-          alertify.error(response.message);
+            } else {
+                $('#spinner').hide();
+                $('#btnLogin').prop('disabled', false);
+                alertify.error(response.message || 'Invalid login.');
+            }
+        },
+        error: function (xhr, status, error) {
+            $('#spinner').hide();
+            $('#btnLogin').prop('disabled', false);
+            console.error("AJAX Error:", xhr.responseText);
+            alertify.error('An error occurred. Please try again.');
         }
-      },
-      error: function () {
-        $('#spinner').hide();
-        $('#btnLogin').prop('disabled', false);
-        alertify.error('An error occurred. Please try again.');
-      }
     });
-  });
+});
 
 
 

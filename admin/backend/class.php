@@ -242,6 +242,140 @@ public function addProduct($productData)
     }
 
         
+
+     public function fetch_all_customers(){
+        $query = $this->conn->prepare("SELECT * FROM `user`");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+
+      public function getUserDetails($user_id) {
+        $query = $this->conn->prepare("SELECT * FROM `user` WHERE user_id = ?");
+        $query->bind_param("i", $user_id);
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result->fetch_assoc(); 
+        } else {
+            return null; 
+        }
+    }
+
+
+   public function acceptUser($user_id) {
+    // Generate a random 8-character password
+    $plainPassword = bin2hex(random_bytes(4)); // 8-char password
+    $hashedPassword = hash('sha256', $plainPassword); // SHA-256 hash
+
+    // Update user status and hashed password
+    $query = $this->conn->prepare("UPDATE `user` SET `status` = 1, `password` = ? WHERE `user_id` = ?");
+    $query->bind_param("si", $hashedPassword, $user_id);
+
+    if ($query->execute()) {
+        return [
+            'status' => 200,
+            'message' => 'User accepted and password generated.',
+            'generated_password' => $plainPassword // plain password to be emailed
+        ];
+    } else {
+        return [
+            'status' => 500,
+            'message' => 'Error: ' . $query->error
+        ];
+    }
+}
+
+public function declineUser($user_id) {
+    $query = $this->conn->prepare("DELETE FROM `user` WHERE `user_id` = ?");
+    $query->bind_param("i", $user_id);
+
+    if ($query->execute()) {
+        return [
+            'status' => 200,
+            'message' => 'User declined and deleted.'
+        ];
+    } else {
+        return [
+            'status' => 500,
+            'message' => 'Error: ' . $query->error
+        ];
+    }
+}
+
+public function restrict($user_id) {
+    $query = $this->conn->prepare("UPDATE `user` SET `status` = 2 WHERE `user_id` = ?");
+    if ($query === false) {
+        return [
+            'status' => 500,
+            'message' => 'Prepare failed: ' . $this->conn->error
+        ];
+    }
+
+    $query->bind_param("i", $user_id);
+
+    if ($query->execute()) {
+        return [
+            'status' => 200,
+            'message' => 'User restricted successfully.'
+        ];
+    } else {
+        return [
+            'status' => 500,
+            'message' => 'Execute failed: ' . $query->error
+        ];
+    }
+}
+
+
+
+
+public function activateUser($user_id) {
+    $query = $this->conn->prepare("UPDATE `user` SET `status` = 1 WHERE `user_id` = ?");
+    if ($query === false) {
+        return [
+            'status' => 500,
+            'message' => 'Prepare failed: ' . $this->conn->error
+        ];
+    }
+
+    $query->bind_param("i", $user_id);
+
+    if ($query->execute()) {
+        return [
+            'status' => 200,
+            'message' => 'User Activated successfully.'
+        ];
+    } else {
+        return [
+            'status' => 500,
+            'message' => 'Execute failed: ' . $query->error
+        ];
+    }
+}
+
+
+
+
+
+     public function updateProductStatus($prod_id) {
+       
+        $query = "UPDATE `product` 
+                  SET `prod_status` = 0
+                  WHERE `prod_id` = $prod_id";
+
+        // Execute the query
+        if ($this->conn->query($query)) {
+            return 'success';
+        } else {
+            return 'Error: ' . $this->conn->error;
+        }
+}
+
     
 
 }

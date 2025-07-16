@@ -1,32 +1,38 @@
+<?php 
+include "components/header.php";
 
+$email = "";
+$password = "";
 
-<?php include "components/header.php"?>
-
-
+if (isset($_GET['email']) && isset($_GET['password'])) {
+  $email = $_GET['email'];
+  $password = $_GET['password'];
+}
+?>
 
 <div class="bg-gray-100 flex items-center justify-center min-h-screen">
 
   <!-- Login Area -->
   <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
 
-  <!-- Spinner -->
-  <div id="spinner" style="display:none;">
-        <div class=" absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-          <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-     </div>
+    <!-- Spinner -->
+    <div id="spinner" style="display:none;">
+      <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+        <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
 
     <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
     
     <form id="frmLogin" class="space-y-6">
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-        <input type="email" id="email" name="email" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-500" required>
+        <input type="email" id="email" name="email" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-500" value="<?= htmlspecialchars($email) ?>" required>
       </div>
 
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" id="password" name="password" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-500" required>
+        <input type="password" id="password" name="password" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-500" value="<?= htmlspecialchars($password) ?>" required>
       </div>
 
       <div class="flex items-center justify-between">
@@ -37,7 +43,9 @@
         <a href="forgot.php" class="text-sm text-indigo-600 hover:text-indigo-500">Forgot password?</a>
       </div>
 
-      <button type="submit" id="btnLogin" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">Sign In</button>
+      <button type="submit" id="btnLogin" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">
+        Sign In
+      </button>
     </form>
 
     <p class="mt-6 text-center text-sm text-gray-600">
@@ -46,4 +54,4 @@
   </div>
 </div>
 
-<?php include "components/footer.php";?>
+<?php include "components/footer.php"; ?>
