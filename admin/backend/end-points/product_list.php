@@ -1,7 +1,7 @@
 <?php 
 $fetch_all_product = $db->fetch_all_product();
 
-if (!empty($fetch_all_product)) {
+if ($fetch_all_product->num_rows > 0) {
     foreach ($fetch_all_product as $product):
         $status = ($product['prod_status'] > 0) ? "Active" : "Not Active";
         $image_path = !empty($product['prod_image']) ? "../upload/{$product['prod_image']}" : 'images/default.png';
@@ -94,6 +94,6 @@ if (!empty($fetch_all_product)) {
     endforeach; 
 } else { ?>
 <tr>
-    <td colspan="10" class="p-4 text-center text-gray-500 italic">No records found.</td>
+    <td colspan="10" class="p-4 text-center text-gray-500 italic">No Product Found.</td>
 </tr>
 <?php } ?>
