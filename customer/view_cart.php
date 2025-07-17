@@ -80,35 +80,44 @@ include "components/header.php";
     </div>
 
 
-    <!-- Payment Method Section -->
-    <div class="mb-6">
-      <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Select Payment</label>
-      <select id="paymentMethod" name="paymentMethod" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <option value="" >Select Payment Method</option>
-        <option value="gcash" data-img="../assets/img/gcashQR.jpg" data-ename="GCash">GCash</option>
-        <option value="maya" data-img="../assets/img/mayaQR.jpg" data-ename="Maya">Maya</option>
-        <option value="bpi" data-img="../assets/img/bpiQR.jpg" data-ename="BPI">BPI</option>
-      </select>
+   <!-- Payment Method Section -->
+<div class="mb-6">
+  <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Select Payment</label>
+  <select id="paymentMethod" name="paymentMethod" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+    <option value="">Select Payment Method</option>
+    <option value="gcash" data-img="../assets/img/gcashQR.jpg" data-ename="GCash">GCash</option>
+    <option value="maya" data-img="../assets/img/mayaQR.jpg" data-ename="Maya">Maya</option>
+    <option value="bdo" data-img="../assets/img/bdoQR.jpg" data-ename="BDO">BDO</option>
+    <option value="bpi" data-img="../assets/img/bpiQR.jpg" data-ename="BPI">BPI</option>
+  </select>
+</div>
+
+<!-- Payment Method Instructions -->
+<div id="paymentDetails" class="hidden space-y-6">
+
+  <!-- QR Code Image -->
+    <div id="qrCode" class="hidden flex flex-col items-center justify-center">
+      <label class="text-base font-semibold text-gray-700 mb-3">Scan QR Code for Payment</label>
+      <img id="qrImage" src="" alt="QR Code"
+        class="w-80 h-80 max-w-full max-h-full border rounded-xl shadow-lg object-contain cursor-pointer"
+        onclick="openImageModal(this.src)" />
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imagePreviewModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-50">
+      <span onclick="closeImageModal()" class="absolute top-5 right-5 text-white text-3xl cursor-pointer">&times;</span>
+      <img id="previewImage" src="" alt="QR Preview" class="max-w-[90%] max-h-[90%] rounded-lg shadow-2xl border-4 border-white" />
     </div>
 
 
-    
-    
+  <!-- Proof of Payment Upload Section -->
+  <div id="proofOfPaymentSection">
+    <label for="proofOfPayment" class="block text-sm font-medium text-gray-700 mb-2">Upload Proof of Payment</label>
+    <input type="file" id="proofOfPayment" name="proofOfPayment" accept="image/*"
+      class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+  </div>
 
-    <!-- Payment Method Instructions -->
-    <div id="paymentDetails" class="hidden">
-      <!-- QR Code Image (for Gcash and Bank Transfer) -->
-      <div id="qrCode" class="mb-4 hidden text-center">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Scan QR Code for Payment</label>
-        <img src="" alt="QR Code" class="w-60 h-60 mx-auto border rounded shadow" />
-      </div>
-
-      <!-- Proof of Payment Upload Section -->
-      <div id="proofOfPaymentSection" class="mt-4">
-        <label for="proofOfPayment" class="block text-sm font-medium text-gray-700">Upload Proof of Payment</label>
-        <input type="file" id="proofOfPayment" name="proofOfPayment" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" accept="image/*" />
-      </div>
-    </div>
+</div>
 
  
 
@@ -129,7 +138,18 @@ include "components/header.php";
 
 
 
+<script>
+   function openImageModal(src) {
+    document.getElementById('previewImage').src = src;
+    document.getElementById('imagePreviewModal').classList.remove('hidden');
+    document.getElementById('imagePreviewModal').classList.add('flex');
+  }
 
+  function closeImageModal() {
+    document.getElementById('imagePreviewModal').classList.remove('flex');
+    document.getElementById('imagePreviewModal').classList.add('hidden');
+  }
+</script>
 
 
 <?php include "components/footer.php"; ?>
