@@ -175,9 +175,9 @@ $(document).ready(function() {
                 type: "POST",
                 url: "backend/end-points/controller.php",
                 data: formData,
-                processData: false, // Prevent jQuery from processing the data
-                contentType: false, // Prevent jQuery from setting content type
-                dataType: "json", // Set data type to JSON
+                processData: false, 
+                contentType: false, 
+                dataType: "json", 
                 beforeSend: function() {
                     $(".loadingSpinner").fadeIn();
                 },
@@ -185,15 +185,37 @@ $(document).ready(function() {
                 success: function(response) {
                     console.log(response);
                 
-                    if (response.status == 'success') {
+                   if (response.status == 'success') {
                         $(".loadingSpinner").fadeOut();
-                        console.log(response); // Response is already parsed as JSON
+
                         alertify.success('Order Request sent successfully.');
-                        location.reload();
-                        $("#checkoutModal").fadeOut();
-                    } else if (response.status == 'error') { // Use '==' for comparison
-                        alertify.error('Order Request Failed.');
+
+                        const orderId = response.order_id;
+                        $.ajax({
+                            type: "POST",
+                            url: "backend/end-points/QRgenerator.php",
+                            data: {
+                                order_id: orderId,
+                                pickup_date: pickupDate,
+                                pickup_time: pickupTime
+                            },
+                       success: function (qrResponse) {
+                            if (qrResponse.status === 'success') {
+                                $('#qrPreview').attr('src', qrResponse.qr_image_url).show();
+                            }
+                        },
+                            error: function (xhr, status, error) {
+                                console.error("QR Generation failed:", error);
+                                alertify.error('QR code generation failed.');
+                            }
+                        });
+
+                        setTimeout(() => {
+                            // location.reload();
+                            $("#checkoutModal").fadeOut();
+                        }, 1000);
                     }
+
                 },
                 
                 error: function(xhr, status, error) {
@@ -207,15 +229,6 @@ $(document).ready(function() {
             
         });
         
-        
-        
-        
-        
-        
-        
-
-
-
 
         updateOrderSummary();
 

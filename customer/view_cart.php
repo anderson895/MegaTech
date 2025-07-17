@@ -38,8 +38,19 @@ include "components/header.php";
                     <button class="btnCheckOut w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 mt-6 focus:outline-none focus:ring-2 focus:ring-red-500">
                         Pick-up
                     </button>
+
+                  
                 </div>
+
+                  
+
             </div>
+
+
+         
+
+
+
 
     </div>
 </div>
@@ -73,6 +84,7 @@ include "components/header.php";
     <div class="mb-6">
       <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Select Payment Method</label>
       <select id="paymentMethod" name="paymentMethod" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <option value="" >Select Payment Method</option>
         <option value="gcash" data-img="../assets/img/gcashQR.jpg" data-ename="GCash">GCash</option>
         <option value="maya" data-img="../assets/img/mayaQR.jpg" data-ename="Maya">Maya</option>
         <option value="bpi" data-img="../assets/img/bpiQR.jpg" data-ename="BPI">BPI</option>
@@ -122,6 +134,8 @@ include "components/header.php";
     </div>
   </div>
 </div>
+
+
 
 
 

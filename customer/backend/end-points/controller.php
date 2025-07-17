@@ -97,10 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = $_POST['cart_user_id'];
         $productId = $_POST['cart_prod_id'];
         
-        // Kunin ang response mula sa AddToCart method
         $response = $db->MinusToCart($userId, $productId);
         
-        // I-echo ang response upang ma-access ito sa frontend
         echo json_encode(['status' => $response]);
     }else if ($_POST['requestType']=="RemoveItem") {
        
@@ -112,116 +110,106 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => $response]);
     }else if ($_POST['requestType']=="OrderRequest") {
 
-        // echo "<pre>";
-        // print_r($_POST);
-        // echo "</pre>";
+      
+        $pickupDate = $_POST['pickupDate'];
+        $pickupTime = $_POST['pickupTime'];
+        $total = $_POST['total'];
 
-     // Retrieve basic fields from POST
-    $pickupDate = $_POST['pickupDate'];
-    $pickupTime = $_POST['pickupTime'];
-    $total = $_POST['total'];
-
-    $selectedPaymentMethod = $_POST['selectedPaymentMethod'];
-    
-// Retrieve selectedProducts from POST
-$selectedProducts = $_POST['selectedProducts'] ?? null;
-
-// Decode the JSON string into a PHP array
-$selectedProductsArray = json_decode($selectedProducts, true);  // true to return as associative array
-
-// Handle file upload if a file was provided
-$selectedFilePath = null;
-$uniqueFileName = null;
-$fileTmpPath = null;
-
-if (isset($_FILES['selectedFile']) && $_FILES['selectedFile']['error'] == UPLOAD_ERR_OK) {
-    $fileTmpPath = $_FILES['selectedFile']['tmp_name'];
-    $fileName = $_FILES['selectedFile']['name'];
-    $uploadDir = '../../../proofPayment/';
-
-    // Generate a unique filename to prevent overwriting
-    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-    $uniqueFileName = uniqid('proof_', true) . '.' . $fileExtension;
-
-    // Validate file size and type before uploading
-    $fileSize = $_FILES['selectedFile']['size'];
-    $fileType = $_FILES['selectedFile']['type'];
-    $maxFileSize = 10 * 1024 * 1024;  // 10MB limit
-    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-
-    if (!in_array($fileType, $allowedMimeTypes)) {
-        echo json_encode(['status' => 'error', 'message' => 'Invalid file type.']);
-        exit;
-    }
-
-    if ($fileSize > $maxFileSize) {
-        echo json_encode(['status' => 'error', 'message' => 'File size exceeds the maximum limit.']);
-        exit;
-    }
-
-    // Set the full path for the file in the uploads directory
-    $selectedFilePath = $uploadDir . $uniqueFileName;
-} else {
-    $uniqueFileName = null;
-    $selectedFilePath = null;
-}
-
-// Process the order request in the database
-$response = $db->OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDate,$pickupTime, $total);
-
-if ($response['status'] === 'success') {
-    
-    $orderId = $response['order_id'];
-
-    if (is_array($selectedProductsArray) && !empty($selectedProductsArray)) {
-        foreach ($selectedProductsArray as $product) {
-            $itemProductId = $product['productId'];
-            $itemQty = intval($product['qty']);  
-            $itemTotalPrice =$product['price']; 
-            $originalPrice = $product['originalPrice'];
-         
+        $selectedPaymentMethod = $_POST['selectedPaymentMethod'];
         
-            
-        
-            // Prepare the SQL query to insert each product into orders_item
-            $insertQuery = "INSERT INTO orders_item (item_order_id, item_product_id, item_product_price,item_qty,item_total) 
-                            VALUES ('$orderId', '$itemProductId', '$originalPrice', '$itemQty', '$itemTotalPrice')";
-            
-            $user_id = $_SESSION['user_id'];
-            
-            $response = $db->RemoveItem($user_id, $itemProductId);
-            
-            // Execute the query for each product
-            if (!$db->conn->query($insertQuery)) {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to insert product into orders_item.']);
+        $selectedProducts = $_POST['selectedProducts'] ?? null;
+
+        // Decode the JSON string into a PHP array
+        $selectedProductsArray = json_decode($selectedProducts, true);  
+
+        // Handle file upload if a file was provided
+        $selectedFilePath = null;
+        $uniqueFileName = null;
+        $fileTmpPath = null;
+
+        if (isset($_FILES['selectedFile']) && $_FILES['selectedFile']['error'] == UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['selectedFile']['tmp_name'];
+            $fileName = $_FILES['selectedFile']['name'];
+            $uploadDir = '../../../proofPayment/';
+
+            // Generate a unique filename to prevent overwriting
+            $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $uniqueFileName = uniqid('proof_', true) . '.' . $fileExtension;
+
+            // Validate file size and type before uploading
+            $fileSize = $_FILES['selectedFile']['size'];
+            $fileType = $_FILES['selectedFile']['type'];
+            $maxFileSize = 10 * 1024 * 1024;  
+            $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+            if (!in_array($fileType, $allowedMimeTypes)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid file type.']);
                 exit;
             }
-        }
-        
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Selected products data is invalid.']);
-        exit;
-    }
-    
 
-    // Create the directory if it doesn't exist
-    if ($selectedFilePath && !is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
+            if ($fileSize > $maxFileSize) {
+                echo json_encode(['status' => 'error', 'message' => 'File size exceeds the maximum limit.']);
+                exit;
+            }
 
-    // Only proceed if a file was uploaded
-    if ($selectedFilePath && isset($fileTmpPath) && is_uploaded_file($fileTmpPath)) {
-        if (move_uploaded_file($fileTmpPath, $selectedFilePath)) {
-            echo json_encode(['status' => 'success', 'message' => 'Order processed and file saved successfully.']);
+            $selectedFilePath = $uploadDir . $uniqueFileName;
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Order processed but file upload failed.']);
+            $uniqueFileName = null;
+            $selectedFilePath = null;
         }
-    } else {
-        echo json_encode(['status' => 'success', 'message' => 'Order processed without file upload.']);
-    }
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Order request failed.']);
-}
+
+        $response = $db->OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDate,$pickupTime, $total);
+
+        if ($response['status'] === 'success') {
+            
+            $orderId = $response['order_id'];
+
+            if (is_array($selectedProductsArray) && !empty($selectedProductsArray)) {
+                foreach ($selectedProductsArray as $product) {
+                    $itemProductId = $product['productId'];
+                    $itemQty = intval($product['qty']);  
+                    $itemTotalPrice =$product['price']; 
+                    $originalPrice = $product['originalPrice'];
+                
+                    $insertQuery = "INSERT INTO orders_item (item_order_id, item_product_id, item_product_price,item_qty,item_total) 
+                                    VALUES ('$orderId', '$itemProductId', '$originalPrice', '$itemQty', '$itemTotalPrice')";
+                    
+                    $user_id = $_SESSION['user_id'];
+                    
+                    $response = $db->RemoveItem($user_id, $itemProductId);
+
+                    if (!$db->conn->query($insertQuery)) {
+                        echo json_encode(['status' => 'error', 'message' => 'Failed to insert product into orders_item.']);
+                        exit;
+                    }
+                }
+                
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Selected products data is invalid.']);
+                exit;
+            }
+            
+            if ($selectedFilePath && !is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+           if (move_uploaded_file($fileTmpPath, $selectedFilePath)) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Order processed and file saved successfully.',
+                    'order_id' => $orderId
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Order processed but file upload failed.',
+                    'order_id' => $orderId
+                ]);
+            }
+
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Order request failed.']);
+        }
 
 
     }

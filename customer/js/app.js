@@ -170,7 +170,6 @@ const getOrdersCount = () => {
       success: function(response) {
     //    console.log(response); 
         let cartCount = response.cartCount;
-        let wishlistCount = response.wishlistCount;
         
         if (cartCount && cartCount > 0) {
             $('.cartCount').text(cartCount).show(); 
@@ -179,12 +178,6 @@ const getOrdersCount = () => {
             $('.cartCount').hide();
         }
 
-        if (wishlistCount && wishlistCount > 0) {
-            $('.wishlistCount').text(wishlistCount).show(); 
-            // wishlistCount
-        } else {
-            $('.wishlistCount').hide();
-        }
       },
     });
 };

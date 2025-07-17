@@ -212,28 +212,30 @@ class global_class extends db_connect
 
 
 
-
 public function OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDate, $pickupTime, $total)
 {
     session_start();
     $user_id = $_SESSION['user_id'];
     $status = 'Pending';
 
-    // Set NULL if no uploaded file
     $proofOfPayment = empty($uniqueFileName) ? NULL : $uniqueFileName;
 
-    // Assume down payment is 50% and balance is the remaining
+    // Down payment logic
     $downPayment = $total * 0.5;
     $balance = $total - $downPayment;
 
+    // Generate unique order code
+    $order_code = $this->generateUniqueOrderCode();
+
     $query = "INSERT INTO `orders` 
-                (`order_user_id`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`) 
+                (`order_user_id`, `order_code`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`) 
               VALUES 
-                (?, ?, ?, ?, ?, ?, ?)";
+                (?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $this->conn->prepare($query)) {
-        $stmt->bind_param('sssssss', 
+        $stmt->bind_param('ssssssdd', 
             $user_id, 
+            $order_code,
             $selectedPaymentMethod, 
             $proofOfPayment, 
             $pickupDate, 
@@ -251,6 +253,27 @@ public function OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDat
         return ['status' => 'error', 'message' => 'Failed to prepare statement: ' . $this->conn->error];
     }
 }
+
+
+
+
+private function generateUniqueOrderCode()
+{
+    do {
+        // You can customize the format here
+        $code = 'ORD-' . strtoupper(bin2hex(random_bytes(4))); // Example: ORD-5A7F2C1D
+
+        $query = "SELECT COUNT(*) as count FROM orders WHERE order_code = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('s', $code);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+
+    } while ($result['count'] > 0);
+
+    return $code;
+}
+
 
 
 
