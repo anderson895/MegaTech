@@ -183,14 +183,12 @@ $(document).ready(function() {
                 },
                 
                 success: function(response) {
-                    console.log(response);
-                
-                   if (response.status == 'success') {
+                    if (response.status == 'success') {
                         $(".loadingSpinner").fadeOut();
-
                         alertify.success('Order Request sent successfully.');
 
                         const orderId = response.order_id;
+
                         $.ajax({
                             type: "POST",
                             url: "backend/end-points/QRgenerator.php",
@@ -199,23 +197,25 @@ $(document).ready(function() {
                                 pickup_date: pickupDate,
                                 pickup_time: pickupTime
                             },
-                       success: function (qrResponse) {
-                            if (qrResponse.status === 'success') {
-                                $('#qrPreview').attr('src', qrResponse.qr_image_url).show();
-                            }
-                        },
-                            error: function (xhr, status, error) {
+                            success: function(qrResponse) {
+                                if (qrResponse.status === 'success') {
+                                    // Redirect to receipt with order ID
+                                    window.location.href = `reservation_receipt?order_id=${orderId}`;
+                                } else {
+                                    alertify.error('QR code generation failed.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
                                 console.error("QR Generation failed:", error);
                                 alertify.error('QR code generation failed.');
                             }
                         });
 
+                        // Optional: close modal
                         setTimeout(() => {
-                            // location.reload();
                             $("#checkoutModal").fadeOut();
                         }, 1000);
                     }
-
                 },
                 
                 error: function(xhr, status, error) {

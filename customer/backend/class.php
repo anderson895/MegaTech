@@ -295,31 +295,8 @@ private function generateUniqueOrderCode()
 
 
 
-
-    public function getUserActiveAddress()
-    {
-        $user_id = $_SESSION['user_id'];
-
-        $query = $this->conn->prepare("SELECT * FROM `address_user` WHERE `ad_user_id` = '$user_id'");
-            if ($query->execute()) {
-                $result = $query->get_result();
-                return $result;
-            }
-        
-    }
-    public function getAllEwallet()
-    {
-
-        $query = $this->conn->prepare("SELECT * FROM ewallet where e_wallet_status='1'");
-            if ($query->execute()) {
-                $result = $query->get_result();
-                return $result;
-            }
-        
-    }
-
-    public function fetch_order($userID){
-        $query = $this->conn->prepare("SELECT * FROM orders WHERE orders.order_user_id = '$userID' ORDER BY order_date DESC");
+    public function fetch_order($order_id){
+        $query = $this->conn->prepare("SELECT * FROM orders WHERE orders.order_id = '$order_id'");
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;
