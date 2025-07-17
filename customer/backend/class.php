@@ -304,6 +304,28 @@ private function generateUniqueOrderCode()
     }
     
 
+   
+    
+
+
+        public function fetch_list_order($user_id){
+            $query = $this->conn->prepare("SELECT * FROM orders WHERE orders.order_user_id = ?");
+            $query->bind_param("i", $user_id); // secure approach using parameter binding
+
+            if ($query->execute()) {
+                $result = $query->get_result();
+                $orders = [];
+
+                while ($row = $result->fetch_assoc()) {
+                    $orders[] = $row;
+                }
+
+                return $orders; 
+            }
+
+            return [];
+        }
+
 
 
     public function fetch_user_profile_image($userID) {
@@ -459,7 +481,7 @@ private function generateUniqueOrderCode()
     }
     
     
-    public function fetch_order_item($userID,$order_id){
+    public function fetch_order_item($order_id){
         $query = $this->conn->prepare("SELECT * FROM orders
         LEFT JOIN orders_item
         ON orders.order_id = orders_item.item_order_id
@@ -467,9 +489,7 @@ private function generateUniqueOrderCode()
         ON product.prod_id = orders_item.item_product_id
         LEFT JOIN category
         ON category.category_id = product.prod_category_id
-        LEFT JOIN refund
-        ON refund.ref_item_id = orders_item.item_id
-        where orders.order_user_id = '$userID' AND orders_item.item_order_id ='$order_id'
+        where  orders_item.item_order_id ='$order_id'
         ");
         if ($query->execute()) {
             $result = $query->get_result();

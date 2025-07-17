@@ -103,7 +103,7 @@ $firstname = $name_parts[0];
 
           <!-- Dropdown Menu -->
           <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg dropdown-menu">
-              <a href="orders.php" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition">
+              <a href="orders" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition">
                   <span class="material-icons align-middle mr-2">shopping_cart</span>
                   My Purchase
               </a>
@@ -151,7 +151,7 @@ $firstname = $name_parts[0];
 
     <!-- Wishlist -->
     
-      <a href="orders.php" class="flex items-center text-gray-700 hover:text-blue-600 transition">
+      <a href="orders" class="flex items-center text-gray-700 hover:text-blue-600 transition">
         <span class="material-icons mr-2">shopping_cart</span>
         My Purchase
       </a>
