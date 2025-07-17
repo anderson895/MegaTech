@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2025 at 04:52 AM
+-- Generation Time: Jul 17, 2025 at 02:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,6 +46,19 @@ INSERT INTO `admin` (`admin_id`, `admin_username`, `admin_password`, `admin_full
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `cart_id` int(11) NOT NULL,
+  `cart_user_id` int(11) NOT NULL,
+  `cart_prod_id` int(11) NOT NULL,
+  `cart_Qty` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `category`
 --
 
@@ -69,7 +82,60 @@ INSERT INTO `category` (`category_id`, `category_name`, `category_description`, 
 (6, 'commericial lights', NULL, 1),
 (7, 'industrial lights', NULL, 1),
 (8, 'Landscape lights', NULL, 1),
-(9, 'Lightning fixture', NULL, 1);
+(9, 'Lightning fixture', NULL, 1),
+(10, 'Accessories', NULL, 1),
+(11, 'Guard Rails', NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `order_user_id` int(11) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `order_payment_method` varchar(60) NOT NULL,
+  `order_down_payment_receipt` varchar(255) NOT NULL,
+  `order_pickup_date` date NOT NULL,
+  `order_pickup_time` time NOT NULL,
+  `order_total` decimal(10,2) NOT NULL,
+  `order_balance` decimal(10,2) NOT NULL,
+  `order_balance_payment_receipt` varchar(255) DEFAULT NULL,
+  `order_status` varchar(60) NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`) VALUES
+(1, 72, '2025-07-16 10:09:15', 'BPI', 'proof_68777a2ae7e637.59074514.jpg', '2025-07-16', '18:08:00', 169000.00, 84500.00, NULL, 'pending');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders_item`
+--
+
+CREATE TABLE `orders_item` (
+  `item_id` int(11) NOT NULL,
+  `item_order_id` int(11) NOT NULL,
+  `item_product_id` int(11) NOT NULL,
+  `item_product_price` decimal(10,2) NOT NULL,
+  `item_qty` int(11) NOT NULL,
+  `item_total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders_item`
+--
+
+INSERT INTO `orders_item` (`item_id`, `item_order_id`, `item_product_id`, `item_product_price`, `item_qty`, `item_total`) VALUES
+(1, 1, 4, 30000.00, 3, 90000.00),
+(2, 1, 5, 50000.00, 1, 50000.00),
+(3, 1, 6, 29000.00, 1, 29000.00);
 
 -- --------------------------------------------------------
 
@@ -126,6 +192,31 @@ INSERT INTO `stock_history` (`stock_id`, `stock_prod_id`, `stock_admin_id`, `sto
 (31, 9, 1, 'Stock In', 10, '792 -> 802', '2025-05-29 12:42:13'),
 (32, 4, 1, 'Stock In', 3, '13 -> 16', '2025-07-16 01:55:36');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL,
+  `Fullname` varchar(60) NOT NULL,
+  `Email` varchar(60) NOT NULL,
+  `Phone` varchar(60) NOT NULL,
+  `Password` varchar(255) DEFAULT NULL,
+  `user_type` varchar(11) NOT NULL,
+  `Profile_images` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 0 COMMENT '0=Not Verified,1=Verified'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `Fullname`, `Email`, `Phone`, `Password`, `user_type`, `Profile_images`, `status`) VALUES
+(72, 'mark', 'andersonandy046@gmail.com', '09454454741', '61e36b4d463fcf248af31898805050d4b137bb54e74c4e7e9b95b35ccb0f9753', 'personal', NULL, 1),
+(75, 'mary jane', 'maryjanedelacruz613@gmail.com', '09454454744', 'ecff9a01e0c1a3129a2bfaff0d90bdc3db6d5092c8ee42c94041425e236c02ec', 'business', NULL, 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -137,10 +228,30 @@ ALTER TABLE `admin`
   ADD PRIMARY KEY (`admin_id`);
 
 --
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD KEY `cart_prod_id` (`cart_prod_id`),
+  ADD KEY `cart_user_id` (`cart_user_id`);
+
+--
 -- Indexes for table `category`
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`category_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `orders_item`
+--
+ALTER TABLE `orders_item`
+  ADD PRIMARY KEY (`item_id`);
 
 --
 -- Indexes for table `product`
@@ -157,6 +268,12 @@ ALTER TABLE `stock_history`
   ADD KEY `stock_user_id` (`stock_admin_id`);
 
 --
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -167,10 +284,28 @@ ALTER TABLE `admin`
   MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=266;
+
+--
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `orders_item`
+--
+ALTER TABLE `orders_item`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -183,6 +318,12 @@ ALTER TABLE `product`
 --
 ALTER TABLE `stock_history`
   MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
