@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2025 at 02:57 AM
+-- Generation Time: Jul 17, 2025 at 04:51 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -94,6 +94,7 @@ INSERT INTO `category` (`category_id`, `category_name`, `category_description`, 
 
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
+  `order_code` varchar(60) NOT NULL,
   `order_user_id` int(11) NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `order_payment_method` varchar(60) NOT NULL,
@@ -110,8 +111,9 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`) VALUES
-(1, 72, '2025-07-16 10:09:15', 'BPI', 'proof_68777a2ae7e637.59074514.jpg', '2025-07-16', '18:08:00', 169000.00, 84500.00, NULL, 'pending');
+INSERT INTO `orders` (`order_id`, `order_code`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`) VALUES
+(13, 'ORD-5B3CE2D3', 72, '2025-07-17 02:19:40', 'GCash', 'proof_68785dbc860a64.79112240.jpg', '2025-07-17', '10:19:00', 60000.00, 30000.00, NULL, 'pending'),
+(14, 'ORD-A7F90ABC', 72, '2025-07-17 02:23:16', 'GCash', 'proof_68785e946c7ea8.85389930.png', '2025-07-17', '10:23:00', 329000.00, 164500.00, NULL, 'pending');
 
 -- --------------------------------------------------------
 
@@ -133,9 +135,10 @@ CREATE TABLE `orders_item` (
 --
 
 INSERT INTO `orders_item` (`item_id`, `item_order_id`, `item_product_id`, `item_product_price`, `item_qty`, `item_total`) VALUES
-(1, 1, 4, 30000.00, 3, 90000.00),
-(2, 1, 5, 50000.00, 1, 50000.00),
-(3, 1, 6, 29000.00, 1, 29000.00);
+(19, 13, 4, 30000.00, 2, 60000.00),
+(20, 14, 6, 29000.00, 1, 29000.00),
+(21, 14, 5, 50000.00, 3, 150000.00),
+(22, 14, 4, 30000.00, 5, 150000.00);
 
 -- --------------------------------------------------------
 
@@ -245,7 +248,8 @@ ALTER TABLE `category`
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_id`);
+  ADD PRIMARY KEY (`order_id`),
+  ADD UNIQUE KEY `order_code` (`order_code`);
 
 --
 -- Indexes for table `orders_item`
@@ -287,7 +291,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=266;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -299,13 +303,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `orders_item`
 --
 ALTER TABLE `orders_item`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `product`
