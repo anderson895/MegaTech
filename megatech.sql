@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2025 at 04:51 AM
+-- Generation Time: Jul 17, 2025 at 06:08 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,6 +56,14 @@ CREATE TABLE `cart` (
   `cart_Qty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`cart_id`, `cart_user_id`, `cart_prod_id`, `cart_Qty`) VALUES
+(287, 72, 5, 1),
+(288, 72, 4, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -99,8 +107,8 @@ CREATE TABLE `orders` (
   `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `order_payment_method` varchar(60) NOT NULL,
   `order_down_payment_receipt` varchar(255) NOT NULL,
-  `order_pickup_date` date NOT NULL,
-  `order_pickup_time` time NOT NULL,
+  `order_pickup_date` date DEFAULT NULL,
+  `order_pickup_time` time DEFAULT NULL,
   `order_total` decimal(10,2) NOT NULL,
   `order_balance` decimal(10,2) NOT NULL,
   `order_balance_payment_receipt` varchar(255) DEFAULT NULL,
@@ -112,8 +120,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `order_code`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`) VALUES
-(13, 'ORD-5B3CE2D3', 72, '2025-07-17 02:19:40', 'GCash', 'proof_68785dbc860a64.79112240.jpg', '2025-07-17', '10:19:00', 60000.00, 30000.00, NULL, 'pending'),
-(14, 'ORD-A7F90ABC', 72, '2025-07-17 02:23:16', 'GCash', 'proof_68785e946c7ea8.85389930.png', '2025-07-17', '10:23:00', 329000.00, 164500.00, NULL, 'pending');
+(15, 'ORD-5369AE1A', 72, '2025-07-17 04:03:25', 'GCash', 'proof_6878760dde28a7.17942010.png', NULL, NULL, 109000.00, 54500.00, NULL, 'pending');
 
 -- --------------------------------------------------------
 
@@ -135,10 +142,9 @@ CREATE TABLE `orders_item` (
 --
 
 INSERT INTO `orders_item` (`item_id`, `item_order_id`, `item_product_id`, `item_product_price`, `item_qty`, `item_total`) VALUES
-(19, 13, 4, 30000.00, 2, 60000.00),
-(20, 14, 6, 29000.00, 1, 29000.00),
-(21, 14, 5, 50000.00, 3, 150000.00),
-(22, 14, 4, 30000.00, 5, 150000.00);
+(23, 15, 6, 29000.00, 1, 29000.00),
+(24, 15, 5, 50000.00, 1, 50000.00),
+(25, 15, 4, 30000.00, 1, 30000.00);
 
 -- --------------------------------------------------------
 
@@ -291,7 +297,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -303,13 +309,13 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `orders_item`
 --
 ALTER TABLE `orders_item`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `product`

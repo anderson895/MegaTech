@@ -82,7 +82,7 @@ include "components/header.php";
 
     <!-- Payment Method Section -->
     <div class="mb-6">
-      <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Select Payment Method</label>
+      <label for="paymentMethod" class="block text-sm font-medium text-gray-700">Select Payment</label>
       <select id="paymentMethod" name="paymentMethod" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
         <option value="" >Select Payment Method</option>
         <option value="gcash" data-img="../assets/img/gcashQR.jpg" data-ename="GCash">GCash</option>
@@ -110,15 +110,7 @@ include "components/header.php";
       </div>
     </div>
 
-        <!-- Pickup Date & Time -->
-    <div class="mb-6">
-    <label for="pickupDate" class="block text-sm font-medium text-gray-700">Pickup Date</label>
-    <input type="date" id="pickupDate" name="pickupDate" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-
-    <label for="pickupTime" class="block text-sm font-medium text-gray-700 mt-4">Pickup Time</label>
-    <input type="time" id="pickupTime" name="pickupTime" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-    </div>
-
+ 
 
     <!-- Modal Footer -->
     <div class="flex justify-end mt-6">

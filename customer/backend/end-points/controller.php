@@ -111,8 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }else if ($_POST['requestType']=="OrderRequest") {
 
       
-        $pickupDate = $_POST['pickupDate'];
-        $pickupTime = $_POST['pickupTime'];
+      
         $total = $_POST['total'];
 
         $selectedPaymentMethod = $_POST['selectedPaymentMethod'];
@@ -158,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $selectedFilePath = null;
         }
 
-        $response = $db->OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDate,$pickupTime, $total);
+        $response = $db->OrderRequest($selectedPaymentMethod, $uniqueFileName, $total);
 
         if ($response['status'] === 'success') {
             

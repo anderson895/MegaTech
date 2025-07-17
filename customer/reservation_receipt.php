@@ -8,8 +8,14 @@ $order = mysqli_fetch_assoc($fetch_order);
 // Format pickup date and time
 $pickupDate = $order['order_pickup_date'];
 $pickupTime = $order['order_pickup_time'];
-$pickupDateTime = new DateTime("$pickupDate $pickupTime");
-$formattedPickup = $pickupDateTime->format('l, F j, Y - g:i A');
+
+if (!empty($pickupDate) && !empty($pickupTime)) {
+    $pickupDateTime = new DateTime("$pickupDate $pickupTime");
+    $formattedPickup = $pickupDateTime->format('l, F j, Y - g:i A');
+} else {
+    $formattedPickup = 'No Schedule Date';
+}
+
 ?>
 <div class="max-w-5xl mx-auto mt-12 p-8 bg-white rounded-2xl shadow-lg border border-gray-200 font-sans text-gray-800">
   <!-- Header -->
@@ -61,7 +67,8 @@ $formattedPickup = $pickupDateTime->format('l, F j, Y - g:i A');
       <p><span class="font-medium">Customer ID:</span> <?= $order['order_user_id'] ?></p>
       <p><span class="font-medium">Date Ordered:</span> <?= $order['order_date'] ?></p>
       <p><span class="font-medium">Payment Method:</span> <?= $order['order_payment_method'] ?></p>
-      <p><span class="font-medium">Pickup Schedule:</span> <?= $formattedPickup ?></p>
+      <p><span class="font-medium">Pickup Schedule:</span> <i><?= $formattedPickup ?></i></p>
+      <p><span class="font-medium">Status:</span> <i><?= $order['order_status'] === 'pending' ? 'Waiting Approval' : htmlspecialchars($order['order_status']) ?></i></p>
     </div>
   </div>
 

@@ -212,7 +212,7 @@ class global_class extends db_connect
 
 
 
-public function OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDate, $pickupTime, $total)
+public function OrderRequest($selectedPaymentMethod, $uniqueFileName, $total)
 {
     session_start();
     $user_id = $_SESSION['user_id'];
@@ -228,18 +228,16 @@ public function OrderRequest($selectedPaymentMethod, $uniqueFileName, $pickupDat
     $order_code = $this->generateUniqueOrderCode();
 
     $query = "INSERT INTO `orders` 
-                (`order_user_id`, `order_code`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`) 
+                (`order_user_id`, `order_code`, `order_payment_method`, `order_down_payment_receipt`, `order_total`, `order_balance`) 
               VALUES 
-                (?, ?, ?, ?, ?, ?, ?, ?)";
+                (?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $this->conn->prepare($query)) {
-        $stmt->bind_param('ssssssdd', 
+        $stmt->bind_param('ssssdd', 
             $user_id, 
             $order_code,
             $selectedPaymentMethod, 
             $proofOfPayment, 
-            $pickupDate, 
-            $pickupTime, 
             $total, 
             $balance
         );

@@ -32,7 +32,7 @@ $result = $db->fetch_list_order($user_id);
                             </td>
                             <td class="py-2 px-4 border-b">₱<?= number_format($order['order_total'], 2) ?></td>
                             <td class="py-2 px-4 border-b">
-                                  <i> <?= $order['order_status'] === 'pending' ? 'Pending Approval' : htmlspecialchars($order['order_status']) ?></i> 
+                                  <i> <?= $order['order_status'] === 'pending' ? 'Waiting Approval' : htmlspecialchars($order['order_status']) ?></i> 
                             </td>
 
                             <td class="py-2 px-4 border-b text-center">
