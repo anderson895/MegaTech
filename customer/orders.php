@@ -13,8 +13,7 @@ $result = $db->fetch_list_order($user_id);
                 <thead class="bg-gray-100 text-gray-800 font-semibold">
                     <tr>
                         <th class="py-3 px-4 border-b">Order Code</th>
-                        <th class="py-3 px-4 border-b">Pickup Date</th>
-                        <th class="py-3 px-4 border-b">Pickup Time</th>
+                        <th class="py-3 px-4 border-b">Pickup Schedule</th>
                         <th class="py-3 px-4 border-b">Total</th>
                         <th class="py-3 px-4 border-b">Status</th>
                         <th class="py-3 px-4 border-b text-center">Action</th>
@@ -24,15 +23,23 @@ $result = $db->fetch_list_order($user_id);
                     <?php foreach ($result as $order): ?>
                         <tr class="hover:bg-gray-50">
                             <td class="py-2 px-4 border-b"><?= htmlspecialchars($order['order_code']) ?></td>
+
                             <td class="py-2 px-4 border-b">
-                                <?= (new DateTime($order['order_pickup_date']))->format('F j, Y') ?>
+                                <?php if (!empty($order['order_pickup_date']) && $order['order_pickup_date'] !== '0000-00-00' && 
+                                          !empty($order['order_pickup_time']) && $order['order_pickup_time'] !== '00:00:00'): ?>
+                                    <?php
+                                        $pickupDateTime = new DateTime("{$order['order_pickup_date']} {$order['order_pickup_time']}");
+                                        echo $pickupDateTime->format('l, F j, Y - g:i A');
+                                    ?>
+                                <?php else: ?>
+                                    No date schedule
+                                <?php endif; ?>
                             </td>
-                            <td class="py-2 px-4 border-b">
-                                <?= date('g:i A', strtotime($order['order_pickup_time'])) ?>
-                            </td>
+
                             <td class="py-2 px-4 border-b">₱<?= number_format($order['order_total'], 2) ?></td>
+
                             <td class="py-2 px-4 border-b">
-                                  <i> <?= $order['order_status'] === 'pending' ? 'Waiting Approval' : htmlspecialchars($order['order_status']) ?></i> 
+                                <i><?= $order['order_status'] === 'pending' ? 'Waiting Approval' : htmlspecialchars($order['order_status']) ?></i>
                             </td>
 
                             <td class="py-2 px-4 border-b text-center">
