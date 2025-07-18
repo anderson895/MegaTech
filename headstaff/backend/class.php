@@ -32,7 +32,7 @@ class global_class extends db_connect
 
                 session_start();
                 $_SESSION['hs_username'] = $user['hs_username'];
-                $_SESSION[''] = $user[''];
+                $_SESSION['hs_id'] = $user['hs_id'];
 
                 return $user;
             } else {
