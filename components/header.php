@@ -39,10 +39,10 @@
 
     <!-- Auth and Cart -->
     <div class="flex items-center space-x-4 text-sm">
-      <a href="login.php" class="text-gray-700 hover:text-blue-600 transition">Login</a>
+      <a href="login" class="text-gray-700 hover:text-blue-600 transition">Login</a>
       <span class="text-gray-500">/</span>
-      <a href="signup.php" class="text-gray-700 hover:text-blue-600 transition">Register</a>
-      <a href="cart.php" class="text-gray-700 hover:text-blue-600 transition text-xl">🛒</a>
+      <a href="signup" class="text-gray-700 hover:text-blue-600 transition">Register</a>
+      <a href="login" class="text-gray-700 hover:text-blue-600 transition text-xl">🛒</a>
     </div>
   </div>
 </header>

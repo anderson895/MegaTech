@@ -23,10 +23,11 @@
     <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
   </div>
 
+
   <!-- Logo and Label -->
   <div class="flex flex-col items-center mb-6">
     <img src="../assets/logo/logo1.jpg" alt="HeadStaff Logo" class="h-24 w-24 object-contain rounded-full shadow mb-2">
-    <h2 class="text-xl font-bold text-gray-700 tracking-wide">Administrator</h2>
+    <h2 class="text-xl font-bold text-gray-700 tracking-wide">Head Staff</h2>
   </div>
 
   <!-- Login Form -->
