@@ -63,8 +63,8 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
   <!-- Reservation Info -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 text-sm md:text-base">
     <div class="space-y-2">
-      <p><span class="font-medium">Reservation ID:</span> <?= $order['order_id'] ?></p>
-      <p><span class="font-medium">Customer ID:</span> <?= $order['order_user_id'] ?></p>
+      <p><span class="font-medium">Reservation Code:</span> <?= $order['order_code'] ?></p>
+      <p><span class="font-medium">Customer Name:</span> <?= ucfirst($order['Fullname']) ?></p>
       <p><span class="font-medium">Date Ordered:</span> <?= $order['order_date'] ?></p>
       <p><span class="font-medium">Payment Method:</span> <?= $order['order_payment_method'] ?></p>
       <p><span class="font-medium">Pickup Schedule:</span> <i><?= $formattedPickup ?></i></p>

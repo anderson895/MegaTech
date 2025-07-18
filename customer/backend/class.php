@@ -294,7 +294,10 @@ private function generateUniqueOrderCode()
 
 
     public function fetch_order($order_id){
-        $query = $this->conn->prepare("SELECT * FROM orders WHERE orders.order_id = '$order_id'");
+        $query = $this->conn->prepare("SELECT * FROM orders 
+        LEFT JOIN user
+        ON user.user_id = orders.order_user_id
+        WHERE orders.order_id = '$order_id'");
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;

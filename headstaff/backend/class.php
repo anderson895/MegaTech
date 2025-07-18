@@ -13,6 +13,9 @@ class global_class extends db_connect
 
 
 
+   
+
+
 
     public function Login($username, $password)
     {
@@ -29,7 +32,7 @@ class global_class extends db_connect
 
                 session_start();
                 $_SESSION['hs_username'] = $user['hs_username'];
-                $_SESSION['hs_id'] = $user['hs_id'];
+                $_SESSION[''] = $user[''];
 
                 return $user;
             } else {
@@ -77,7 +80,10 @@ class global_class extends db_connect
 
 
     public function fetch_order($order_id){
-        $query = $this->conn->prepare("SELECT * FROM orders WHERE orders.order_id = '$order_id'");
+        $query = $this->conn->prepare("SELECT * FROM orders 
+        LEFT JOIN user
+        ON user.user_id = orders.order_user_id
+        WHERE orders.order_id = '$order_id'");
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;
@@ -127,6 +133,109 @@ class global_class extends db_connect
             return null; 
         }
     }
+
+
+
+
+
+  public function updateOrderStatus($orderId,$newStatus) {
+        $stmt = $this->conn->prepare("UPDATE `orders` SET `order_status` = '$newStatus' WHERE `orders`.`order_id` = '$orderId'");
+        return $stmt->execute();
+    }
+
+
+
+
+    public function validateStockSufficiency($orderId) {
+        $insufficientStockProducts = [];
+    
+        $orderItemsQuery = "SELECT item_product_id, item_qty FROM orders_item WHERE item_order_id = '$orderId'";
+        $orderItemsResult = mysqli_query($this->conn, $orderItemsQuery);
+    
+        if (!$orderItemsResult || mysqli_num_rows($orderItemsResult) === 0) {
+            return false; // No items found
+        }
+    
+        while ($item = mysqli_fetch_assoc($orderItemsResult)) {
+            $productId = $item['item_product_id'];
+            $itemQty = $item['item_qty'];
+    
+            $checkStockQuery = "SELECT prod_name, prod_stocks FROM product WHERE prod_id = $productId";
+            $stockResult = mysqli_query($this->conn, $checkStockQuery);
+            $stock = mysqli_fetch_assoc($stockResult);
+    
+            if (!$stock || $stock['prod_stocks'] < $itemQty) {
+                $insufficientStockProducts[] = $stock['prod_name'] . " (ID: $productId)";
+            }
+        }
+        if (!empty($insufficientStockProducts)) {
+            return $insufficientStockProducts;
+        }
+        return true;
+    }
+
+
+
+public function stockout($orderId) {
+    // Get all order items for the given order ID
+    $orderItemsQuery = "
+        SELECT p.prod_name, oi.item_product_id, oi.item_qty, p.prod_stocks 
+        FROM orders_item as oi
+        LEFT JOIN product as p ON p.prod_id = oi.item_product_id
+        WHERE oi.item_order_id = ?
+    ";
+
+    $stmt = $this->conn->prepare($orderItemsQuery);
+    $stmt->bind_param("i", $orderId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if (!$result) {
+        return 'Error fetching order items: ' . $stmt->error;
+    }
+
+    session_start();
+    $hs_id = $_SESSION['hs_id'];
+
+    while ($item = $result->fetch_assoc()) {
+        $productId = $item['item_product_id'];
+        $itemQty = (int)$item['item_qty'];
+        $current_qty = (int)$item['prod_stocks'];
+        $prod_name = $item['prod_name'];
+
+        // Check if enough stock
+        if ($current_qty >= $itemQty) {
+            $new_qty = $current_qty - $itemQty;
+
+            // Update stock
+            $updateStockQuery = "
+                UPDATE product
+                SET prod_stocks = ?
+                WHERE prod_id = ?
+            ";
+            $updateStmt = $this->conn->prepare($updateStockQuery);
+            $updateStmt->bind_param("ii", $new_qty, $productId);
+            $updateStmt->execute();
+            $updateStmt->close();
+
+            // Log stockout
+            $change_log = "$current_qty -> $new_qty";
+            $logStmt = $this->conn->prepare("
+                INSERT INTO stock_history 
+                (stock_prod_id, stock_type,user_type, stock_Qty, stock_changes, stock_account_id) 
+                VALUES (?, 'Stock Out','HeadStaff', ?, ?, ?)
+            ");
+            $logStmt->bind_param("iisi", $productId, $itemQty, $change_log, $hs_id);
+            $logStmt->execute();
+            $logStmt->close();
+
+        } else {
+            return "Not enough stock for product '$prod_name'. Required: $itemQty, Available: $current_qty";
+        }
+    }
+
+    return true;
+}
 
 
 

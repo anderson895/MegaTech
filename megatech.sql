@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2025 at 06:08 AM
+-- Generation Time: Jul 18, 2025 at 12:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,8 +61,9 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `cart_user_id`, `cart_prod_id`, `cart_Qty`) VALUES
-(287, 72, 5, 1),
-(288, 72, 4, 1);
+(289, 72, 4, 1),
+(290, 72, 6, 1),
+(291, 72, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -97,6 +98,27 @@ INSERT INTO `category` (`category_id`, `category_name`, `category_description`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `headstaff`
+--
+
+CREATE TABLE `headstaff` (
+  `hs_id` int(11) NOT NULL,
+  `hs_fullname` varchar(60) NOT NULL,
+  `hs_username` varchar(60) NOT NULL,
+  `hs_password` varchar(255) NOT NULL,
+  `hs_status` int(11) NOT NULL DEFAULT 1 COMMENT '0=unactive.1=active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `headstaff`
+--
+
+INSERT INTO `headstaff` (`hs_id`, `hs_fullname`, `hs_username`, `hs_password`, `hs_status`) VALUES
+(1, 'Ian Mark', 'headstaff', 'dca08eaca0ec6ccfe0b182d8adb36c19226445333b165402079aa7ecd7e231b4', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orders`
 --
 
@@ -120,7 +142,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `order_code`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`) VALUES
-(15, 'ORD-5369AE1A', 72, '2025-07-17 04:03:25', 'GCash', 'proof_6878760dde28a7.17942010.png', NULL, NULL, 109000.00, 54500.00, NULL, 'pending');
+(15, 'ORD-5369AE1A', 72, '2025-07-18 09:30:50', 'GCash', 'proof_6878760dde28a7.17942010.png', NULL, NULL, 109000.00, 54500.00, NULL, 'paid');
 
 -- --------------------------------------------------------
 
@@ -173,9 +195,9 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`prod_id`, `prod_code`, `prod_name`, `prod_description`, `prod_specs`, `prod_stocks`, `prod_category_id`, `prod_price`, `prod_critical`, `prod_status`, `prod_image`, `prod_added`) VALUES
 (3, 'A0001', 'LED Industrial Grade Solar Street lights IP67', '300W Megalight High Brightness LED Industrial Grade Solar Street lights IP67', '[{\"Specs\":\"color\",\"value\":\"orange\"},{\"Specs\":\"brand\",\"value\":\"yamaha\"}]', 10, 2, 4500.00, 10, 0, 'product_687683437e3086.19790545.jpg', '2025-07-16 08:57:30'),
-(4, 'A0002', 'Solar Panel', 'Transform your operations with robust Solar Panels technology for efficiency and savings', '[{\"Specs\":\"Panel type\",\"value\":\"Monocrystalline, Polycrystalline, Thin-film\"},{\"Specs\":\"Power output\",\"value\":\"50W, 100W, 150W, 300W\"},{\"Specs\":\"Voltage Rating\",\"value\":\"12V, 24V\"},{\"Specs\":\"Size\",\"value\":\"1200mm x 540mm x 35mm\"},{\"Specs\":\"Weight\",\"value\":\"7.5 kg\"},{\"Specs\":\"Mounting Type\",\"value\":\"Roof-mounted, Ground-mounted, Pole-mounted\"}]', 16, 2, 30000.00, 10, 1, 'product_687700c5b87b41.71450609.jpg', '2025-07-16 09:30:45'),
-(5, 'A0003', 'Electric Pole', 'Installation Area – Highway, Subdivision, Industrial Area', '[{\"Specs\":\"Pole Type\",\"value\":\"Concrete Pole, Steel Pole\"},{\"Specs\":\"Height\",\"value\":\"7m, 10m, 12m\"},{\"Specs\":\"Load Capacity\",\"value\":\"300kg, 500kg\"}]', 100, 5, 50000.00, 10, 1, 'product_687712af7c7e43.51042686.jpg', '2025-07-16 10:47:11'),
-(6, 'A0004', 'Akumulator AGM Monbat MEGALIGHT AGM 230Ah 12 V / 230 Ah', 'Akumulator AGM Megalight Power 12V 230AH.Akumulator głębokiego rozładowania. wymiary w mm: dł/szer/wys/ 518/274/242. Waga 59 kg. Układ biegunów 3.', '[{\"Specs\":\"Battery Type\",\"value\":\"Lithium-ion, LiFePO4, Lead Acid\"},{\"Specs\":\"Voltage Rating\",\"value\":\"3.7V, 6V, 12V\"},{\"Specs\":\"Capacity\",\"value\":\"5000mAh, 100Ah\"},{\"Specs\":\"Size\",\"value\":\"150mm x 65mm x 90mm\"}]', 100, 3, 29000.00, 15, 1, 'product_6877138e30f989.41089661.jpg', '2025-07-16 10:50:54');
+(4, 'A0002', 'Solar Panel', 'Transform your operations with robust Solar Panels technology for efficiency and savings', '[{\"Specs\":\"Panel type\",\"value\":\"Monocrystalline, Polycrystalline, Thin-film\"},{\"Specs\":\"Power output\",\"value\":\"50W, 100W, 150W, 300W\"},{\"Specs\":\"Voltage Rating\",\"value\":\"12V, 24V\"},{\"Specs\":\"Size\",\"value\":\"1200mm x 540mm x 35mm\"},{\"Specs\":\"Weight\",\"value\":\"7.5 kg\"},{\"Specs\":\"Mounting Type\",\"value\":\"Roof-mounted, Ground-mounted, Pole-mounted\"}]', 19, 2, 30000.00, 10, 1, 'product_687700c5b87b41.71450609.jpg', '2025-07-16 09:30:45'),
+(5, 'A0003', 'Electric Pole', 'Installation Area – Highway, Subdivision, Industrial Area', '[{\"Specs\":\"Pole Type\",\"value\":\"Concrete Pole, Steel Pole\"},{\"Specs\":\"Height\",\"value\":\"7m, 10m, 12m\"},{\"Specs\":\"Load Capacity\",\"value\":\"300kg, 500kg\"}]', 93, 5, 50000.00, 10, 1, 'product_687712af7c7e43.51042686.jpg', '2025-07-16 10:47:11'),
+(6, 'A0004', 'Akumulator AGM Monbat MEGALIGHT AGM 230Ah 12 V / 230 Ah', 'Akumulator AGM Megalight Power 12V 230AH.Akumulator głębokiego rozładowania. wymiary w mm: dł/szer/wys/ 518/274/242. Waga 59 kg. Układ biegunów 3.', '[{\"Specs\":\"Battery Type\",\"value\":\"Lithium-ion, LiFePO4, Lead Acid\"},{\"Specs\":\"Voltage Rating\",\"value\":\"3.7V, 6V, 12V\"},{\"Specs\":\"Capacity\",\"value\":\"5000mAh, 100Ah\"},{\"Specs\":\"Size\",\"value\":\"150mm x 65mm x 90mm\"}]', 88, 3, 29000.00, 15, 1, 'product_6877138e30f989.41089661.jpg', '2025-07-16 10:50:54');
 
 -- --------------------------------------------------------
 
@@ -186,9 +208,10 @@ INSERT INTO `product` (`prod_id`, `prod_code`, `prod_name`, `prod_description`, 
 CREATE TABLE `stock_history` (
   `stock_id` int(11) NOT NULL,
   `stock_prod_id` int(11) NOT NULL,
-  `stock_admin_id` int(11) NOT NULL,
-  `stock_type` varchar(60) NOT NULL,
-  `stock_outQty` int(11) NOT NULL,
+  `stock_account_id` int(11) NOT NULL,
+  `stock_type` varchar(20) NOT NULL,
+  `user_type` varchar(20) NOT NULL,
+  `stock_Qty` int(11) NOT NULL,
   `stock_changes` text NOT NULL,
   `stock_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -197,9 +220,13 @@ CREATE TABLE `stock_history` (
 -- Dumping data for table `stock_history`
 --
 
-INSERT INTO `stock_history` (`stock_id`, `stock_prod_id`, `stock_admin_id`, `stock_type`, `stock_outQty`, `stock_changes`, `stock_date`) VALUES
-(31, 9, 1, 'Stock In', 10, '792 -> 802', '2025-05-29 12:42:13'),
-(32, 4, 1, 'Stock In', 3, '13 -> 16', '2025-07-16 01:55:36');
+INSERT INTO `stock_history` (`stock_id`, `stock_prod_id`, `stock_account_id`, `stock_type`, `user_type`, `stock_Qty`, `stock_changes`, `stock_date`) VALUES
+(50, 6, 1, 'Stock Out', 'HeadStaff', 1, '90 -> 89', '2025-07-18 10:37:19'),
+(51, 5, 1, 'Stock Out', 'HeadStaff', 1, '95 -> 94', '2025-07-18 10:37:19'),
+(52, 4, 1, 'Stock Out', 'HeadStaff', 1, '21 -> 20', '2025-07-18 10:37:19'),
+(53, 6, 1, 'Stock Out', 'HeadStaff', 1, '89 -> 88', '2025-07-18 10:38:52'),
+(54, 5, 1, 'Stock Out', 'HeadStaff', 1, '94 -> 93', '2025-07-18 10:38:52'),
+(55, 4, 1, 'Stock Out', 'HeadStaff', 1, '20 -> 19', '2025-07-18 10:38:52');
 
 -- --------------------------------------------------------
 
@@ -223,7 +250,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `Fullname`, `Email`, `Phone`, `Password`, `user_type`, `Profile_images`, `status`) VALUES
-(72, 'mark', 'andersonandy046@gmail.com', '09454454741', '61e36b4d463fcf248af31898805050d4b137bb54e74c4e7e9b95b35ccb0f9753', 'personal', NULL, 1),
+(72, 'joshua padilla', 'andersonandy046@gmail.com', '09454454741', '61e36b4d463fcf248af31898805050d4b137bb54e74c4e7e9b95b35ccb0f9753', 'personal', NULL, 1),
 (75, 'mary jane', 'maryjanedelacruz613@gmail.com', '09454454744', 'ecff9a01e0c1a3129a2bfaff0d90bdc3db6d5092c8ee42c94041425e236c02ec', 'business', NULL, 1);
 
 --
@@ -251,6 +278,12 @@ ALTER TABLE `category`
   ADD PRIMARY KEY (`category_id`);
 
 --
+-- Indexes for table `headstaff`
+--
+ALTER TABLE `headstaff`
+  ADD PRIMARY KEY (`hs_id`);
+
+--
 -- Indexes for table `orders`
 --
 ALTER TABLE `orders`
@@ -275,7 +308,7 @@ ALTER TABLE `product`
 ALTER TABLE `stock_history`
   ADD PRIMARY KEY (`stock_id`),
   ADD KEY `stock_raw_id` (`stock_prod_id`),
-  ADD KEY `stock_user_id` (`stock_admin_id`);
+  ADD KEY `stock_user_id` (`stock_account_id`);
 
 --
 -- Indexes for table `user`
@@ -297,13 +330,19 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=292;
 
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
   MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `headstaff`
+--
+ALTER TABLE `headstaff`
+  MODIFY `hs_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -327,7 +366,7 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `stock_history`
 --
 ALTER TABLE `stock_history`
-  MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `user`

@@ -206,40 +206,46 @@ public function addProduct($productData)
     
 
 
-     public function updateStock(
-        $stock_prod_id,
-        $stock_admin_id,
-        $stockin_qty,
-        $prod_name
-    ) {
-        // 1. Get current quantity
-        $query = $this->conn->prepare("SELECT prod_stocks FROM product WHERE prod_id = ?");
-        $query->bind_param("i", $stock_prod_id);
-        $query->execute();
-        $query->bind_result($current_qty);
-        $query->fetch();
-        $query->close();
+    public function updateStock(
+    $stock_prod_id,
+    $stock_admin_id,
+    $stockin_qty,
+    $prod_name
+) {
+    // 1. Get current quantity
+    $query = $this->conn->prepare("SELECT prod_stocks FROM product WHERE prod_id = ?");
+    $query->bind_param("i", $stock_prod_id);
+    $query->execute();
+    $query->bind_result($current_qty);
+    $query->fetch();
+    $query->close();
 
-        // 2. Update stock quantity
-        $query = $this->conn->prepare("UPDATE `product` SET `prod_stocks` = `prod_stocks` + ? WHERE `prod_id` = ?");
-        $query->bind_param("ii", $stockin_qty, $stock_prod_id);
-        $stockUpdated = $query->execute();
-        $query->close();
+    // 2. Update stock quantity (Stock In)
+    $query = $this->conn->prepare("UPDATE product SET prod_stocks = prod_stocks + ? WHERE prod_id = ?");
+    $query->bind_param("ii", $stockin_qty, $stock_prod_id);
+    $stockUpdated = $query->execute();
+    $query->close();
 
-        // 3. Insert stock history log
-        $change_log = "$current_qty -> " . ($current_qty + $stockin_qty);
-        $insertLog = $this->conn->prepare(
-            "INSERT INTO stock_history 
-            (stock_prod_id, stock_type, stock_outQty, stock_changes, stock_admin_id) 
-            VALUES (?, 'Stock In', ?, ?, ?)"
-        );
-        $insertLog->bind_param("iisi", $stock_prod_id, $stockin_qty, $change_log, $stock_admin_id);
-        $logInserted = $insertLog->execute();
-        $insertLog->close();
+    // 3. Prepare stock history log
+    $new_qty = $current_qty + $stockin_qty;
+    $change_log = "$current_qty -> $new_qty";
+    $stock_type = "Stock In";
+    $user_type = "Administrator";
 
-        // 4. Final result
-        return ($stockUpdated && $logInserted) ? 'success' : 'error';
-    }
+    // 4. Insert into stock_history
+    $insertLog = $this->conn->prepare("
+        INSERT INTO stock_history 
+        (stock_prod_id, stock_type, stock_Qty, user_type, stock_changes, stock_account_id) 
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+    $insertLog->bind_param("isissi", $stock_prod_id, $stock_type, $stockin_qty, $user_type, $change_log, $stock_admin_id);
+    $logInserted = $insertLog->execute();
+    $insertLog->close();
+
+    // 5. Final result
+    return ($stockUpdated && $logInserted) ? 'success' : 'error';
+}
+
 
         
 
