@@ -159,56 +159,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $response = $db->OrderRequest($selectedPaymentMethod, $uniqueFileName, $total);
 
-        if ($response['status'] === 'success') {
-            
-            $orderId = $response['order_id'];
+if ($response['status'] === 'success') {
+    $orderId = $response['order_id'];
+    $orderCode = $response['order_code'];
 
-            if (is_array($selectedProductsArray) && !empty($selectedProductsArray)) {
-                foreach ($selectedProductsArray as $product) {
-                    $itemProductId = $product['productId'];
-                    $itemQty = intval($product['qty']);  
-                    $itemTotalPrice =$product['price']; 
-                    $originalPrice = $product['originalPrice'];
-                
-                    $insertQuery = "INSERT INTO orders_item (item_order_id, item_product_id, item_product_price,item_qty,item_total) 
-                                    VALUES ('$orderId', '$itemProductId', '$originalPrice', '$itemQty', '$itemTotalPrice')";
-                    
-                    $user_id = $_SESSION['user_id'];
-                    
-                    $response = $db->RemoveItem($user_id, $itemProductId);
+    if (is_array($selectedProductsArray) && !empty($selectedProductsArray)) {
+        foreach ($selectedProductsArray as $product) {
+            $itemProductId = $product['productId'];
+            $itemQty = intval($product['qty']);  
+            $itemTotalPrice = $product['price']; 
+            $originalPrice = $product['originalPrice'];
 
-                    if (!$db->conn->query($insertQuery)) {
-                        echo json_encode(['status' => 'error', 'message' => 'Failed to insert product into orders_item.']);
-                        exit;
-                    }
+            $insertQuery = "INSERT INTO orders_item 
+                            (item_order_id, item_product_id, item_product_price, item_qty, item_total) 
+                            VALUES (?, ?, ?, ?, ?)";
+
+            $stmt = $db->conn->prepare($insertQuery);
+            if ($stmt) {
+                $stmt->bind_param("iisid", $orderId, $itemProductId, $originalPrice, $itemQty, $itemTotalPrice);
+                if (!$stmt->execute()) {
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to insert item: ' . $stmt->error]);
+                    exit;
                 }
-                
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Selected products data is invalid.']);
+                echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $db->conn->error]);
                 exit;
             }
-            
-            if ($selectedFilePath && !is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
 
-           if (move_uploaded_file($fileTmpPath, $selectedFilePath)) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Order processed and file saved successfully.',
-                    'order_id' => $orderId
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Order processed but file upload failed.',
-                    'order_id' => $orderId
-                ]);
-            }
-
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Order request failed.']);
+            // Remove item from cart
+            $user_id = $_SESSION['user_id'];
+            $removeResult = $db->RemoveItem($user_id, $itemProductId);
         }
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Selected products data is invalid or empty.']);
+        exit;
+    }
+
+    // Handle file upload if needed
+    if ($selectedFilePath && !is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    if (move_uploaded_file($fileTmpPath, $selectedFilePath)) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Order processed and file saved successfully.',
+            'order_id' => $orderId,
+            'order_code' => $orderCode
+        ]);
+        exit;
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Order processed but file upload failed.',
+            'order_id' => $orderId,
+            'order_code' => $orderCode
+        ]);
+        exit;
+    }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Order request failed.']);
+    exit;
+}
+
 
 
     }

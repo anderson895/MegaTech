@@ -183,19 +183,20 @@ $(document).ready(function() {
                 },
                 
                 success: function(response) {
+                    console.log(response);
                     if (response.status == 'success') {
                         $(".loadingSpinner").fadeOut();
                         alertify.success('Order Request sent successfully.');
 
                         const orderId = response.order_id;
+                        const order_code = response.order_code;
 
                         $.ajax({
                             type: "POST",
                             url: "backend/end-points/QRgenerator.php",
                             data: {
                                 order_id: orderId,
-                                pickup_date: pickupDate,
-                                pickup_time: pickupTime
+                                order_code: order_code
                             },
                             success: function(qrResponse) {
                                 if (qrResponse.status === 'success') {

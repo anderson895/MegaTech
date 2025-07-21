@@ -9,12 +9,15 @@ use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Color\Color;
 
-// Kunin mula sa POST
-$orderId = $_POST['order_id'] ?? 'MT-0001';
-$pickupDate = $_POST['pickup_date'] ?? '2025-07-18';
-$pickupTime = $_POST['pickup_time'] ?? '10:30 AM';
 
-$data = "Order ID: $orderId\nPickup Date: $pickupDate\nPickup Time: $pickupTime";
+// echo "<pre>";
+// print_r($_POST);
+// echo "</pre>";
+
+$orderId = $_POST['order_id'];
+$order_code = $_POST['order_code'];
+
+$data = "Order Code: $order_code";
 
 // Generate QR
 $qrCode = new QrCode(

@@ -243,7 +243,12 @@ public function OrderRequest($selectedPaymentMethod, $uniqueFileName, $total)
         );
 
         if ($stmt->execute()) {
-            return ['status' => 'success', 'order_id' => $this->conn->insert_id];
+          return [
+                'status' => 'success',
+                'order_id' => $this->conn->insert_id,
+                'order_code' => $order_code
+            ];
+
         } else {
             return ['status' => 'error', 'message' => 'Failed to create order: ' . $stmt->error];
         }
