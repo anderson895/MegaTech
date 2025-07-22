@@ -7,11 +7,12 @@ if ($fetch_all_students): ?>
         $status_color = match ($student['order_status']) {
             "decline" => "text-red-500",
             "pending" => "text-yellow-500",
+            "paid" => "text-green-500",
             default => "text-green-500"
         };
 
         // Check if order is not pending
-        $isPending = strtolower($student['order_status']) === 'pending';
+        $isPending = strtolower($student['order_status']) === 'pending' || strtolower($student['order_status']) === 'pickedup';
     ?>
     <tr>
         <td class="p-2"><?php echo htmlspecialchars($student['order_code']); ?></td>
@@ -19,7 +20,16 @@ if ($fetch_all_students): ?>
         <td class="p-2"><?php echo htmlspecialchars($student['order_date']); ?></td>
         <td class="p-2"><?php echo htmlspecialchars($student['order_payment_method']); ?></td>
         <td class="p-2">₱ <?php echo htmlspecialchars(number_format($student['order_total'],2)); ?></td>
-        <td class="p-2 <?= $status_color; ?>"><strong><?php echo ucfirst($student['order_status']); ?></strong></td>
+        <td class="p-2 <?= $status_color; ?>">
+          <strong>
+            <?php 
+              echo ($student['order_status'] === 'pickedup') 
+                ? 'Done' 
+                : ucfirst($student['order_status']); 
+            ?>
+          </strong>
+        </td>
+
         <td class="p-2 text-center">
             <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
 

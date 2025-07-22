@@ -243,6 +243,14 @@ public function addProduct($productData)
     }
 
 
+
+     public function pickedupOrder($orderId, $orderStatus) {
+        $stmt = $this->conn->prepare("UPDATE `orders` SET `order_status` = '$orderStatus' WHERE `orders`.`order_id` = '$orderId'");
+        return $stmt->execute();
+    }
+
+
+
     
 
     public function getProductImageById($product_ID) {

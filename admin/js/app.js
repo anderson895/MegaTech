@@ -3,6 +3,77 @@ $(document).ready(function () {
 
 
 
+
+
+$(document).on('click', '.orderActionToggler', function (e) {
+    e.preventDefault();
+
+    const user_id = $(this).data('user_id');
+    const order_code = $(this).data('order_code');
+    const order_id = $(this).data('order_id');
+  
+    const action = $(this).data('action');
+
+    let title = '';
+    let confirmButtonText = '';
+    let requestType = '';
+
+    if (action === 'pickedup') {
+       title = `<span style="color: green;">Set as picked up:</span> <strong style="color: gray;">${order_code}</strong>`;
+
+        confirmButtonText = 'Confirm';
+        requestType = 'pickedupOrder';
+    } 
+
+    Swal.fire({
+        title: title,
+        html: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { order_id: order_id, requestType: requestType },
+                dataType: 'json',
+                success: function (response) {
+                    if (response === 200) {
+                        $('#spinnerOverlay').removeClass('hidden');
+
+                        if (action === 'pickedup') {
+                            
+                            Swal.fire('Success!', response.message, 'success').then(() => {
+                                        location.reload();
+                            });
+                               
+                        } 
+
+                    } else {
+                        Swal.fire('Error!', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error!', 'There was a problem with the request.', 'error');
+                }
+            });
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 //  $('.setScheduleToggler').on('click', function () {
 $(document).on('click', '.setScheduleToggler', function (e) {
   const userId = $(this).data('user_id');

@@ -23,7 +23,7 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
     <div class="flex justify-center mb-2">
       <img src="../assets/logo/logo1.jpg" alt="MegaTech Logo" class="h-16 w-16 rounded-full border shadow object-cover">
     </div>
-    <h1 class="text-3xl font-bold text-gray-800">Reservation Receipt</h1>
+    <h1 class="text-3xl font-bold text-gray-800">Reservation Details</h1>
     <p class="text-blue-600 font-semibold uppercase tracking-wide text-sm">MegaTech</p>
   </div>
 

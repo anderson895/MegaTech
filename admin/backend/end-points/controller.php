@@ -239,6 +239,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode($response);
 
+    }else if ($_POST['requestType'] == 'pickedupUser') {
+
+        $user_id = $_POST['user_id'];
+        $response = $db->pickedupUser($user_id);
+
+        echo json_encode($response);
     } else if ($_POST['requestType'] == 'setSchedule') {
 
         $orderId = $_POST['orderId'];
@@ -259,8 +265,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              'message' => 'Failed to update stock in the database: ' . $order
                ]);
         }
+    }else if ($_POST['requestType'] == 'pickedupOrder') {
 
-              
+        $orderStatus="pickedup";
+
+        $orderId = $_POST['order_id'];
+        // Cancel the order
+            $order = $db->pickedupOrder($orderId, $orderStatus);
+
+            if ($order) {
+                echo 200; 
+            } else {
+                echo 'Failed to update order in the database.';
+            }
+                
 
     }else {
         echo json_encode([
