@@ -8,9 +8,9 @@ $(document).on('click', '.userActionToggler', function (e) {
     e.preventDefault();
 
     const user_id = $(this).data('user_id');
-    
-    const order_id = $(this).data('order_id');
     const order_code = $(this).data('order_code');
+    const order_id = $(this).data('order_id');
+  
     const action = $(this).data('action');
 
     let title = '';

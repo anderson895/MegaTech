@@ -1,6 +1,110 @@
 $(document).ready(function () {
 
 
+
+
+//  $('.setScheduleToggler').on('click', function () {
+$(document).on('click', '.setScheduleToggler', function (e) {
+  const userId = $(this).data('user_id');
+  const orderId = $(this).data('order_id');
+  const orderCode = $(this).data('order_code');
+  const fullname = $(this).data('fullname');
+
+  // Update modal content
+  $('#modalDetails').html(`
+    <strong>Name:</strong> ${fullname} <br>
+    <strong>Order Code:</strong> ${orderCode} <br>
+  `);
+
+  $("#orderId").val(orderId);
+  $("#userId").val(userId);
+  $("#orderCode").val(orderCode);
+
+  // Show modal with fadeIn
+  $('#setScheduleModal').removeClass('hidden').fadeIn(200);
+});
+
+// Close button
+$('#closeModal').on('click', function () {
+  $('#setScheduleModal').fadeOut(200, function () {
+    $(this).addClass('hidden');
+  });
+});
+
+// Close when clicking outside the modal content
+$('#setScheduleModal').on('click', function (e) {
+  if (e.target.id === 'setScheduleModal') {
+    $(this).fadeOut(200, function () {
+      $(this).addClass('hidden');
+    });
+  }
+});
+
+
+
+
+$('#setScheduleForm').on('submit', function(e) {
+    e.preventDefault();
+
+    const user_id = $('#userId').val();
+    const order_code = $('#orderCode').val();
+    const order_id = $('#orderId').val();
+
+    console.log(user_id);
+
+    var formData = new FormData(this);
+    formData.append('requestType', 'setSchedule'); 
+
+    $.ajax({
+        url: "backend/end-points/controller.php",
+        type: 'POST',
+        data: formData,
+        dataType: 'json',
+        contentType: false,    // Required for FormData
+        processData: false,    // Required for FormData
+        success: function (response) {
+            if (response.status === 200) {
+                $('#spinnerOverlay').removeClass('hidden');
+
+                $.ajax({
+                    url: 'backend/mail/schedule-mailer.php',
+                    type: 'POST',
+                    data: {
+                        user_id: user_id,
+                        order_code: order_code,
+                        order_id: order_id,
+                    },
+                    success: function () {
+                        $('#spinnerOverlay').addClass('hidden');
+                        Swal.fire('Success!', response.message, 'success').then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function () {
+                        $('#spinnerOverlay').addClass('hidden');
+                        Swal.fire('Email Error!', 'Action succeeded, but mail was not sent.', 'warning').then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+
+            } else {
+                Swal.fire('Error!', response.message, 'error');
+            }
+        },
+        error: function () {
+            Swal.fire('Error!', 'There was a problem with the request.', 'error');
+        }
+    });
+});
+
+
+
+
+
+
+
+
 $(document).on('click', '.userActionToggler', function (e) {
     e.preventDefault();
 

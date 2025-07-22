@@ -65,7 +65,7 @@ if (isset($_SESSION['admin_id'])) {
           <span>Dashboard</span>
       </a>
 
-     <a href="orderlist" class="flex items-center lg:justify-start space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
+     <a href="reserve" class="flex items-center lg:justify-start space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
         <span class="material-icons">event</span>
         <span>Reserve</span>
     </a>

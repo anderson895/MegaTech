@@ -239,6 +239,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         echo json_encode($response);
 
+    } else if ($_POST['requestType'] == 'setSchedule') {
+
+        $orderId = $_POST['orderId'];
+        $scheduleDate = $_POST['scheduleDate'];
+        $scheduleTime = $_POST['scheduleTime'];
+        $newStatus = "scheduled";
+     
+        $order = $db->updateOrderStatus($orderId,$scheduleDate,$scheduleTime,$newStatus);
+
+        if ($order === true) {
+            echo json_encode([
+            'status' => 200,
+            'message' => 'Stock updated successfully (stock out).'
+            ]);
+        } else {
+             echo json_encode([
+             'status' => 500,
+             'message' => 'Failed to update stock in the database: ' . $order
+               ]);
+        }
+
+              
+
     }else {
         echo json_encode([
             'status' => 400,

@@ -193,6 +193,57 @@ public function addProduct($productData)
 
 
     
+   public function fetch_all_reservation(){
+        $query = $this->conn->prepare("SELECT * FROM `orders`
+        LEFT JOIN user
+        ON user.user_id = orders.order_user_id
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+      public function fetch_order($order_id){
+        $query = $this->conn->prepare("SELECT * FROM orders 
+        LEFT JOIN user
+        ON user.user_id = orders.order_user_id
+        WHERE orders.order_id = '$order_id'");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+     
+    public function fetch_order_item($order_id){
+        $query = $this->conn->prepare("SELECT * FROM orders
+        LEFT JOIN orders_item
+        ON orders.order_id = orders_item.item_order_id
+        LEFT JOIN product
+        ON product.prod_id = orders_item.item_product_id
+        LEFT JOIN category
+        ON category.category_id = product.prod_category_id
+        where  orders_item.item_order_id ='$order_id'
+        ");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+    
+
+
+    public function updateOrderStatus($orderId,$scheduleDate,$scheduleTime,$newStatus) {
+        $stmt = $this->conn->prepare("UPDATE `orders` SET `order_status` = '$newStatus',`order_pickup_date` = '$scheduleDate',`order_pickup_time` = '$scheduleTime' WHERE `orders`.`order_id` = '$orderId'");
+        return $stmt->execute();
+    }
+
+
+    
 
     public function getProductImageById($product_ID) {
         $sql = "SELECT prod_image FROM product WHERE prod_id = ?";
