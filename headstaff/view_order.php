@@ -17,13 +17,16 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
 }
 
 ?>
+
+
+
 <div class="max-w-5xl mx-auto mt-12 p-8 bg-white rounded-2xl shadow-lg border border-gray-200 font-sans text-gray-800">
   <!-- Header -->
   <div class="text-center border-b pb-6 mb-10">
     <div class="flex justify-center mb-2">
       <img src="../assets/logo/logo1.jpg" alt="MegaTech Logo" class="h-16 w-16 rounded-full border shadow object-cover">
     </div>
-    <h1 class="text-3xl font-bold text-gray-800">Reservation Receipt</h1>
+    <h1 class="text-3xl font-bold text-gray-800">Reservation Details</h1>
     <p class="text-blue-600 font-semibold uppercase tracking-wide text-sm">MegaTech</p>
   </div>
 
@@ -117,4 +120,3 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
 </div>
 
 <?php include "components/footer.php"; ?>
-<script src="../function/js/filter_price_category.js"></script>

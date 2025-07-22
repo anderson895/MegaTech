@@ -6,7 +6,7 @@ include "components/header.php";
     <h2 class="text-lg font-semibold text-gray-700">Return</h2>
     <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-lg font-bold text-white">
         <?php
-        echo substr(ucfirst($_SESSION['hs_username']), 0, 1);
+        echo substr(ucfirst($_SESSION['admin_username']), 0, 1);
         ?>
     </div>
 </div>
@@ -27,8 +27,7 @@ include "components/header.php";
                     <th class="p-2">CODE</th>
                     <th class="p-2">NAME</th>
                     <th class="p-2">DATE</th>
-                    <th class="p-2">MOP</th>
-                    <th class="p-2">TOTAL</th>
+                    <th class="p-2">REASON</th>
                     <th class="p-2">STATUS</th>
                     <th class="p-2 text-center">ACTION</th>
                 </tr>

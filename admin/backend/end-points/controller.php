@@ -268,10 +268,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }else if ($_POST['requestType'] == 'pickedupOrder') {
 
         $orderStatus="pickedup";
-
         $orderId = $_POST['order_id'];
-        // Cancel the order
             $order = $db->pickedupOrder($orderId, $orderStatus);
+
+            if ($order) {
+                echo 200; 
+            } else {
+                echo 'Failed to update order in the database.';
+            }
+                
+
+    }else if ($_POST['requestType'] == 'approveReturn') {
+
+        $return_status=4;
+        $return_id = $_POST['return_id'];
+            $order = $db->approveReturn($return_id, $return_status);
+
+            if ($order) {
+                echo 200; 
+            } else {
+                echo 'Failed to update order in the database.';
+            }
+                
+
+    }else if ($_POST['requestType'] == 'cancelReturn') {
+
+        $return_status=2;
+        $return_id = $_POST['return_id'];
+            $order = $db->cancelReturn($return_id, $return_status);
 
             if ($order) {
                 echo 200; 

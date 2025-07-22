@@ -206,6 +206,29 @@ public function addProduct($productData)
     }
 
 
+
+
+
+ public function fetch_all_return(){
+        $query = $this->conn->prepare("SELECT * FROM `return_order`
+        LEFT JOIN orders_item
+        ON orders_item.item_id = return_order.return_item_id
+        LEFT JOIN orders
+        ON orders.order_id  = orders_item.item_order_id 
+        LEFT JOIN user
+        ON orders.order_user_id  = user.user_id  
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+
+
+
       public function fetch_order($order_id){
         $query = $this->conn->prepare("SELECT * FROM orders 
         LEFT JOIN user
@@ -244,8 +267,20 @@ public function addProduct($productData)
 
 
 
-     public function pickedupOrder($orderId, $orderStatus) {
+    public function pickedupOrder($orderId, $orderStatus) {
         $stmt = $this->conn->prepare("UPDATE `orders` SET `order_status` = '$orderStatus' WHERE `orders`.`order_id` = '$orderId'");
+        return $stmt->execute();
+    }
+
+
+
+    public function approveReturn($return_id, $return_status) {
+        $stmt = $this->conn->prepare("UPDATE `return_order` SET `return_status` = '$return_status' WHERE `return_order`.`return_id` = '$return_id'");
+        return $stmt->execute();
+    }
+
+    public function cancelReturn($return_id, $return_status) {
+        $stmt = $this->conn->prepare("UPDATE `return_order` SET `return_status` = '$return_status' WHERE `return_order`.`return_id` = '$return_id'");
         return $stmt->execute();
     }
 

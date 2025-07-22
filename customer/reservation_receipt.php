@@ -219,7 +219,7 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
           <select id="reason" name="reason" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             <option value="">-- Select Reason --</option>
             <option value="damaged">Damaged Item</option>
-            <option value="wrong_item">Wrong Item</option>
+            <option value="wrong item">Wrong Item</option>
             <option value="defective">Defective Product</option>
             <option value="other">Other</option>
           </select>

@@ -2,6 +2,89 @@ $(document).ready(function () {
 
 
 
+    
+$(document).on('click', '.btnReturnToggler', function (e) {
+    e.preventDefault();
+
+    const return_id = $(this).data('return_id');
+    const order_user_id = $(this).data('order_user_id');
+  
+    const action = $(this).data('action');
+
+    let title = '';
+    let confirmButtonText = '';
+    let requestType = '';
+
+    if (action === 'approve') {
+       title = `<span style="color: green;">Approve Return</strong>`;
+
+        confirmButtonText = 'Confirm';
+        requestType = 'approveReturn';
+    } else if (action === 'cancel') {
+       title = `<span style="color: red;">Cancel Return</strong>`;
+
+        confirmButtonText = 'Confirm';
+        requestType = 'cancelReturn';
+    }
+
+    Swal.fire({
+        title: title,
+        html: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'No!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { return_id: return_id, requestType: requestType },
+                dataType: 'json',
+                success: function (response) {
+                    if (response === 200) {
+                        $('#spinnerOverlay').removeClass('hidden');
+
+
+                         $.ajax({
+                            url: 'backend/mail/return-mailer.php',
+                            type: 'POST',
+                            data: {
+                                user_id: order_user_id,
+                                action: action
+                            },
+                            success: function () {
+                                $('#spinnerOverlay').addClass('hidden');
+                                Swal.fire('Success!', response.message, 'success').then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                $('#spinnerOverlay').addClass('hidden');
+                                Swal.fire('Email Error!', 'Action succeeded, but mail was not sent.', 'warning').then(() => {
+                                    location.reload();
+                                });
+                            }
+                        });
+                       
+                            
+
+                    } else {
+                        Swal.fire('Error!', response.message, 'error');
+                    }
+                },
+                error: function () {
+                    Swal.fire('Error!', 'There was a problem with the request.', 'error');
+                }
+            });
+        }
+    });
+});
+
+
+
+
+
 
 
 
@@ -222,8 +305,6 @@ $(document).on('click', '.userActionToggler', function (e) {
                 success: function (response) {
                     if (response.status === 200) {
                         $('#spinnerOverlay').removeClass('hidden');
-
-                        // Only send mail for accept/restrict
                         if (action === 'accept' || action === 'restrict') {
                             $.ajax({
                                 url: 'backend/mail/user-mailer.php',
@@ -292,7 +373,7 @@ $(document).on('click', '.userActionToggler', function (e) {
                     url: "backend/end-points/controller.php",
                     type: 'POST',
                     data: { prod_id: prod_id, requestType: 'removeProduct' },
-                    dataType: 'json',  // Expect a JSON response
+                    dataType: 'json', 
                     success: function(response) {
                       console.log(response);
                         if (response.status === 200) {
