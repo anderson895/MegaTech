@@ -17,28 +17,21 @@ class global_class extends db_connect
 
 
     public function check_account($user_id ) {
-        // I-sanitize ang admin_id para maiwasan ang SQL injection
         $user_id  = intval($user_id);
-    
-        // SQL query para hanapin ang admin_id sa table
         $query = "SELECT * FROM user WHERE user_id  = $user_id";
-    
         $result = $this->conn->query($query);
-    
-        // Prepare ang array para sa result
         $items = [];
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $items[] = $row;
             }
         }
-        return $items; // Ibabalik ang array ng results o empty array kung walang nahanap
+        return $items;
     }
 
 
     public function getCartlist($userID)
     {
-        // Directly insert the userID into the query (no prepared statements)
         $query = "SELECT cart.*, product.*
       
             FROM `cart`
@@ -50,13 +43,10 @@ class global_class extends db_connect
         $result = $this->conn->query($query);
         
         if ($result) {
-            // Fetch all results and store in array
             $cartItems = [];
             while ($row = $result->fetch_assoc()) {
                 $cartItems[] = $row;
             }
-    
-            // Return the result
             return $cartItems;
         }
     }
@@ -103,33 +93,6 @@ class global_class extends db_connect
     
 
 
-
-    public function fetch_product_on_wish($userID){
-        $query = $this->conn->prepare("SELECT 
-                product.*, 
-                category.*, 
-                promo.*, 
-                wishlist.*, 
-                CASE 
-                    WHEN promo.promo_expiration < NOW() THEN NULL
-                    WHEN promo.promo_status = '0' THEN NULL
-                    ELSE product.prod_promo_id
-                END AS prod_promo_id
-            FROM product
-            LEFT JOIN category
-                ON product.prod_category_id = category.category_id
-            LEFT JOIN promo
-                ON promo.promo_id = product.prod_promo_id
-            LEFT JOIN wishlist
-                ON wishlist.wish_prod_id = product.prod_id 
-            where wishlist.wish_user_id ='$userID'
-        "    
-    );
-        if ($query->execute()) {
-            $result = $query->get_result();
-            return $result;
-        }
-    }
     
 
 
@@ -145,70 +108,10 @@ class global_class extends db_connect
     
     
 
-    public function getPaymentQr($cart_id)
-    { 
-        session_start();
-        $user_id = $_SESSION['user_id'];
-        
-            $updateStatusQuery = "DELETE FROM `cart` WHERE cart_user_id = $user_id AND cart_prod_id=$cart_id";
-            if ($this->conn->query($updateStatusQuery)) {
-                return 200;
-            }
-    }
-
 
    
     
-    
 
-
-
-    public function UpdateAddress($address_id)
-    { 
-        session_start();
-        $user_id = $_SESSION['user_id'];
-    
-        // Update all previous addresses to '0'
-        $resetStatusQuery = "UPDATE `address_user` SET `ad_status` = '0' WHERE `ad_user_id` = '$user_id'";
-        if ($this->conn->query($resetStatusQuery)) {
-            // Update the current address to '1'
-            $updateStatusQuery = "UPDATE `address_user` SET `ad_status` = '1' WHERE ad_id='$address_id' AND `ad_user_id` = '$user_id'";
-            if ($this->conn->query($updateStatusQuery)) {
-                return 200;
-            }
-        }
-        return 400;
-    }
-    
-
-    
-    public function AddAddress($street_name, $barangay, $complete_address_add)
-{
-    session_start();
-    $user_id = $_SESSION['user_id'];
-
-    // Check if the address already exists
-    $checkQuery = "SELECT * FROM `address_user` WHERE `ad_user_id` = '$user_id' AND `ad_address_code` = '$barangay' AND `ad_complete_address` = '$complete_address_add'";
-    $result = $this->conn->query($checkQuery);
-
-    if ($result->num_rows > 0) {
-        return 409; // Address already exists
-    } else {
-        // Set all ad_status to 0 for this user
-        $resetStatusQuery = "UPDATE `address_user` SET `ad_status` = '0' WHERE `ad_user_id` = '$user_id'";
-        $this->conn->query($resetStatusQuery);
-
-        // Insert new address with ad_status set to 1
-        $query = "INSERT INTO `address_user` (`ad_user_id`, `ad_address_code`, `ad_complete_address`, `ad_status`) 
-                  VALUES ('$user_id', '$barangay', '$complete_address_add', '1')";
-
-        if ($this->conn->query($query)) {
-            return 200; // Success
-        } else {
-            return 400; // Error
-        }
-    }
-}
 
 
 
@@ -486,22 +389,41 @@ private function generateUniqueOrderCode()
         }
     }
     
-    
-    public function fetch_order_item($order_id){
-        $query = $this->conn->prepare("SELECT * FROM orders
-        LEFT JOIN orders_item
-        ON orders.order_id = orders_item.item_order_id
-        LEFT JOIN product
-        ON product.prod_id = orders_item.item_product_id
-        LEFT JOIN category
-        ON category.category_id = product.prod_category_id
-        where  orders_item.item_order_id ='$order_id'
+    public function fetch_order_item($order_id) {
+        $query = $this->conn->prepare("
+            SELECT 
+                orders.*,
+                orders_item.*,
+                product.*,
+                category.*,
+                return_order.return_status
+            FROM orders
+            LEFT JOIN orders_item 
+                ON orders.order_id = orders_item.item_order_id
+            LEFT JOIN product 
+                ON product.prod_id = orders_item.item_product_id
+            LEFT JOIN category 
+                ON category.category_id = product.prod_category_id
+            LEFT JOIN return_order 
+                ON return_order.return_item_id = orders_item.item_id
+            WHERE orders_item.item_order_id = ?
         ");
+        $query->bind_param('i', $order_id);
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;
         }
+        return false;
     }
+
+
+
+     public function updateOrderStatus($item_id,$newStatus) {
+        $stmt = $this->conn->prepare("UPDATE `return_order` SET `return_status` = '$newStatus' WHERE `return_order`.`return_item_id` = '$item_id'");
+        return $stmt->execute();
+    }
+
+
     
 
     public function getOrderStatusCounts($userID)
@@ -623,6 +545,34 @@ private function generateUniqueOrderCode()
     }
 
 
+
+
+
+
+
+public function return_item($item_id, $item_qty, $reason, $uniqueFileName)
+{
+    $query = "INSERT INTO `return_order` 
+              (`return_item_id`, `return_qty`, `return_proof`, `return_reason`) 
+              VALUES (?, ?, ?, ?)";
+
+    if ($stmt = $this->conn->prepare($query)) {
+        $stmt->bind_param('iiss', 
+            $item_id, 
+            $item_qty, 
+            $uniqueFileName, 
+            $reason
+        );
+
+        if ($stmt->execute()) {
+            return ['status' => 'success'];
+        } else {
+            return ['status' => 'error', 'message' => 'Execute failed: ' . $stmt->error];
+        }
+    } else {
+        return ['status' => 'error', 'message' => 'Prepare failed: ' . $this->conn->error];
+    }
+}
 
     
     

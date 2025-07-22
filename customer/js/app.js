@@ -1,4 +1,153 @@
-  $('#userPasswordFrm').on('submit', function(e) {
+
+
+$(document).on('click', '.cancelReturnBtn', function (e) {
+    e.preventDefault();
+
+    const item_id = $(this).data('item_id');
+    const prod_name = $(this).data('prod_name');
+  
+    const action = $(this).data('action');
+
+    let title = '';
+    let confirmButtonText = '';
+    let requestType = '';
+
+    if (action === 'cancelReturn') {
+        title = `Cancel Return ? `;
+        confirmButtonText = 'Yes!';
+        requestType = 'cancelReturnOrder';
+    }
+
+    Swal.fire({
+        title: title,
+        html: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "backend/end-points/controller.php",
+                type: 'POST',
+                data: { item_id: item_id, requestType: requestType },
+                dataType: 'json',
+                success: function (response) {
+                    
+                Swal.fire('Success!', response.message, 'success').then(() => {
+                     location.reload();
+                });
+                               
+                },
+                error: function () {
+                    Swal.fire('Error!', 'There was a problem with the request.', 'error');
+                }
+            });
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Open Modal
+$(document).on('click', '.returnItemToggler', function (e) {
+  const item_id = $(this).data('item_id');
+  const prod_name = $(this).data('prod_name');
+  const item_qty = $(this).data('item_qty');
+
+  $("#item_id").val(item_id);
+  $("#prod_name").val(prod_name);
+  $("#item_qty").val(item_qty); 
+  $("#original_qty").val(item_qty); 
+
+  $('#returnItemModal').removeClass('hidden').fadeIn(200);
+});
+
+// Close Modal
+$('#closeModal').on('click', function () {
+  $('#returnItemModal').fadeOut(200, function () {
+    $(this).addClass('hidden');
+  });
+});
+
+$('#returnItemModal').on('click', function (e) {
+  if (e.target.id === 'returnItemModal') {
+    $(this).fadeOut(200, function () {
+      $(this).addClass('hidden');
+    });
+  }
+});
+
+$('#returnItemForm').on('submit', function(e) {
+  e.preventDefault();
+
+  const original_qty = parseInt($("#original_qty").val());
+  const submitted_qty = parseInt($("#item_qty").val());
+
+  if (isNaN(submitted_qty) || submitted_qty <= 0) {
+    alertify.error('Please enter a valid quantity.');
+    return;
+  }
+
+  if (submitted_qty > original_qty) {
+    alertify.error('Submitted quantity exceeds available quantity.');
+    return;
+  }
+
+  const formData = new FormData(this);
+  formData.append('requestType', 'returnItem');
+
+  $.ajax({
+    url: "backend/end-points/controller.php",
+    type: 'POST',
+    data: formData,
+    dataType: 'json',
+    contentType: false,
+    processData: false,
+    success: function (response) {
+      if (response.status === 200) {
+        $('#spinnerOverlay').removeClass('hidden');
+        Swal.fire('Success!', response.message, 'success').then(() => {
+          location.reload();
+        });
+      }
+    },
+    error: function () {
+      Swal.fire('Error!', 'There was a problem with the request.', 'error');
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ $('#userPasswordFrm').on('submit', function(e) {
         e.preventDefault(); 
 
         var newpassword =$('#newpassword').val()
@@ -68,7 +217,6 @@
 
 
      $('.togglerAdd').click(function() {
-        // Sample data, replace with actual values from your PHP/Backend
         let cart_user_id = $(this).data('user_id');
         let cart_prod_id = $(this).data('product_id'); 
         
@@ -79,9 +227,9 @@
             data: { 
                 cart_user_id: cart_user_id,
                 cart_prod_id: cart_prod_id,
-                requestType: "AddToCart" // Corrected here
+                requestType: "AddToCart" 
             },
-            dataType: 'json', // Corrected the syntax here
+            dataType: 'json',
             success: function(response) {
 
                 

@@ -34,16 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userID = $_POST['userID'];
         $user_NewPassword = $_POST['user_NewPassword'];
         $user_CurrentPassword = $_POST['user_CurrentPassword'];
-
-    
-            // Call the function
         $response = $db->update_user_password($userID, $user_NewPassword, $user_CurrentPassword);
-
-        // Echo JSON encoded response
         echo json_encode($response);
-
-
-
 
     }else if ($_POST['requestType']=="UpdateUserProfile") {
     $userID = $_POST['userID'];
@@ -77,13 +69,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($updateSuccess) {
         echo json_encode(['status' => 'success', 'message' => 'Profile updated successfully']);
     } else {
-        // If the update fails, retain the old image
         if ($profileImage !== $oldImage && file_exists($profileImage)) {
-            unlink($profileImage); // Delete the newly uploaded image
+            unlink($profileImage); 
         }
         echo json_encode(['status' => 'error', 'message' => 'Failed to update profile']);
     }
 
+
+    }else if ($_POST['requestType']=="returnItem") {
+        $item_id = $_POST['item_id'];
+        $item_qty = $_POST['item_qty'];
+        $reason = $_POST['reason'];
+
+        $return_image = '';
+        $uploadDir = '../../../upload/';
+        $uniqueFileName = null;
+        
+        if (!$item_id || !$item_qty || !$reason) {
+            echo json_encode(['status' => 'error', 'message' => 'Missing required fields.']);
+            exit;
+        }
+        if (isset($_FILES['return_image']) && $_FILES['return_image']['error'] === 0) {
+            $fileExtension = pathinfo($_FILES['return_image']['name'], PATHINFO_EXTENSION);
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+            if (!in_array(strtolower($fileExtension), $allowedExtensions)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid file type.']);
+                exit;
+            }
+
+            if ($_FILES['return_image']['size'] > 2 * 1024 * 1024) { // 2MB limit
+                echo json_encode(['status' => 'error', 'message' => 'File size exceeds 2MB limit.']);
+                exit;
+            }
+
+            $uniqueFileName = uniqid('return_', true) . '.' . $fileExtension;
+            $return_image = $uploadDir . $uniqueFileName;
+
+            if (!move_uploaded_file($_FILES['return_image']['tmp_name'], $return_image)) {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to upload image.']);
+                exit;
+            }
+        }
+        $result = $db->return_item($item_id, $item_qty, $reason, $uniqueFileName);
+        if (is_array($result) && $result['status'] === 'success') {
+            echo json_encode(['status' => 200, 'message' => 'Return request submitted successfully.']);
+        } else {
+            $message = is_array($result) && isset($result['message']) ? $result['message'] : 'Something went wrong.';
+            echo json_encode(['status' => 'error', 'message' => $message]);
+        }
+    }else if ($_POST['requestType'] == 'cancelReturnOrder') {
+
+        $newStatus=3;
+
+        $item_id = $_POST['item_id'];
+            $order = $db->updateOrderStatus($item_id, $newStatus);
+
+            if ($order) {
+                echo 200; 
+            } else {
+                echo 'Failed to update order in the database.';
+            }
+                
 
     }else if ($_POST['requestType']=="AddToCart") {
         $userId = $_POST['cart_user_id'];
@@ -120,8 +167,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Decode the JSON string into a PHP array
         $selectedProductsArray = json_decode($selectedProducts, true);  
-
-        // Handle file upload if a file was provided
         $selectedFilePath = null;
         $uniqueFileName = null;
         $fileTmpPath = null;
@@ -228,8 +273,7 @@ if ($response['status'] === 'success') {
 
 }else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    $response = $db->getPaymentQr();
-    echo json_encode(['status' => $response]);
+  
 }
 
 
