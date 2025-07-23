@@ -36,7 +36,7 @@ include "components/header.php";
                     <th class="p-2">Product</th>
                     <th class="p-2">Stock</th>
                     <th class="p-2">Critical level</th>
-                    <th class="p-2">Price</th>
+                    <th class="p-2">Current Price</th>
                     <th class="p-2">Status</th>
                     <th class="p-2 text-center">Action</th>
                 </tr>
@@ -75,7 +75,7 @@ include "components/header.php";
             <!-- Price & Critical Level -->
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
-                    <label class="text-sm text-gray-600 mb-1 block">Price</label>
+                    <label class="text-sm text-gray-600 mb-1 block">Supplier Price</label>
                     <input type="text" name="product_Price" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm" required>
                 </div>
                 <div class="flex-1">
@@ -188,7 +188,7 @@ document.getElementById('addSpecsButton').addEventListener('click', function () 
     specsGroup.appendChild(removeButton);
     sizeContainer.appendChild(specsGroup);
 
-    updateRemoveButtonsVisibility(); // Refresh visibility
+    updateRemoveButtonsVisibility(); 
 });
 
 // For default spec row after DOM is loaded
@@ -201,9 +201,8 @@ document.addEventListener('DOMContentLoaded', function () {
             updateRemoveButtonsVisibility();
         });
     }
-    updateRemoveButtonsVisibility(); // Initial check
+    updateRemoveButtonsVisibility(); 
 });
-// jQuery for filtering the table based on search input
     $(document).ready(function () {
         $("#searchInput").on("keyup", function () {
             var value = $(this).val().toLowerCase();
