@@ -36,10 +36,12 @@ if ($fetch_all_return): ?>
 
         <td class="p-2 text-center">
             <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
-                <a href="view_order?order_id=<?= $return['order_id']?>" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded-md text-sm font-medium transition inline-flex items-center">
+                <button
+                    class="BtnView_return bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded-md text-sm font-medium transition inline-flex items-center"
+                    data-proof_img='<?= $return['return_proof']; ?>'
+                    >
                     <span class="material-icons align-middle text-sm mr-1">visibility</span> View
-                </a>
+                </button>
 
                 <button 
                     class="bg-green-600 btnReturnToggler hover:bg-green-700 text-white py-1 px-3 rounded-md text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -84,3 +86,33 @@ if ($fetch_all_return): ?>
 
 
 
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
+  <div class="relative w-full h-full flex items-center justify-center">
+    <!-- Close Button -->
+    <button id="closeModal" class="absolute top-4 right-6 text-white hover:text-red-400 text-4xl z-50 font-bold">&times;</button>
+
+    <!-- Image -->
+    <img id="modalImage" src="" alt="Return Proof"
+      class="max-w-full max-h-full object-contain rounded-lg shadow-lg">
+  </div>
+</div>
+
+
+
+<script>
+$(document).ready(function() {
+    $('.BtnView_return').on('click', function() {
+        const imagePath = $(this).data('proof_img');
+        $('#modalImage').attr('src', '../upload/' + imagePath);
+        $('#imageModal').removeClass('hidden').addClass('flex');
+    });
+
+    $('#closeModal, #imageModal').on('click', function(e) {
+        if (e.target.id === 'closeModal' || e.target.id === 'imageModal') {
+            $('#imageModal').addClass('hidden').removeClass('flex');
+            $('#modalImage').attr('src', '');
+        }
+    });
+});
+</script>
