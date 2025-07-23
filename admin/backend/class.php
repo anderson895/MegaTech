@@ -96,7 +96,6 @@ public function addProduct($productData)
         $specsJson
     );
 
-    // Execute and check
     if ($stmt->execute()) {
         return $this->conn->insert_id;
     } else {
@@ -104,6 +103,19 @@ public function addProduct($productData)
         return false;
     }
 }
+
+
+
+    public function get_allpickuped_report(){
+        $query = $this->conn->prepare("SELECT * FROM `orders`
+        LEFT JOIN user
+        ON orders.order_user_id  = user.user_id 
+         WHERE order_status = 'pickedup'");
+        if ($query->execute()) {
+            return $query->get_result();
+        }
+        return null;
+    }
 
 
 
@@ -118,6 +130,59 @@ public function addProduct($productData)
             return $result;
         }
     }
+
+    public function get_defective_report(){
+        $query = $this->conn->prepare("SELECT * FROM `return_order`
+        LEFT JOIN orders_item
+        ON return_order.return_item_id  = orders_item.item_id 
+        LEFT JOIN orders
+        ON orders.order_id  = orders_item.item_order_id  
+        LEFT JOIN product
+        ON orders_item.item_product_id  = product.prod_id   
+        ");
+
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+
+    public function get_sales_report(){
+        $query = $this->conn->prepare("SELECT * FROM `orders` WHERE order_status = 'pickedup'");
+        if ($query->execute()) {
+            return $query->get_result();
+        }
+        return null;
+    }
+
+
+    public function get_inventory_report(){
+        $query = $this->conn->prepare("
+            SELECT 
+                sh.stock_date AS date,
+                sl.sl_supplier_name AS supplier_name,
+                sl.sl_supplier_price AS supplier_price,
+                p.prod_name AS product_name,
+                sh.stock_Qty AS stock_qty,
+                sh.stock_changes AS changes
+            FROM 
+                supply_logs sl
+            INNER JOIN stock_history sh ON sl.sl_stock_id = sh.stock_id
+            INNER JOIN product p ON sh.stock_prod_id = p.prod_id
+            WHERE 
+                sh.stock_type = 'Stock In'
+            ORDER BY sh.stock_date DESC
+        ");
+
+        if ($query->execute()) {
+            return $query->get_result();
+        }
+        return null;
+    }
+
+
 
      public function check_account($admin_id) {
         $admin_id = intval($admin_id);
