@@ -17,7 +17,7 @@ use Endroid\QrCode\Color\Color;
 $orderId = $_POST['order_id'];
 $order_code = $_POST['order_code'];
 
-$data = "Order Code: $order_code";
+$data = $order_code;
 
 // Generate QR
 $qrCode = new QrCode(
