@@ -109,12 +109,30 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
   </div>
 </div>
 
-<!-- Action Buttons -->
-<?php if ($order['order_status'] !== 'pickedup') : ?>
+<?php
+$orderStatus = strtolower($order['order_status']);
+?>
+
+<?php if ($orderStatus === 'paid') : ?>
+  <!-- Only Show Set Schedule Button -->
+  <div class="flex justify-center items-center mt-4">
+    <button 
+      class="setScheduleToggler w-full sm:w-[220px] flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition"
+      data-user_id="<?= $order['order_user_id'] ?>"
+      data-order_id="<?= $order['order_id'] ?>"
+      data-order_code="<?= $order['order_code'] ?>"
+      data-fullname="<?= ucfirst($order['Fullname']) ?>">
+      <span class="material-icons mr-2 text-base">calendar_month</span>
+      Set Schedule
+    </button>
+  </div>
+
+<?php elseif ($orderStatus === 'scheduled') : ?>
+  <!-- Show Mark as Done and Re-Schedule Buttons -->
   <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
   <input type="hidden" name="new_status" value="picked up">
 
-  <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-4">
     <!-- Mark as Done -->
     <button type="submit"
             class="orderActionToggler w-full sm:w-[220px] flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition"
@@ -126,24 +144,26 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
       Mark as Done
     </button>
 
-    <!-- Schedule Button -->
+    <!-- Re-Schedule Button -->
     <button 
-      class="setScheduleToggler w-full sm:w-[220px] flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition disabled:opacity-50 disabled:cursor-not-allowed"
+      class="setScheduleToggler w-full sm:w-[220px] flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow transition"
       data-user_id="<?= $order['order_user_id'] ?>"
       data-order_id="<?= $order['order_id'] ?>"
       data-order_code="<?= $order['order_code'] ?>"
-      data-fullname="<?= ucfirst($order['Fullname']) ?>"
-      <?= strtolower($order['order_status']) === 'pending' ? 'disabled' : '' ?>
-    >
+      data-fullname="<?= ucfirst($order['Fullname']) ?>">
       <span class="material-icons mr-2 text-base">calendar_month</span>
-      <?= strtolower($order['order_status']) === 'scheduled' ? 'Re-Schedule' : 'Set Schedule' ?>
+      Re-Schedule
     </button>
   </div>
-<?php else : ?>
+
+<?php elseif ($orderStatus === 'pickedup') : ?>
+  <!-- Picked up message -->
   <div class="mt-10 text-center text-green-700 font-semibold text-lg">
     ✅ This reservation has already been picked up.
   </div>
+
 <?php endif; ?>
+
 
 <!-- Footer -->
 <div class="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500 italic">
