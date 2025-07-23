@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2025 at 09:52 AM
+-- Generation Time: Jul 23, 2025 at 10:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,7 +40,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `admin_username`, `admin_password`, `admin_fullname`, `admin_status`) VALUES
-(1, 'admin', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 'Juan Dela Cruz', 1),
+(1, 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'Juan Dela Cruz', 1),
 (7, 'andy', '6177321eac992341d1ad0823a07e76bfc4ee6909db120e377ea303fdc216756c', 'Joshua Padilla', 1);
 
 -- --------------------------------------------------------
@@ -134,7 +134,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `order_code`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`, `order_proof_recieved`) VALUES
-(24, 'ORD-D24F214C', 72, '2025-07-23 06:14:53', 'GCash', 'proof_68807b2b802832.48801730.jpg', '2025-07-23', '14:13:00', 79000.00, 39500.00, NULL, 'pickedup', 'pickedup_68807dddb52587.80788592.jpg');
+(24, 'ORD-D24F214C', 72, '2025-07-23 06:14:53', 'GCash', 'proof_68807b2b802832.48801730.jpg', '2025-07-23', '14:13:00', 79000.00, 39500.00, NULL, 'pickedup', 'pickedup_68807dddb52587.80788592.jpg'),
+(25, 'ORD-7719DB04', 76, '2025-01-23 08:33:28', 'GCash', 'proof_68809ddc4031c6.16009405.jpg', '2025-07-23', '16:33:00', 238000.00, 119000.00, NULL, 'pickedup', 'pickedup_68809e58420215.75667259.png');
 
 -- --------------------------------------------------------
 
@@ -157,7 +158,10 @@ CREATE TABLE `orders_item` (
 
 INSERT INTO `orders_item` (`item_id`, `item_order_id`, `item_product_id`, `item_product_price`, `item_qty`, `item_total`) VALUES
 (36, 24, 6, 29000.00, 1, 29000.00),
-(37, 24, 5, 50000.00, 1, 50000.00);
+(37, 24, 5, 50000.00, 1, 50000.00),
+(38, 25, 4, 30000.00, 1, 30000.00),
+(39, 25, 5, 50000.00, 3, 150000.00),
+(40, 25, 6, 29000.00, 2, 58000.00);
 
 -- --------------------------------------------------------
 
@@ -186,9 +190,9 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`prod_id`, `prod_code`, `prod_name`, `prod_description`, `prod_specs`, `prod_stocks`, `prod_category_id`, `prod_price`, `prod_critical`, `prod_status`, `prod_image`, `prod_added`) VALUES
 (3, 'A0001', 'LED Industrial Grade Solar Street lights IP67', '300W Megalight High Brightness LED Industrial Grade Solar Street lights IP67', '[{\"Specs\":\"color\",\"value\":\"orange\"},{\"Specs\":\"brand\",\"value\":\"yamaha\"}]', 10, 2, 4500.00, 10, 0, 'product_687683437e3086.19790545.jpg', '2025-07-16 08:57:30'),
-(4, 'A0002', 'Solar Panel', 'Transform your operations with robust Solar Panels technology for efficiency and savings', '[{\"Specs\":\"Panel type\",\"value\":\"Monocrystalline, Polycrystalline, Thin-film\"},{\"Specs\":\"Power output\",\"value\":\"50W, 100W, 150W, 300W\"},{\"Specs\":\"Voltage Rating\",\"value\":\"12V, 24V\"},{\"Specs\":\"Size\",\"value\":\"1200mm x 540mm x 35mm\"},{\"Specs\":\"Weight\",\"value\":\"7.5 kg\"},{\"Specs\":\"Mounting Type\",\"value\":\"Roof-mounted, Ground-mounted, Pole-mounted\"}]', 14, 2, 30000.00, 10, 1, 'product_687700c5b87b41.71450609.jpg', '2025-07-16 09:30:45'),
-(5, 'A0003', 'Electric Pole', 'Installation Area – Highway, Subdivision, Industrial Area', '[{\"Specs\":\"Pole Type\",\"value\":\"Concrete Pole, Steel Pole\"},{\"Specs\":\"Height\",\"value\":\"7m, 10m, 12m\"},{\"Specs\":\"Load Capacity\",\"value\":\"300kg, 500kg\"}]', 90, 5, 50000.00, 10, 1, 'product_687712af7c7e43.51042686.jpg', '2025-07-16 10:47:11'),
-(6, 'A0004', 'Akumulator AGM Monbat MEGALIGHT AGM 230Ah 12 V / 230 Ah', 'Akumulator AGM Megalight Power 12V 230AH.Akumulator głębokiego rozładowania. wymiary w mm: dł/szer/wys/ 518/274/242. Waga 59 kg. Układ biegunów 3.', '[{\"Specs\":\"Battery Type\",\"value\":\"Lithium-ion, LiFePO4, Lead Acid\"},{\"Specs\":\"Voltage Rating\",\"value\":\"3.7V, 6V, 12V\"},{\"Specs\":\"Capacity\",\"value\":\"5000mAh, 100Ah\"},{\"Specs\":\"Size\",\"value\":\"150mm x 65mm x 90mm\"}]', 100, 3, 29000.00, 15, 1, 'product_6877138e30f989.41089661.jpg', '2025-07-16 10:50:54');
+(4, 'A0002', 'Solar Panel', 'Transform your operations with robust Solar Panels technology for efficiency and savings', '[{\"Specs\":\"Panel type\",\"value\":\"Monocrystalline, Polycrystalline, Thin-film\"},{\"Specs\":\"Power output\",\"value\":\"50W, 100W, 150W, 300W\"},{\"Specs\":\"Voltage Rating\",\"value\":\"12V, 24V\"},{\"Specs\":\"Size\",\"value\":\"1200mm x 540mm x 35mm\"},{\"Specs\":\"Weight\",\"value\":\"7.5 kg\"},{\"Specs\":\"Mounting Type\",\"value\":\"Roof-mounted, Ground-mounted, Pole-mounted\"}]', 13, 2, 30000.00, 10, 1, 'product_687700c5b87b41.71450609.jpg', '2025-07-16 09:30:45'),
+(5, 'A0003', 'Electric Pole', 'Installation Area – Highway, Subdivision, Industrial Area', '[{\"Specs\":\"Pole Type\",\"value\":\"Concrete Pole, Steel Pole\"},{\"Specs\":\"Height\",\"value\":\"7m, 10m, 12m\"},{\"Specs\":\"Load Capacity\",\"value\":\"300kg, 500kg\"}]', 87, 5, 50000.00, 10, 1, 'product_687712af7c7e43.51042686.jpg', '2025-07-16 10:47:11'),
+(6, 'A0004', 'Akumulator AGM Monbat MEGALIGHT AGM 230Ah 12 V / 230 Ah', 'Akumulator AGM Megalight Power 12V 230AH.Akumulator głębokiego rozładowania. wymiary w mm: dł/szer/wys/ 518/274/242. Waga 59 kg. Układ biegunów 3.', '[{\"Specs\":\"Battery Type\",\"value\":\"Lithium-ion, LiFePO4, Lead Acid\"},{\"Specs\":\"Voltage Rating\",\"value\":\"3.7V, 6V, 12V\"},{\"Specs\":\"Capacity\",\"value\":\"5000mAh, 100Ah\"},{\"Specs\":\"Size\",\"value\":\"150mm x 65mm x 90mm\"}]', 98, 3, 29000.00, 15, 1, 'product_6877138e30f989.41089661.jpg', '2025-07-16 10:50:54');
 
 -- --------------------------------------------------------
 
@@ -253,7 +257,10 @@ INSERT INTO `stock_history` (`stock_id`, `stock_prod_id`, `stock_account_id`, `s
 (65, 6, 1, 'Stock Out', 'HeadStaff', 1, '102 -> 101', '2025-07-23 06:10:49'),
 (66, 5, 1, 'Stock Out', 'HeadStaff', 1, '92 -> 91', '2025-07-23 06:10:49'),
 (67, 6, 1, 'Stock Out', 'HeadStaff', 1, '101 -> 100', '2025-07-23 06:12:04'),
-(68, 5, 1, 'Stock Out', 'HeadStaff', 1, '91 -> 90', '2025-07-23 06:12:04');
+(68, 5, 1, 'Stock Out', 'HeadStaff', 1, '91 -> 90', '2025-07-23 06:12:04'),
+(69, 4, 1, 'Stock Out', 'HeadStaff', 1, '14 -> 13', '2025-07-23 08:32:12'),
+(70, 5, 1, 'Stock Out', 'HeadStaff', 3, '90 -> 87', '2025-07-23 08:32:12'),
+(71, 6, 1, 'Stock Out', 'HeadStaff', 2, '100 -> 98', '2025-07-23 08:32:12');
 
 -- --------------------------------------------------------
 
@@ -302,7 +309,8 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`user_id`, `Fullname`, `Email`, `Phone`, `Password`, `user_type`, `Profile_images`, `status`) VALUES
 (72, 'joshua padilla', 'andersonandy046@gmail.com', '09454454741', '61e36b4d463fcf248af31898805050d4b137bb54e74c4e7e9b95b35ccb0f9753', 'personal', NULL, 1),
-(75, 'mary jane', 'maryjanedelacruz613@gmail.com', '09454454744', 'ecff9a01e0c1a3129a2bfaff0d90bdc3db6d5092c8ee42c94041425e236c02ec', 'business', NULL, 1);
+(75, 'mary jane', 'maryjanedelacruz613@gmail.com', '09454454744', 'ecff9a01e0c1a3129a2bfaff0d90bdc3db6d5092c8ee42c94041425e236c02ec', 'business', NULL, 1),
+(76, 'juan dela cruz', 'mypet02025@gmail.com', '09454454744', 'f21cc5777f91245e7b14d8721e7799fe9e17de2c053bb7fdb164c662dd1a6383', 'business', NULL, 1);
 
 --
 -- Indexes for dumped tables
@@ -397,7 +405,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=301;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=304;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -415,13 +423,13 @@ ALTER TABLE `headstaff`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `orders_item`
 --
 ALTER TABLE `orders_item`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -439,7 +447,7 @@ ALTER TABLE `return_order`
 -- AUTO_INCREMENT for table `stock_history`
 --
 ALTER TABLE `stock_history`
-  MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `supply_logs`
@@ -451,7 +459,7 @@ ALTER TABLE `supply_logs`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- Constraints for dumped tables

@@ -26,7 +26,9 @@ $(document).ready(function () {
             success: function(response) {
                 console.log(response);
                 if (response.success) {
-                    alertify.success(response.message); 
+                     Swal.fire('Success!', response.message, 'success').then(() => {
+                                        location.reload();
+                                    });
                 } else {
                     alertify.error(response.message);
                 }

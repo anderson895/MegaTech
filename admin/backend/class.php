@@ -51,6 +51,78 @@ class global_class extends db_connect
 
 
 
+     public function getDataAnalytics()
+{
+    $query = " 
+        SELECT 
+            (SELECT COUNT(*) FROM `user` WHERE status = '1') AS userCount,
+            (SELECT COUNT(*) FROM `product` WHERE prod_status = '1') AS productCount,
+            (SELECT SUM(`order_total`) FROM `orders` WHERE `order_status` = 'pickedup') AS totalSales,
+            (SELECT SUM(`order_total`) 
+                FROM `orders` 
+                WHERE `order_status` = 'pickedup' 
+                AND DATE(`order_date`) = CURDATE()) AS todaySales,
+            (SELECT SUM(`order_total`) 
+                FROM `orders` 
+                WHERE `order_status` = 'pickedup' 
+                AND YEARWEEK(`order_date`, 1) = YEARWEEK(CURDATE(), 1)) AS weeklySales,
+            (SELECT SUM(`order_total`) 
+                FROM `orders` 
+                WHERE `order_status` = 'pickedup' 
+                AND MONTH(`order_date`) = MONTH(CURDATE()) 
+                AND YEAR(`order_date`) = YEAR(CURDATE())) AS monthlySales
+    ";
+
+    $result = $this->conn->query($query);
+
+    if ($result) {
+        $row = $result->fetch_assoc();
+
+        // Additional query for monthly chart data (Jan to Dec)
+        $chartQuery = "
+            SELECT 
+                MONTH(order_date) AS month_num,
+                DATE_FORMAT(order_date, '%b') AS month_name,
+                SUM(order_total) AS total
+            FROM orders
+            WHERE order_status = 'pickedup'
+              AND YEAR(order_date) = YEAR(CURDATE())
+            GROUP BY month_num
+            ORDER BY month_num
+        ";
+
+        $chartResult = $this->conn->query($chartQuery);
+
+        $months = [];
+        $totals = [];
+
+        if ($chartResult) {
+            while ($r = $chartResult->fetch_assoc()) {
+                $months[] = $r['month_name'];
+                $totals[] = (float)$r['total'];
+            }
+        }
+
+        // Include chart data in the response
+        $row['chartMonths'] = $months;
+        $row['chartTotals'] = $totals;
+
+        echo json_encode($row);
+    } else {
+        echo json_encode(['error' => 'Failed to retrieve analytics']);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
     public function fetch_admin_info($id){
