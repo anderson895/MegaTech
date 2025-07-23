@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
         }else if ($_POST['requestType']=="UpdateAdminPassword") {
-       // Get input data from POST request
             $admin_id = $_POST['admin_id'];
             $user_NewPassword = $_POST['user_NewPassword'];
             $user_CurrentPassword = $_POST['user_CurrentPassword'];

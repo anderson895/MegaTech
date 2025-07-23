@@ -60,10 +60,7 @@ if (isset($_SESSION['hs_id'])) {
 
 
   <nav class="space-y-4 text-left lg:text-left">
-      <a href="dashboard" class="flex items-center lg:justify-start space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
-          <span class="material-icons">dashboard</span>
-          <span>Dashboard</span>
-      </a>
+     
 
      <a href="reservation" class="flex items-center lg:justify-start space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
         <span class="material-icons">event</span>
@@ -73,16 +70,9 @@ if (isset($_SESSION['hs_id'])) {
 
      
 
-
-      <a href="report" class="flex items-center lg:justify-start  space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
-          <span class="material-icons">description</span>
-          <span>Reports</span>
-      </a>
-
-      <a href="user_role" class="flex items-center lg:justify-start  space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
-            <span class="material-icons">admin_panel_settings</span>
-
-          <span>User Role</span>
+       <a href="settings" class="flex items-center lg:justify-start space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
+          <span class="material-icons">settings</span>
+          <span>Settings</span>
       </a>
 
       <a href="logout">

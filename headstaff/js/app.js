@@ -4,6 +4,48 @@ $(document).ready(function () {
 
 
 
+
+
+ $('#userPasswordFrm').on('submit', function(e) {
+        e.preventDefault(); 
+
+        var newpassword =$('#newpassword').val()
+        var confirmpassword =$('#confirmpassword').val()
+
+        if(confirmpassword!=newpassword){
+            alertify.error('Confirm Password Not Match');
+            return;
+        }
+
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'backend/end-points/controller.php', 
+            type: 'POST',
+            data: formData,
+            dataType: 'json', 
+            processData: false, 
+            contentType: false, 
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    alertify.success(response.message); 
+                } else {
+                    alertify.error(response.message);
+                }
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
 $(document).on('click', '.userActionToggler', function (e) {
     e.preventDefault();
 
@@ -122,7 +164,7 @@ $("#frmLogin").submit(function (e) {
             alertify.success('Login Successful');
 
             setTimeout(function () {
-              window.location.href = "dashboard"; 
+              window.location.href = "reservation"; 
             }, 1000);
 
           } else {

@@ -72,6 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
                 
 
+    }else if ($_POST['requestType']=="UpdateHeadPassword") {
+            $hs_id = $_POST['hs_id'];
+            $user_NewPassword = $_POST['user_NewPassword'];
+            $user_CurrentPassword = $_POST['user_CurrentPassword'];
+            $response = $db->UpdateHeadPassword($hs_id, $user_NewPassword, $user_CurrentPassword);
+            echo json_encode($response);
+
     }else {
         echo json_encode([
             'status' => 400,

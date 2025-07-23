@@ -146,6 +146,48 @@ class global_class extends db_connect
 
 
 
+
+
+
+
+ public function UpdateHeadPassword($hs_id, $newPassword, $currentPassword) {
+        $query = "SELECT `hs_password` FROM `headstaff` WHERE `hs_id` = ?";
+        $stmt = $this->conn->prepare($query);
+        if (!$stmt) return ['success' => false, 'message' => 'SQL error.'];
+
+        $stmt->bind_param("i", $hs_id);
+        $stmt->execute();
+        $stmt->bind_result($storedPassword);
+        if (!$stmt->fetch()) {
+            $stmt->close();
+            return ['success' => false, 'message' => 'admin not found.'];
+        }
+        $stmt->close();
+
+        if (hash('sha256', $currentPassword) !== $storedPassword) {
+            return ['success' => false, 'message' => 'Incorrect current password.'];
+        }
+
+        $update = $this->conn->prepare("UPDATE `headstaff` SET `hs_password` = ? WHERE `hs_id` = ?");
+        if (!$update) return ['success' => false, 'message' => 'SQL error.'];
+
+        $hashed = hash('sha256', $newPassword);
+        $update->bind_param("si", $hashed, $hs_id);
+        $success = $update->execute();
+        $update->close();
+
+        return [
+            'success' => $success,
+            'message' => $success ? 'Password updated successfully.' : 'Failed to update password.'
+        ];
+    }
+
+
+
+
+
+
+
     public function validateStockSufficiency($orderId) {
         $insufficientStockProducts = [];
     
