@@ -103,11 +103,12 @@ if (isset($_SESSION['admin_id'])) {
           <span>Reports</span>
       </a>
 
-      <a href="user_role" class="flex items-center lg:justify-start  space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
-            <span class="material-icons">admin_panel_settings</span>
-
-          <span>User Role</span>
+      
+      <a href="settings" class="flex items-center lg:justify-start space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
+          <span class="material-icons">settings</span>
+          <span>Settings</span>
       </a>
+
 
       <a href="logout">
           <button type="submit" class="flex items-center lg:justify-start  space-x-3 text-gray-600 hover:text-red-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
