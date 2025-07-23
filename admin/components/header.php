@@ -90,8 +90,8 @@ if (isset($_SESSION['admin_id'])) {
         <span class="material-icons">expand_more</span>
       </button>
       <div id="assetsDropdown" class="ml-8 space-y-2 hidden">
-          <a href="products" class="block text-gray-600 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Product</a>
-          <a href="inventory" class="block text-gray-600 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
+          <a href="products" class="block text-gray-600 hover:text-blue-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Product</a>
+          <a href="inventory" class="block text-gray-600 hover:text-blue-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
           
           
       </div>

@@ -267,9 +267,16 @@ public function addProduct($productData)
 
 
 
-    public function pickedupOrder($orderId, $orderStatus) {
-        $stmt = $this->conn->prepare("UPDATE `orders` SET `order_status` = '$orderStatus' WHERE `orders`.`order_id` = '$orderId'");
-        return $stmt->execute();
+    public function pickedupOrder($orderId, $orderStatus, $uniqueFileName) {
+        $stmt = $this->conn->prepare("UPDATE `orders` 
+            SET `order_status` = ?, `order_proof_recieved` = ? 
+            WHERE `order_id` = ?");
+        
+        if ($stmt->execute([$orderStatus, $uniqueFileName, $orderId])) {
+            return ['status' => 'success'];
+        } else {
+            return ['status' => 'error', 'message' => $stmt->errorInfo()[2]];
+        }
     }
 
 
@@ -301,44 +308,73 @@ public function addProduct($productData)
 
 
     public function updateStock(
-    $stock_prod_id,
-    $stock_admin_id,
-    $stockin_qty,
-    $prod_name
-) {
-    // 1. Get current quantity
-    $query = $this->conn->prepare("SELECT prod_stocks FROM product WHERE prod_id = ?");
-    $query->bind_param("i", $stock_prod_id);
-    $query->execute();
-    $query->bind_result($current_qty);
-    $query->fetch();
-    $query->close();
+        $stock_prod_id,
+        $stock_admin_id,
+        $stockin_qty,
+        $prod_name
+    ) {
+        // 1. Get current quantity
+        $query = $this->conn->prepare("SELECT prod_stocks FROM product WHERE prod_id = ?");
+        $query->bind_param("i", $stock_prod_id);
+        $query->execute();
+        $query->bind_result($current_qty);
+        $query->fetch();
+        $query->close();
 
-    // 2. Update stock quantity (Stock In)
-    $query = $this->conn->prepare("UPDATE product SET prod_stocks = prod_stocks + ? WHERE prod_id = ?");
-    $query->bind_param("ii", $stockin_qty, $stock_prod_id);
-    $stockUpdated = $query->execute();
-    $query->close();
+        // 2. Update stock quantity (Stock In)
+        $query = $this->conn->prepare("UPDATE product SET prod_stocks = prod_stocks + ? WHERE prod_id = ?");
+        $query->bind_param("ii", $stockin_qty, $stock_prod_id);
+        $stockUpdated = $query->execute();
+        $query->close();
 
-    // 3. Prepare stock history log
-    $new_qty = $current_qty + $stockin_qty;
-    $change_log = "$current_qty -> $new_qty";
-    $stock_type = "Stock In";
-    $user_type = "Administrator";
+        // 3. Prepare stock history log
+        $new_qty = $current_qty + $stockin_qty;
+        $change_log = "$current_qty -> $new_qty";
+        $stock_type = "Stock In";
+        $user_type = "Administrator";
 
-    // 4. Insert into stock_history
-    $insertLog = $this->conn->prepare("
-        INSERT INTO stock_history 
-        (stock_prod_id, stock_type, stock_Qty, user_type, stock_changes, stock_account_id) 
-        VALUES (?, ?, ?, ?, ?, ?)
-    ");
-    $insertLog->bind_param("isissi", $stock_prod_id, $stock_type, $stockin_qty, $user_type, $change_log, $stock_admin_id);
-    $logInserted = $insertLog->execute();
-    $insertLog->close();
+        // 4. Insert into stock_history
+        $insertLog = $this->conn->prepare("
+            INSERT INTO stock_history 
+            (stock_prod_id, stock_type, stock_Qty, user_type, stock_changes, stock_account_id) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $insertLog->bind_param("isissi", $stock_prod_id, $stock_type, $stockin_qty, $user_type, $change_log, $stock_admin_id);
+        $logInserted = $insertLog->execute();
 
-    // 5. Final result
-    return ($stockUpdated && $logInserted) ? 'success' : 'error';
-}
+        // Get the inserted stock_history ID
+        $stock_id = $this->conn->insert_id;
+
+        $insertLog->close();
+
+        // 5. Final JSON result
+        return json_encode([
+            "status" => ($stockUpdated && $logInserted) ? "success" : "error",
+            "stock_id" => ($logInserted) ? $stock_id : null
+        ]);
+    }
+
+        public function record_supply_logs(
+            $stock_id,
+            $stockin_supplier,
+            $stockin_price
+        ) {
+            // Use parameter binding to prevent SQL injection
+            $query = $this->conn->prepare("
+                INSERT INTO supply_logs (sl_stock_id, sl_supplier_name, sl_supplier_price) 
+                VALUES (?, ?, ?)
+            ");
+
+            $query->bind_param("isd", $stock_id, $stockin_supplier, $stockin_price);
+
+            if ($query->execute()) {
+                $query->close();
+                return 'success';
+            } else {
+                $query->close();
+                return 'error';
+            }
+        }
 
 
         

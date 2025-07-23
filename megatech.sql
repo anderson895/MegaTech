@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2025 at 12:47 PM
+-- Generation Time: Jul 23, 2025 at 07:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -125,22 +125,23 @@ CREATE TABLE `orders` (
   `order_total` decimal(10,2) NOT NULL,
   `order_balance` decimal(10,2) NOT NULL,
   `order_balance_payment_receipt` varchar(255) DEFAULT NULL,
-  `order_status` varchar(60) NOT NULL DEFAULT 'pending'
+  `order_status` varchar(60) NOT NULL DEFAULT 'pending',
+  `order_proof_recieved` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `order_code`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`) VALUES
-(15, 'ORD-5369AE1A', 72, '2025-07-18 09:30:50', 'GCash', 'proof_6878760dde28a7.17942010.png', NULL, NULL, 109000.00, 54500.00, NULL, 'paid'),
-(16, 'ORD-FBF95319', 72, '2025-07-22 08:38:38', 'Maya', 'proof_687a252291db43.18585402.png', '2025-07-22', '14:21:00', 109000.00, 54500.00, NULL, 'pickedup'),
-(17, 'ORD-7ABC23A0', 72, '2025-07-21 07:00:36', 'GCash', 'proof_687de594dde322.72508395.png', NULL, NULL, 30000.00, 15000.00, NULL, 'pending'),
-(18, 'ORD-8489CE79', 72, '2025-07-21 07:19:57', 'GCash', 'proof_687dea1d04f274.97225631.png', NULL, NULL, 30000.00, 15000.00, NULL, 'pending'),
-(19, 'ORD-246B6056', 72, '2025-07-21 07:20:55', 'GCash', 'proof_687dea57af4a96.55741544.png', NULL, NULL, 50000.00, 25000.00, NULL, 'pending'),
-(20, 'ORD-C68B10ED', 72, '2025-07-21 07:23:11', 'BDO', 'proof_687deadf727ba9.24395884.jpg', NULL, NULL, 29000.00, 14500.00, NULL, 'pending'),
-(21, 'ORD-F95AA739', 72, '2025-07-21 07:27:11', 'Maya', 'proof_687debcfdd8766.81398445.jpg', NULL, NULL, 30000.00, 15000.00, NULL, 'pending'),
-(22, 'ORD-04E3E458', 72, '2025-07-21 07:31:27', 'GCash', 'proof_687deccf701370.86101863.jpg', NULL, NULL, 29000.00, 14500.00, NULL, 'pending');
+INSERT INTO `orders` (`order_id`, `order_code`, `order_user_id`, `order_date`, `order_payment_method`, `order_down_payment_receipt`, `order_pickup_date`, `order_pickup_time`, `order_total`, `order_balance`, `order_balance_payment_receipt`, `order_status`, `order_proof_recieved`) VALUES
+(15, 'ORD-5369AE1A', 72, '2025-07-23 04:05:38', 'GCash', 'proof_6878760dde28a7.17942010.png', NULL, NULL, 109000.00, 54500.00, NULL, 'pickedup', 'pickedup_68805f92877800.95133068.png'),
+(16, 'ORD-FBF95319', 72, '2025-07-23 04:51:55', 'Maya', 'proof_687a252291db43.18585402.png', '2025-07-23', '12:51:00', 109000.00, 54500.00, NULL, 'scheduled', NULL),
+(17, 'ORD-7ABC23A0', 72, '2025-07-23 03:56:46', 'GCash', 'proof_687de594dde322.72508395.png', NULL, NULL, 30000.00, 15000.00, NULL, 'paid', NULL),
+(18, 'ORD-8489CE79', 72, '2025-07-21 07:19:57', 'GCash', 'proof_687dea1d04f274.97225631.png', NULL, NULL, 30000.00, 15000.00, NULL, 'pending', NULL),
+(19, 'ORD-246B6056', 72, '2025-07-21 07:20:55', 'GCash', 'proof_687dea57af4a96.55741544.png', NULL, NULL, 50000.00, 25000.00, NULL, 'pending', NULL),
+(20, 'ORD-C68B10ED', 72, '2025-07-21 07:23:11', 'BDO', 'proof_687deadf727ba9.24395884.jpg', NULL, NULL, 29000.00, 14500.00, NULL, 'pending', NULL),
+(21, 'ORD-F95AA739', 72, '2025-07-21 07:27:11', 'Maya', 'proof_687debcfdd8766.81398445.jpg', NULL, NULL, 30000.00, 15000.00, NULL, 'pending', NULL),
+(22, 'ORD-04E3E458', 72, '2025-07-21 07:31:27', 'GCash', 'proof_687deccf701370.86101863.jpg', NULL, NULL, 29000.00, 14500.00, NULL, 'pending', NULL);
 
 -- --------------------------------------------------------
 
@@ -202,7 +203,7 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`prod_id`, `prod_code`, `prod_name`, `prod_description`, `prod_specs`, `prod_stocks`, `prod_category_id`, `prod_price`, `prod_critical`, `prod_status`, `prod_image`, `prod_added`) VALUES
 (3, 'A0001', 'LED Industrial Grade Solar Street lights IP67', '300W Megalight High Brightness LED Industrial Grade Solar Street lights IP67', '[{\"Specs\":\"color\",\"value\":\"orange\"},{\"Specs\":\"brand\",\"value\":\"yamaha\"}]', 10, 2, 4500.00, 10, 0, 'product_687683437e3086.19790545.jpg', '2025-07-16 08:57:30'),
-(4, 'A0002', 'Solar Panel', 'Transform your operations with robust Solar Panels technology for efficiency and savings', '[{\"Specs\":\"Panel type\",\"value\":\"Monocrystalline, Polycrystalline, Thin-film\"},{\"Specs\":\"Power output\",\"value\":\"50W, 100W, 150W, 300W\"},{\"Specs\":\"Voltage Rating\",\"value\":\"12V, 24V\"},{\"Specs\":\"Size\",\"value\":\"1200mm x 540mm x 35mm\"},{\"Specs\":\"Weight\",\"value\":\"7.5 kg\"},{\"Specs\":\"Mounting Type\",\"value\":\"Roof-mounted, Ground-mounted, Pole-mounted\"}]', 18, 2, 30000.00, 10, 1, 'product_687700c5b87b41.71450609.jpg', '2025-07-16 09:30:45'),
+(4, 'A0002', 'Solar Panel', 'Transform your operations with robust Solar Panels technology for efficiency and savings', '[{\"Specs\":\"Panel type\",\"value\":\"Monocrystalline, Polycrystalline, Thin-film\"},{\"Specs\":\"Power output\",\"value\":\"50W, 100W, 150W, 300W\"},{\"Specs\":\"Voltage Rating\",\"value\":\"12V, 24V\"},{\"Specs\":\"Size\",\"value\":\"1200mm x 540mm x 35mm\"},{\"Specs\":\"Weight\",\"value\":\"7.5 kg\"},{\"Specs\":\"Mounting Type\",\"value\":\"Roof-mounted, Ground-mounted, Pole-mounted\"}]', 145, 2, 30000.00, 10, 1, 'product_687700c5b87b41.71450609.jpg', '2025-07-16 09:30:45'),
 (5, 'A0003', 'Electric Pole', 'Installation Area – Highway, Subdivision, Industrial Area', '[{\"Specs\":\"Pole Type\",\"value\":\"Concrete Pole, Steel Pole\"},{\"Specs\":\"Height\",\"value\":\"7m, 10m, 12m\"},{\"Specs\":\"Load Capacity\",\"value\":\"300kg, 500kg\"}]', 92, 5, 50000.00, 10, 1, 'product_687712af7c7e43.51042686.jpg', '2025-07-16 10:47:11'),
 (6, 'A0004', 'Akumulator AGM Monbat MEGALIGHT AGM 230Ah 12 V / 230 Ah', 'Akumulator AGM Megalight Power 12V 230AH.Akumulator głębokiego rozładowania. wymiary w mm: dł/szer/wys/ 518/274/242. Waga 59 kg. Układ biegunów 3.', '[{\"Specs\":\"Battery Type\",\"value\":\"Lithium-ion, LiFePO4, Lead Acid\"},{\"Specs\":\"Voltage Rating\",\"value\":\"3.7V, 6V, 12V\"},{\"Specs\":\"Capacity\",\"value\":\"5000mAh, 100Ah\"},{\"Specs\":\"Size\",\"value\":\"150mm x 65mm x 90mm\"}]', 87, 3, 29000.00, 15, 1, 'product_6877138e30f989.41089661.jpg', '2025-07-16 10:50:54');
 
@@ -218,6 +219,7 @@ CREATE TABLE `return_order` (
   `return_qty` int(11) NOT NULL,
   `return_proof` varchar(255) NOT NULL,
   `return_reason` text NOT NULL,
+  `return_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `return_status` int(11) NOT NULL DEFAULT 1 COMMENT '0=archived,1=request,2=cancel by admin, 3=cancel by customer,4=approve'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -225,8 +227,9 @@ CREATE TABLE `return_order` (
 -- Dumping data for table `return_order`
 --
 
-INSERT INTO `return_order` (`return_id`, `return_item_id`, `return_qty`, `return_proof`, `return_reason`, `return_status`) VALUES
-(3, 27, 1, 'return_687f65bb59a772.47129387.png', 'damaged', 1);
+INSERT INTO `return_order` (`return_id`, `return_item_id`, `return_qty`, `return_proof`, `return_reason`, `return_date`, `return_status`) VALUES
+(4, 26, 1, 'return_687f6cc9add0e3.45366378.jpg', 'damaged', '2025-07-22 11:38:13', 4),
+(5, 27, 1, 'return_687f6d30958b53.85519503.png', 'wrong_item', '2025-07-22 11:39:42', 2);
 
 -- --------------------------------------------------------
 
@@ -258,7 +261,33 @@ INSERT INTO `stock_history` (`stock_id`, `stock_prod_id`, `stock_account_id`, `s
 (55, 4, 1, 'Stock Out', 'HeadStaff', 1, '20 -> 19', '2025-07-18 10:38:52'),
 (56, 4, 1, 'Stock Out', 'HeadStaff', 1, '19 -> 18', '2025-07-18 10:49:42'),
 (57, 6, 1, 'Stock Out', 'HeadStaff', 1, '88 -> 87', '2025-07-18 10:49:42'),
-(58, 5, 1, 'Stock Out', 'HeadStaff', 1, '93 -> 92', '2025-07-18 10:49:42');
+(58, 5, 1, 'Stock Out', 'HeadStaff', 1, '93 -> 92', '2025-07-18 10:49:42'),
+(59, 4, 1, 'Stock In', 'Administrator', 2, '18 -> 20', '2025-07-23 01:09:20'),
+(60, 4, 1, 'Stock In', 'Administrator', 23, '20 -> 43', '2025-07-23 05:15:36'),
+(61, 4, 1, 'Stock In', 'Administrator', 100, '43 -> 143', '2025-07-23 05:17:24'),
+(62, 4, 1, 'Stock In', 'Administrator', 2, '143 -> 145', '2025-07-23 05:18:06');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `supply_logs`
+--
+
+CREATE TABLE `supply_logs` (
+  `sl_id` int(11) NOT NULL,
+  `sl_stock_id` int(11) NOT NULL,
+  `sl_supplier_name` varchar(60) NOT NULL,
+  `sl_supplier_price` decimal(10,2) NOT NULL,
+  `sl_supplier_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `supply_logs`
+--
+
+INSERT INTO `supply_logs` (`sl_id`, `sl_stock_id`, `sl_supplier_name`, `sl_supplier_price`, `sl_supplier_date`) VALUES
+(1, 61, 'j supply', 66.00, '2025-07-23 05:17:24'),
+(2, 62, 'j supply', 100.00, '2025-07-23 05:18:06');
 
 -- --------------------------------------------------------
 
@@ -352,6 +381,13 @@ ALTER TABLE `stock_history`
   ADD KEY `stock_user_id` (`stock_account_id`);
 
 --
+-- Indexes for table `supply_logs`
+--
+ALTER TABLE `supply_logs`
+  ADD PRIMARY KEY (`sl_id`),
+  ADD KEY `sl_stock_id` (`sl_stock_id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -407,13 +443,19 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT for table `return_order`
 --
 ALTER TABLE `return_order`
-  MODIFY `return_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `return_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `stock_history`
 --
 ALTER TABLE `stock_history`
-  MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `stock_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+
+--
+-- AUTO_INCREMENT for table `supply_logs`
+--
+ALTER TABLE `supply_logs`
+  MODIFY `sl_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -437,6 +479,18 @@ ALTER TABLE `orders_item`
 --
 ALTER TABLE `return_order`
   ADD CONSTRAINT `return_order_ibfk_1` FOREIGN KEY (`return_item_id`) REFERENCES `orders_item` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `stock_history`
+--
+ALTER TABLE `stock_history`
+  ADD CONSTRAINT `stock_history_ibfk_1` FOREIGN KEY (`stock_prod_id`) REFERENCES `product` (`prod_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `supply_logs`
+--
+ALTER TABLE `supply_logs`
+  ADD CONSTRAINT `supply_logs_ibfk_1` FOREIGN KEY (`sl_stock_id`) REFERENCES `stock_history` (`stock_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

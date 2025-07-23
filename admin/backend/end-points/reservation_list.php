@@ -2,9 +2,9 @@
 $fetch_all_students = $db->fetch_all_reservation();
 
 if ($fetch_all_students): ?>
-    <?php foreach ($fetch_all_students as $student):
+    <?php foreach ($fetch_all_students as $order):
 
-        $status_color = match ($student['order_status']) {
+        $status_color = match ($order['order_status']) {
             "decline" => "text-red-500",
             "pending" => "text-yellow-500",
             "paid" => "text-green-500",
@@ -12,20 +12,20 @@ if ($fetch_all_students): ?>
         };
 
         // Check if order is not pending
-        $isPending = strtolower($student['order_status']) === 'pending' || strtolower($student['order_status']) === 'pickedup';
+        $isPending = strtolower($order['order_status']) === 'pending' || strtolower($order['order_status']) === 'pickedup';
     ?>
     <tr>
-        <td class="p-2"><?php echo htmlspecialchars($student['order_code']); ?></td>
-        <td class="p-2"><?php echo htmlspecialchars(ucfirst($student['Fullname'])); ?></td>
-        <td class="p-2"><?php echo htmlspecialchars($student['order_date']); ?></td>
-        <td class="p-2"><?php echo htmlspecialchars($student['order_payment_method']); ?></td>
-        <td class="p-2">₱ <?php echo htmlspecialchars(number_format($student['order_total'],2)); ?></td>
+        <td class="p-2"><?php echo htmlspecialchars($order['order_code']); ?></td>
+        <td class="p-2"><?php echo htmlspecialchars(ucfirst($order['Fullname'])); ?></td>
+        <td class="p-2"><?php echo htmlspecialchars($order['order_date']); ?></td>
+        <td class="p-2"><?php echo htmlspecialchars($order['order_payment_method']); ?></td>
+        <td class="p-2">₱ <?php echo htmlspecialchars(number_format($order['order_total'],2)); ?></td>
         <td class="p-2 <?= $status_color; ?>">
           <strong>
             <?php 
-              echo ($student['order_status'] === 'pickedup') 
+              echo ($order['order_status'] === 'pickedup') 
                 ? 'Done' 
-                : ucfirst($student['order_status']); 
+                : ucfirst($order['order_status']); 
             ?>
           </strong>
         </td>
@@ -33,21 +33,23 @@ if ($fetch_all_students): ?>
         <td class="p-2 text-center">
             <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
 
-                <a href="view_order?order_id=<?= $student['order_id']?>" 
+                <a href="view_order?order_id=<?= $order['order_id']?>" 
                     class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded-md text-sm font-medium transition inline-flex items-center">
                     <span class="material-icons align-middle text-sm mr-1">visibility</span> View
                 </a>
 
                 <button 
                     class="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-md text-sm font-medium transition setScheduleToggler disabled:opacity-50 disabled:cursor-not-allowed"
-                    data-user_id="<?= $student['user_id'] ?>"
-                    data-order_id="<?= $student['order_id'] ?>"
-                    data-order_code="<?= $student['order_code'] ?>"
-                    data-fullname="<?= ucfirst($student['Fullname']) ?>"
+                    data-user_id="<?= $order['user_id'] ?>"
+                    data-order_id="<?= $order['order_id'] ?>"
+                    data-order_code="<?= $order['order_code'] ?>"
+                    data-fullname="<?= ucfirst($order['Fullname']) ?>"
                     <?= $isPending ? 'disabled' : '' ?>
                 >
-                    <span class="material-icons align-middle text-sm">check_circle</span> Set Schedule
+                    <span class="material-icons align-middle text-sm">calendar_month</span> 
+                    <?= strtolower($order['order_status']) === 'scheduled' ? 'Re-Schedule' : 'Set Schedule' ?>
                 </button>
+
 
               
 

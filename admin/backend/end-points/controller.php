@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ]);
 
                         if ($prod_id) {
-                            echo "200"; // SUCCESS
+                            echo "200"; 
                         } else {
                             echo "Error saving product data.";
                         }
@@ -93,13 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product_Name = $_POST['product_Name'];
         $product_Price = $_POST['product_Price'];
         $critical_Level = $_POST['critical_Level'];
-        
         $product_Category = $_POST['product_Category'];
         $product_Description = $_POST['product_Description'];
-        
         $product_Image = $_FILES['product_Image'];
-
-
           // Get specs from POST
                 $specs_names = $_POST['specs_name'] ?? [];
                 $specs_values = $_POST['specs_value'] ?? [];
@@ -119,19 +115,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $existingImageName = $db->getProductImageById($product_ID); 
         
-        if ($product_Image['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = '../../../upload/';
-        
-            if ($existingImageName && file_exists($uploadDir . $existingImageName)) {
-                unlink($uploadDir . $existingImageName);  
-            }
-        
-            $fileExtension = pathinfo($product_Image['name'], PATHINFO_EXTENSION);
-            $newFileName = uniqid('product_', true) . '.' . $fileExtension;
-        
-            $uploadFilePath = $uploadDir . $newFileName;
-        
-            if (move_uploaded_file($product_Image['tmp_name'], $uploadFilePath)) {
+            if ($product_Image['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = '../../../upload/';
+            
+                if ($existingImageName && file_exists($uploadDir . $existingImageName)) {
+                    unlink($uploadDir . $existingImageName);  
+                }
+            
+                $fileExtension = pathinfo($product_Image['name'], PATHINFO_EXTENSION);
+                $newFileName = uniqid('product_', true) . '.' . $fileExtension;
+            
+                $uploadFilePath = $uploadDir . $newFileName;
+            
+                if (move_uploaded_file($product_Image['tmp_name'], $uploadFilePath)) {
+                    $user = $db->updateProduct(
+                        $product_ID,
+                        $product_Code,
+                        $product_Name,
+                        $product_Price,
+                        $critical_Level,
+                        $product_Category,
+                        $product_Description,
+                        $newFileName,
+                        $specs
+                    );
+            
+                    if ($user === 'success') {
+                        echo 200; 
+                    } else {
+                        echo 'Failed to update product in the database.';
+                    }
+                } else {
+                    echo 'Error uploading image. Please try again.';
+                }
+            } else {
                 $user = $db->updateProduct(
                     $product_ID,
                     $product_Code,
@@ -140,38 +157,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $critical_Level,
                     $product_Category,
                     $product_Description,
-                    $newFileName,
+                    $existingImageName,
                     $specs
                 );
-        
+            
                 if ($user === 'success') {
-                    echo 200; 
+                    echo 200;  
                 } else {
                     echo 'Failed to update product in the database.';
                 }
-            } else {
-                echo 'Error uploading image. Please try again.';
             }
-        } else {
-            $user = $db->updateProduct(
-                $product_ID,
-                $product_Code,
-                $product_Name,
-                $product_Price,
-                $critical_Level,
-                $product_Category,
-                $product_Description,
-                $existingImageName,
-                $specs
-            );
-        
-            if ($user === 'success') {
-                echo 200;  
-            } else {
-                echo 'Failed to update product in the database.';
-            }
-        }
-        
+            
         
 
         
@@ -192,25 +188,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }else if($_POST['requestType'] =='StockIn'){
 
         session_start();
-
         $admin_id = intval($_SESSION['admin_id']);
-
         $prod_name = $_POST['product_name_stockin'];
         $stockin_qty = $_POST['stockin_qty'];
         $stock_prod_id = $_POST['product_id_stockin'];
 
-        $user = $db->updateStock(
+
+        // field for record_supply_logs
+        $stockin_supplier = $_POST['stockin_supplier'];
+        $stockin_price = $_POST['stockin_price'];
+
+
+        
+
+
+       // Step 1: Call updateStock and decode result
+        $updateResult = $db->updateStock(
             $stock_prod_id,
             $admin_id,
             $stockin_qty,
             $prod_name
         );
 
-        if ($user === 'success') {
-            echo 200;
+        $updateData = json_decode($updateResult, true); // decode to associative array
+
+        if ($updateData['status'] === 'success' && isset($updateData['stock_id'])) {
+            // Step 2: Pass stock_id to record_supply_logs
+            $stock_id = $updateData['stock_id'];
+
+            $recordResult = $db->record_supply_logs(
+                $stock_id,
+                $stockin_supplier,
+                $stockin_price
+            );
+
+            if ($recordResult === 'success') {
+                echo 200;
+            } else {
+                echo 'Failed to record supply logs.';
+            }
         } else {
             echo 'Failed to update product in the database.';
         }
+
     }else if ($_POST['requestType'] == 'acceptUser') {
 
         $user_id = $_POST['user_id'];
@@ -257,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($order === true) {
             echo json_encode([
             'status' => 200,
-            'message' => 'Stock updated successfully (stock out).'
+            'message' => 'Stock updated successfully.'
             ]);
         } else {
              echo json_encode([
@@ -267,15 +287,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }else if ($_POST['requestType'] == 'pickedupOrder') {
 
-        $orderStatus="pickedup";
-        $orderId = $_POST['order_id'];
-            $order = $db->pickedupOrder($orderId, $orderStatus);
 
-            if ($order) {
-                echo 200; 
-            } else {
-                echo 'Failed to update order in the database.';
+        $orderStatus = "pickedup";
+        $orderId = $_POST['order_id'];
+
+        $uploadDir = '../../../upload/';
+        $uniqueFileName = '';
+
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        if (isset($_FILES['proof_of_pickup']) && $_FILES['proof_of_pickup']['error'] === 0) {
+            $fileExtension = strtolower(pathinfo($_FILES['proof_of_pickup']['name'], PATHINFO_EXTENSION));
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+            if (!in_array($fileExtension, $allowedExtensions)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid file type.']);
+                exit;
             }
+
+            $uniqueFileName = uniqid('pickedup_', true) . '.' . $fileExtension;
+            $destination = $uploadDir . $uniqueFileName;
+
+            if (!move_uploaded_file($_FILES['proof_of_pickup']['tmp_name'], $destination)) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to move uploaded file.',
+                    'tmp_name' => $_FILES['proof_of_pickup']['tmp_name'],
+                    'destination' => $destination
+                ]);
+                exit;
+            }
+        }
+
+        $result = $db->pickedupOrder($orderId, $orderStatus, $uniqueFileName);
+
+        if (is_array($result) && $result['status'] === 'success') {
+            echo json_encode(['status' => 200, 'message' => 'Return request submitted successfully.']);
+        } else {
+            $message = is_array($result) && isset($result['message']) ? $result['message'] : 'Something went wrong.';
+            echo json_encode(['status' => 'error', 'message' => $message]);
+        }
+
+
                 
 
     }else if ($_POST['requestType'] == 'approveReturn') {

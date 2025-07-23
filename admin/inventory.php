@@ -325,47 +325,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                 
-
 <!-- Modal -->
-<div id="StockInModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" style="display:none;">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full sm:w-[600px] max-h-[90vh] overflow-y-auto flex flex-col animate__animated animate__fadeIn">
+<div id="StockInModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="display: none;">
+  <div class="bg-white rounded-xl shadow-2xl w-full sm:w-[550px] max-h-[90vh] overflow-y-auto p-6 animate__animated animate__fadeIn">
 
-
-
-        <!-- Spinner -->
-        <div class="spinner" style="display:none;">
-            <div class="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-                <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-        </div>
-
-        <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Update Stocks For <span id="stockinTarget"></span></h2>
-
-        <!-- Modal Form for Adding Product -->
-        <form id="frmUpdateStock" class="flex flex-col items-center w-full">
-
-                <div class="mb-6" hidden>
-                    <label for="product_id_stockin" class="block text-gray-700">Product ID</label>
-                    <input type="text" id="product_id_stockin" name="product_id_stockin" class="w-full p-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
-                    <input type="text" id="product_name_stockin" name="product_name_stockin" class="w-full p-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
-                </div>
-
-            <div class="mb-6 w-full flex justify-center">
-                <label for="stockin_qty" class="block text-lg font-medium text-gray-700 mb-2">Current Stock: <span id="product_stocks"></span></label>
-            </div>
-            <div class="mb-6 w-full flex justify-center">
-                <input type="number" id="stockin_qty" name="stockin_qty" class="w-full sm:w-3/4 p-4 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-lg" required>
-            </div>
-
-            <div class="flex justify-center gap-4 mt-6 w-full">
-                <button type="button" id="StockInModalClose" class="px-6 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300 ease-in-out w-full sm:w-auto text-lg">Cancel</button>
-                <button type="submit" class="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 ease-in-out w-full sm:w-auto text-lg">Add Stocks</button>
-            </div>
-        </form>
+    <!-- Spinner Overlay -->
+    <div class="spinner hidden absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10">
+      <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
     </div>
+
+    <!-- Header -->
+    <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">
+      Add Stocks: <span id="stockinTarget" class="text-blue-600"></span>
+    </h2>
+
+    <!-- Form Start -->
+    <form id="frmUpdateStock" class="space-y-4">
+
+      <!-- Hidden Product Info -->
+      <div class="hidden">
+        <label for="product_id_stockin" class="block text-sm text-gray-600">Product ID</label>
+        <input type="text" id="product_id_stockin" name="product_id_stockin" class="w-full border p-2 rounded-md">
+        <input type="text" id="product_name_stockin" name="product_name_stockin" class="w-full border p-2 rounded-md">
+      </div>
+
+      <!-- Current Stock Display -->
+      <div class="text-center text-base text-gray-700">
+        Current Stock: <span id="product_stocks" class="font-semibold text-blue-700"></span>
+      </div>
+
+      <!-- Qty -->
+      <div>
+        <label for="stockin_qty" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+        <input type="number" id="stockin_qty" name="stockin_qty" placeholder="Enter quantity"
+          class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+
+      <!-- Supplier -->
+      <div>
+        <label for="stockin_supplier" class="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+        <input type="text" id="stockin_supplier" name="stockin_supplier" placeholder="Enter supplier name"
+          class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+
+      <!-- Price -->
+      <div>
+        <label for="stockin_price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+        <input type="number" id="stockin_price" name="stockin_price" step="0.01" placeholder="Enter price"
+          class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end gap-3 pt-4">
+        <button type="button" id="StockInModalClose"
+          class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200">Cancel</button>
+        <button type="submit"
+          class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">Add Stocks</button>
+      </div>
+    </form>
+  </div>
 </div>
-
-
 
 
 

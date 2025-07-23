@@ -109,41 +109,81 @@ $(document).on('click', '.orderActionToggler', function (e) {
     } 
 
     Swal.fire({
-        title: title,
-        html: 'You won\'t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: confirmButtonText,
-        cancelButtonText: 'No, cancel!',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: "backend/end-points/controller.php",
-                type: 'POST',
-                data: { order_id: order_id, requestType: requestType },
-                dataType: 'json',
-                success: function (response) {
-                    if (response === 200) {
-                        $('#spinnerOverlay').removeClass('hidden');
-
-                        if (action === 'pickedup') {
-                            
-                            Swal.fire('Success!', response.message, 'success').then(() => {
-                                        location.reload();
-                            });
-                               
-                        } 
-
-                    } else {
-                        Swal.fire('Error!', response.message, 'error');
-                    }
-                },
-                error: function () {
-                    Swal.fire('Error!', 'There was a problem with the request.', 'error');
-                }
-            });
+    title: `
+        <div class="text-green-600 text-lg font-semibold">
+            Set as picked up:
+            <span class="text-gray-700 font-bold">${order_code}</span>
+        </div>
+    `,
+    html: `
+        <div class="text-sm text-gray-700 mb-2">You won't be able to revert this!</div>
+        
+        <div class="flex flex-col items-start space-y-2 text-left">
+            <label for="proof" class="text-sm font-medium text-gray-700">Upload proof of receipt:</label>
+            <input 
+                type="file" 
+                id="proof"
+                class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                    border border-gray-300 rounded-md p-1"
+                accept="image/*,application/pdf"
+            />
+        </div>
+    `,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: `<span class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Confirm</span>`,
+    cancelButtonText: `<span class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded">Cancel</span>`,
+    customClass: {
+        popup: 'p-6 rounded-lg shadow-xl',
+        confirmButton: 'swal2-confirm-button',
+        cancelButton: 'swal2-cancel-button'
+    },
+    buttonsStyling: false,
+    preConfirm: () => {
+        const fileInput = document.getElementById('proof');
+        if (!fileInput.files.length) {
+            Swal.showValidationMessage('Please upload a proof of receipt');
+            return false;
         }
-    });
+        return fileInput.files[0];
+    }
+}).then((result) => {
+    if (result.isConfirmed) {
+        const file = result.value;
+
+        const formData = new FormData();
+        formData.append('order_id', order_id);
+        formData.append('requestType', requestType);
+        formData.append('proof_of_pickup', file);
+
+        $.ajax({
+            url: "backend/end-points/controller.php",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === 200) {
+                    $('#spinnerOverlay').removeClass('hidden');
+                    Swal.fire('Success!', response.message, 'success').then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Error!', response.message, 'error');
+                }
+            },
+            error: function () {
+                Swal.fire('Error!', 'There was a problem with the request.', 'error');
+            }
+        });
+    }
+});
+
 });
 
 
