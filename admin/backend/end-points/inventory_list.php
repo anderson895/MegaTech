@@ -31,24 +31,15 @@ if ($fetch_all_product->num_rows > 0) {
 ?>
 
 <tr class="border-b">
-    <td class="p-3"><?= htmlspecialchars($product['prod_code']) ?></td>
+    <td class="p-3"><?= $product['prod_code'] ?></td>
     <td class="p-3">
-        <img src="<?= $image_path ?>" alt="<?= htmlspecialchars($product['prod_name']) ?>" class="w-16 h-16 object-cover rounded">
+        <img src="<?= $image_path ?>" alt="<?= $product['prod_name'] ?>" class="w-16 h-16 object-cover rounded">
     </td>
-    <td class="p-3 font-semibold"><?= htmlspecialchars($product['prod_name']) ?></td>
-    <td class="p-3 text-sm">
-        <?= strlen($product['prod_description']) > 50 ? htmlspecialchars(substr($product['prod_description'], 0, 50)) . '...' : htmlspecialchars($product['prod_description']) ?>
-    </td>
-    
-    <td class="p-3 text-sm">
-     <div class="space-y-1 max-h-[80px] overflow-y-auto">
+    <td class="p-3 font-semibold"><?= $product['prod_name']?></td>
+   
 
-            <?= $specs_html ?>
-        </div>
-
-    </td>
-
-    <td class="p-3"><?= ucfirst($product['category_name']) ?></td>
+    <td class="p-3"><?= $product['prod_stocks'] ?></td>
+    <td class="p-3"><?= $product['prod_critical'] ?></td>
     <td class="p-3">₱<?= number_format($product['prod_price'], 2) ?></td>
     <td class="p-3">
         <span class="<?= $product['prod_status'] > 0 ? 'text-green-600 font-semibold' : 'text-red-500 italic' ?>">
@@ -58,34 +49,21 @@ if ($fetch_all_product->num_rows > 0) {
 
     <td class="p-3 text-center">
         <div class="flex flex-col sm:flex-row justify-center items-center space-y-1 sm:space-y-0 sm:space-x-2">
-            <!-- Update Button -->
-            <button class="bg-blue-500 text-white py-1 px-3 rounded-md text-sm updateProductToggler"
-                data-prod_id="<?= $product['prod_id'] ?>"
-                data-prod_code="<?= htmlspecialchars($product['prod_code']) ?>"
-                data-prod_name="<?= htmlspecialchars($product['prod_name']) ?>"
-                data-prod_price="<?= $product['prod_price'] ?>"
-                data-prod_stocks="<?= $product['prod_stocks'] ?>"
-                data-prod_category_id="<?= $product['prod_category_id'] ?>"
-                data-prod_critical="<?= $product['prod_critical'] ?>"
-                data-prod_description="<?= htmlspecialchars($product['prod_description']) ?>"
-                data-prod_specs="<?= $specs_json ?>"
-            >
-                Update
-            </button>
+            
 
             <!-- Stock In Button -->
-            <!-- <button class="bg-green-500 text-white py-1 px-3 rounded-md text-sm stockInToggler"
+            <button class="bg-green-500 text-white py-1 px-3 rounded-md text-sm stockInToggler"
                 data-prod_stocks="<?= $product['prod_stocks'] ?>"
                 data-prod_id="<?= $product['prod_id'] ?>"
-                data-prod_name="<?= htmlspecialchars($product['prod_name']) ?>"
+                data-prod_name="<?= $product['prod_name'] ?>"
             >
                 StockIn
-            </button> -->
+            </button>
 
             <!-- Remove Button -->
             <button class="bg-red-500 text-white py-1 px-3 rounded-md text-sm togglerRemoveProduct"
                 data-prod_id="<?= $product['prod_id'] ?>"
-                data-prod_name="<?= htmlspecialchars($product['prod_name']) ?>"
+                data-prod_name="<?= $product['prod_name'] ?>"
             >
                 Remove
             </button>

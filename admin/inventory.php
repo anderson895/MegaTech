@@ -12,11 +12,8 @@ include "components/header.php";
 <!-- Card for Table -->
 <div class="bg-white rounded-lg shadow-lg p-6">
     <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-semibold text-gray-700">Product List</h3>
-        <!-- Add Product Button -->
-        <button id="addProductButton" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-            Add Product
-        </button>
+        <h3 class="text-xl font-semibold text-gray-700">Inventory</h3>
+       
     </div>
 
     <!-- Search Bar -->
@@ -37,17 +34,15 @@ include "components/header.php";
                     <th class="p-2">CODE</th>
                     <th class="p-2">Image</th>
                     <th class="p-2">Product</th>
-                    <th class="p-2">Description</th>
-                    <th class="p-2">Specs</th>
                     <th class="p-2">Stock</th>
-                    <th class="p-2">Category</th>
+                    <th class="p-2">Critical level</th>
                     <th class="p-2">Price</th>
                     <th class="p-2">Status</th>
                     <th class="p-2 text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php include "backend/end-points/product_list.php" ?>
+                <?php include "backend/end-points/inventory_list.php" ?>
             </tbody>
         </table>
     </div>

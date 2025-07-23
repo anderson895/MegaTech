@@ -80,10 +80,22 @@ if (isset($_SESSION['admin_id'])) {
           <span class="material-icons">group</span>
           <span>Customers</span>
       </a>
-      <a href="product" class="flex items-center lg:justify-start  space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
-          <span class="material-icons">store</span>
-          <span>Products</span>
-      </a>
+     
+
+      <button id="toggleAssets" class="w-full flex items-center justify-between text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
+        <div class="flex items-center space-x-3">
+            <span class="material-icons">store</span>
+            <span>Inventory</span>
+        </div>
+        <span class="material-icons">expand_more</span>
+      </button>
+      <div id="assetsDropdown" class="ml-8 space-y-2 hidden">
+          <a href="products" class="block text-gray-600 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Product</a>
+          <a href="inventory" class="block text-gray-600 hover:text-yellow-300 hover:bg-gray-800 px-4 py-2 rounded-md transition-all duration-300">Inventory</a>
+          
+          
+      </div>
+      
 
 
       <a href="report" class="flex items-center lg:justify-start  space-x-3 text-gray-600 hover:text-blue-500 hover:bg-gray-100 px-4 py-2 rounded-md transition-all duration-300">
