@@ -11,6 +11,31 @@ include "components/header.php";
     </div>
 </div>
 
+<!-- Status Filter Tabs -->
+<div class="mb-6 border-b border-gray-200">
+  <ul class="flex flex-wrap text-sm font-medium text-center" id="statusFilterTabs">
+    <li class="mr-2">
+      <button class="status-button px-4 py-2 rounded-t-md bg-indigo-100 text-indigo-700 font-semibold" data-status="">All</button>
+    </li>
+    <li class="mr-2">
+      <button class="status-button px-4 py-2 rounded-t-md hover:bg-gray-100" data-status="pending">Pending</button>
+    </li>
+    <li class="mr-2">
+      <button class="status-button px-4 py-2 rounded-t-md hover:bg-gray-100" data-status="paid">Paid</button>
+    </li>
+    <li class="mr-2">
+      <button class="status-button px-4 py-2 rounded-t-md hover:bg-gray-100" data-status="decline">Decline</button>
+    </li>
+    <li class="mr-2">
+      <button class="status-button px-4 py-2 rounded-t-md hover:bg-gray-100" data-status="done">Pickedup</button>
+    </li>
+    <li class="mr-2">
+      <button class="status-button px-4 py-2 rounded-t-md hover:bg-gray-100" data-status="scheduled">Scheduled</button>
+    </li>
+  </ul>
+</div>
+
+
 <!-- Card for Table -->
 <div class="bg-white rounded-lg shadow-lg p-6">
 
@@ -42,10 +67,12 @@ include "components/header.php";
 
 <?php include "components/footer.php";?>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="../function/js/filter_tab.js"></script>
+
+
 <script>
     $(document).ready(function() {
-        // Search functionality
         $('#searchInput').on('input', function() {
             var value = $(this).val().toLowerCase();
             $('#userTable tbody tr').filter(function() {
