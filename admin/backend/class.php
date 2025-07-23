@@ -13,6 +13,58 @@ class global_class extends db_connect
 
 
 
+    public function UpdateAdminPassword($admin_id, $newPassword, $currentPassword) {
+        $query = "SELECT `admin_password` FROM `admin` WHERE `admin_id` = ?";
+        $stmt = $this->conn->prepare($query);
+        if (!$stmt) return ['success' => false, 'message' => 'SQL error.'];
+
+        $stmt->bind_param("i", $admin_id);
+        $stmt->execute();
+        $stmt->bind_result($storedPassword);
+        if (!$stmt->fetch()) {
+            $stmt->close();
+            return ['success' => false, 'message' => 'admin not found.'];
+        }
+        $stmt->close();
+
+        if (hash('sha256', $currentPassword) !== $storedPassword) {
+            return ['success' => false, 'message' => 'Incorrect current password.'];
+        }
+
+        $update = $this->conn->prepare("UPDATE `admin` SET `admin_password` = ? WHERE `admin_id` = ?");
+        if (!$update) return ['success' => false, 'message' => 'SQL error.'];
+
+        $hashed = hash('sha256', $newPassword);
+        $update->bind_param("si", $hashed, $admin_id);
+        $success = $update->execute();
+        $update->close();
+
+        return [
+            'success' => $success,
+            'message' => $success ? 'Password updated successfully.' : 'Failed to update password.'
+        ];
+    }
+
+
+
+
+
+
+
+
+
+    public function fetch_admin_info($id){
+        $query = $this->conn->prepare("SELECT * FROM `admin` where admin_id = '$id'");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+
+
+
+
 
     public function Login($username, $password)
     {

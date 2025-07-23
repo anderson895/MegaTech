@@ -23,6 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'message' => 'Invalid username or password'
                 ]);
             }
+        }else if ($_POST['requestType']=="UpdateAdminPassword") {
+       // Get input data from POST request
+            $admin_id = $_POST['admin_id'];
+            $user_NewPassword = $_POST['user_NewPassword'];
+            $user_CurrentPassword = $_POST['user_CurrentPassword'];
+            $response = $db->UpdateAdminPassword($admin_id, $user_NewPassword, $user_CurrentPassword);
+            echo json_encode($response);
+
         }else  if ($_POST['requestType'] == 'AddProduct') {
 
                 $product_Code = $_POST['product_Code'];
