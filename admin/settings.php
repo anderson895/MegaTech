@@ -5,6 +5,14 @@ $fetch_user_info = $db->fetch_admin_info($admin_id);
 foreach ($fetch_user_info as $user):
 endforeach;
 ?>
+<!-- Top Bar -->
+<div class="flex justify-between items-center bg-white p-4 mb-6 rounded-md shadow shadow-gray-200">
+    <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+    <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
+        <?php echo strtoupper(substr($_SESSION['admin_username'], 0, 1)); ?>
+    </div>
+</div>
+
 
 <div class="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8">
   <h2 class="text-4xl font-semibold mb-6 text-gray-900">Password Settings</h2>
