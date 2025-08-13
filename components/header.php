@@ -26,7 +26,7 @@
     <!-- Logo -->
     <div class="flex items-center space-x-3">
       <img src="assets/logo/logo1.jpg" alt="Logo" class="w-12 h-12 hidden sm:block rounded-full">
-      <a href="index.php" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition">MEGATECH</a>
+      <a href="index" class="text-2xl font-bold text-gray-800 hover:text-blue-600 transition">MEGATECH</a>
     </div>
 
     <!-- Center Navigation -->

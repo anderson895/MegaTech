@@ -14,7 +14,7 @@
     <div>
       <h3 class="text-lg font-semibold mb-3 text-gray-800">Quick Links</h3>
       <ul class="space-y-2">
-        <li><a href="index.php" class="hover:text-blue-600 transition">Home</a></li>
+        <li><a href="index" class="hover:text-blue-600 transition">Home</a></li>
         <li><a href="#about" class="hover:text-blue-600 transition">About</a></li>
         <li><a href="products.php" class="hover:text-blue-600 transition">Products</a></li>
       </ul>
