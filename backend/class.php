@@ -294,5 +294,45 @@ public function getPriceRange() {
 
 
 
+       public function fetch_order($order_id){
+        $query = $this->conn->prepare("SELECT * FROM orders 
+        LEFT JOIN user
+        ON user.user_id = orders.order_user_id
+        WHERE orders.order_id = '$order_id'");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+    
+
+
+    public function fetch_order_item($order_id) {
+        $query = $this->conn->prepare("
+            SELECT 
+                orders.*,
+                orders_item.*,
+                product.*,
+                category.*,
+                return_order.return_status
+            FROM orders
+            LEFT JOIN orders_item 
+                ON orders.order_id = orders_item.item_order_id
+            LEFT JOIN product 
+                ON product.prod_id = orders_item.item_product_id
+            LEFT JOIN category 
+                ON category.category_id = product.prod_category_id
+            LEFT JOIN return_order 
+                ON return_order.return_item_id = orders_item.item_id
+            WHERE orders_item.item_order_id = ?
+        ");
+        $query->bind_param('i', $order_id);
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+        return false;
+    }
+
 
 }

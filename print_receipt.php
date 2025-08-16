@@ -1,10 +1,14 @@
 <?php
 include "components/header.php";
+include('backend/class.php');
+
+
+$db = new global_class();
 
 $fetch_order = $db->fetch_order($_GET['order_id']);
+
+
 $fetch_order_item = $db->fetch_order_item($_GET['order_id']);
-
-
 $order = mysqli_fetch_assoc($fetch_order);
 
 $pickupDate = $order['order_pickup_date'];
@@ -21,7 +25,7 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
 <div class="max-w-4xl mx-auto mt-12 p-8 bg-white rounded-2xl shadow-xl border font-sans text-gray-800">
   <!-- Logo & Header -->
   <div class="text-center mb-10 border-b pb-6">
-    <img src="../assets/logo/logo1.jpg" alt="MegaTech Logo" class="h-16 w-16 mx-auto rounded-full border shadow mb-3 object-cover">
+    <img src="assets/logo/logo1.jpg" alt="MegaTech Logo" class="h-16 w-16 mx-auto rounded-full border shadow mb-3 object-cover">
     <h1 class="text-3xl font-bold">Reservation Details</h1>
     <p class="text-blue-600 font-semibold uppercase tracking-wider text-sm">MegaTech Services</p>
   </div>
@@ -132,9 +136,9 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
     <div class="text-center bg-gray-50 rounded-lg p-4 shadow border">
       <p class="uppercase text-sm text-gray-600 font-semibold mb-3">QR Code</p>
       <div class="w-44 h-44 mx-auto bg-white border rounded-lg shadow p-2">
-        <img src="../qrcodes/qr_<?= $order['order_id'] ?>.png" alt="QR Code" class="w-full h-full object-contain">
+        <img src="qrcodes/qr_<?= $order['order_id'] ?>.png" alt="QR Code" class="w-full h-full object-contain">
       </div>
-      <a href="../qrcodes/qr_<?= $order['order_id'] ?>.png" download
+      <a href="qrcodes/qr_<?= $order['order_id'] ?>.png" download
          class="mt-3 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2"
              viewBox="0 0 24 24">
@@ -149,10 +153,10 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
     <div class="text-center bg-gray-50 rounded-lg p-4 shadow border">
       <p class="uppercase text-sm text-gray-600 font-semibold mb-3">Proof of Payment</p>
       <div class="w-44 h-44 mx-auto bg-white border rounded-lg shadow p-2">
-        <img src="../proofPayment/<?= $order['order_down_payment_receipt'] ?>" alt="Proof of Payment"
+        <img src="proofPayment/<?= $order['order_down_payment_receipt'] ?>" alt="Proof of Payment"
              class="w-full h-full object-cover rounded-md">
       </div>
-      <a href="../proofPayment/<?= $order['order_down_payment_receipt'] ?>" download
+      <a href="proofPayment/<?= $order['order_down_payment_receipt'] ?>" download
          class="mt-3 inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded shadow transition">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2"
              viewBox="0 0 24 24">
