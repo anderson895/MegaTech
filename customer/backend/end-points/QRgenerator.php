@@ -10,14 +10,11 @@ use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Color\Color;
 
 
-// echo "<pre>";
-// print_r($_POST);
-// echo "</pre>";
 
 $orderId = $_POST['order_id'];
 $order_code = $_POST['order_code'];
 
-$data = $order_code;
+$data = "http://localhost/MegaTech/print_receipt.php?order_id=$orderId";
 
 // Generate QR
 $qrCode = new QrCode(
@@ -45,7 +42,7 @@ $result->saveToFile($savePath);
 // Return JSON with image URL (adjust path if needed for web access)
 $response = [
     'status' => 'success',
-    'qr_image_url' => "/qrcodes/$filename" // Make sure this matches the accessible URL
+    'qr_image_url' => "/qrcodes/$filename"
 ];
 
 header('Content-Type: application/json');
