@@ -12,10 +12,16 @@ include "components/header.php";
 
 <!-- Card for Table -->
 <div class="bg-white rounded-lg shadow-lg p-6">
+
+    <button id="addProductButton" class="bg-blue-500 text-white py-2 px-3 rounded-md text-sm ">
+                Add Products
+     </button>
  
 
     <!-- Search Bar -->
-    <div class="mb-4">
+    <div class="mb-4 p-4">
+
+    
         <input
             type="text"
             id="searchInput"
