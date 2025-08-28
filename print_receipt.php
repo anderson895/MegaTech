@@ -1,5 +1,5 @@
 <?php
-include "components/header.php";
+
 include('backend/class.php');
 
 
@@ -21,6 +21,40 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
     $formattedPickup = 'No Schedule Date';
 }
 ?>
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEGATECH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="assets/logo/logo1.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.css" />
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"></script>
+</head>
+
+
+
+
+<body class="bg-gray-50">
+
+<?php include "function/PageSpinner.php"; ?>
+
+
+
+
+
+
 
 <div class="max-w-4xl mx-auto mt-12 p-8 bg-white rounded-2xl shadow-xl border font-sans text-gray-800">
   <!-- Logo & Header -->
@@ -185,76 +219,10 @@ if (!empty($pickupDate) && !empty($pickupTime)) {
 
 
 
-<div id="returnItemModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
-  <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl relative">
-    
-    <!-- Close Button -->
-    <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-3xl font-bold">&times;</button>
+<script src="assets/js/app.js"></script>
 
-    <!-- Title -->
-    <h2 class="text-3xl font-semibold mb-6 text-gray-800 text-center">Return Item</h2>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Modal Details -->
-    <div id="modalDetails" class="mb-6 text-sm text-gray-600 text-center">
-      Please provide details of the item you want to return.
-    </div>
-
-    <!-- Return Form -->
-    <form id="returnItemForm" class="space-y-4">
-      <!-- ✅ Hidden field for original quantity -->
-      <input type="hidden" id="original_qty" name="original_qty">
-
-      <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
-        <div>
-          <label for="prod_name" class="block text-sm font-medium text-gray-700">Product Name</label>
-          <input type="text" id="prod_name" name="prod_name" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-        
-        <div hidden>
-          <label for="item_id" class="block text-sm font-medium text-gray-700">Item ID</label>
-          <input type="text" id="item_id" name="item_id" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-
-        <div>
-          <label for="item_qty" class="block text-sm font-medium text-gray-700">Quantity</label>
-          <input type="number" id="item_qty" name="item_qty" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        </div>
-
-        <div>
-          <label for="reason" class="block text-sm font-medium text-gray-700">Reason for Return</label>
-          <select id="reason" name="reason" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            <option value="">-- Select Reason --</option>
-            <option value="damaged">Damaged Item</option>
-            <option value="wrong item">Wrong Item</option>
-            <option value="defective">Defective Product</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Upload Section -->
-      <div>
-        <label for="return_image" class="block text-sm font-medium text-gray-700">Upload Photo of Item</label>
-        <input type="file" id="return_image" name="return_image" accept="image/*" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      </div>
-
-      <!-- Submit Button -->
-      <div class="text-center mt-6">
-        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition duration-300">
-          Submit Return Request
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-<?php include "components/footer.php"; ?>
+</body>
+</html>
