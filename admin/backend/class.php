@@ -383,16 +383,18 @@ public function addProduct($productData)
 
     
    public function fetch_all_reservation(){
-        $query = $this->conn->prepare("SELECT * FROM `orders`
+    $query = $this->conn->prepare("
+        SELECT * FROM `orders`
         LEFT JOIN user
         ON user.user_id = orders.order_user_id
-        ");
+        ORDER BY orders.order_id DESC
+    ");
 
-        if ($query->execute()) {
-            $result = $query->get_result();
-            return $result;
-        }
+    if ($query->execute()) {
+        $result = $query->get_result();
+        return $result;
     }
+}
 
 
 
