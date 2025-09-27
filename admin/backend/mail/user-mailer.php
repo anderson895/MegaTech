@@ -85,8 +85,10 @@ class Mailer extends db_connect
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'angeladeniseflores199@gmail.com';
-            $mail->Password = 'rpbm yjls katl wcrt'; // use secure config in production
+            // $mail->Username = 'angeladeniseflores199@gmail.com';
+            // $mail->Password = 'rpbm yjls katl wcrt'; 
+            $mail->Username = 'depedtrack264@gmail.com'; 
+            $mail->Password = 'krib ldvp jhfw orvn'; 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
