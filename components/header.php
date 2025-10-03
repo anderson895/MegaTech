@@ -37,13 +37,14 @@
       <a href="products" class="hover:text-blue-600 transition">Products</a>
     </nav>
 
-    <!-- Auth and Cart -->
+      <!-- Auth and Cart -->
     <div class="flex items-center space-x-4 text-sm">
       <a href="login" class="text-gray-700 hover:text-blue-600 transition">Login</a>
       <span class="text-gray-500">/</span>
       <a href="signup" class="text-gray-700 hover:text-blue-600 transition">Register</a>
-      <a href="login" class="text-gray-700 hover:text-blue-600 transition text-xl">🛒</a>
+     
     </div>
+
   </div>
 </header>
 
